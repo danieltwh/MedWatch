@@ -47,16 +47,16 @@ services:
     networks:
       - medwatch_network
   
-  # frontend:
-  #   container_name: medwatch_frontend
-  #   build:
-  #     context: ./frontend
-  #     dockerfile: ./Dockerfile
-  #   image: medwatch_frontend:latest
-  #   ports:
-  #     - 80:80
-  #   networks:
-  #     - medwatch_network
+  frontend:
+    container_name: medwatch_frontend
+    build:
+      context: ./frontend
+      dockerfile: ./Dockerfile
+    image: medwatch_frontend:latest
+    ports:
+      - 8080:80
+    networks:
+      - medwatch_network
   
   rabbitmq:
     container_name: medwatch_rabbitmq

@@ -37,7 +37,7 @@
 │   ├── requirments.txt
 │   └── xxx
 ├── xxx
-└── docker-compose          <- docker compose file for MLOps Suite
+└── docker-compose          <- docker compose file for MedWatch
 ```
 
 ## Notes

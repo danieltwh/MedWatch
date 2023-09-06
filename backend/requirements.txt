@@ -1,0 +1,10 @@
+fastapi
+pika
+psycopg2
+PyJWT
+regex
+requests
+SQLAlchemy
+typing
+urllib3
+uvicorn

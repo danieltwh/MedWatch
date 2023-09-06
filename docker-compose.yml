@@ -1,0 +1,99 @@
+version: '1'
+name: MedWatch
+services:
+  postgres:
+    image: postgres:15.2
+    container_name: medwatch_postgres
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: MedWatchDB
+    volumes:
+      # - postgres_data:/var/lib/postgresql/data/
+      - './backend/sql/init/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql'
+      - './backend/sql/init/insert_values.sql:/docker-entrypoint-initdb.d/insert_values.sql'
+    expose:
+      - 5455
+    ports:
+      - 5455:5455
+    command: -p 5455
+    networks:
+      - medwatch_network
+
+  mongodb:
+    image: mongo:jammy
+    container_name: medwatch_mongodb
+    ports:
+      - 27017:27017
+    # volumes:
+    #   - './mongodb/:/etc/mongo'
+    # command: mongod --config /etc/mongo/mongod.conf
+    
+  backend:
+    depends_on:
+      - postgres
+      - mongodb
+      - rabbitmq
+      - redis
+    container_name: medwatch_backend
+    build:
+      context: ./backend
+      dockerfile: ./Dockerfile
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    image: medwatch_backend:latest
+    ports:
+      - 5050:5050
+    networks:
+      - medwatch_network
+  
+  frontend:
+    container_name: medwatch_frontend
+    build:
+      context: ./frontend
+      dockerfile: ./Dockerfile
+    image: medwatch_frontend:latest
+    ports:
+      - 8080:80
+    networks:
+      - medwatch_network
+  
+  rabbitmq:
+    container_name: medwatch_rabbitmq
+    image: rabbitmq:3.11.10-management
+    environment:
+      RABBITMQ_USER: user
+      RABBITMQ_PASSWORD: password
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+      - ./rabbitmq/definitions.json:/etc/rabbitmq/definitions.json
+    networks:
+      - medwatch_network
+  
+  redis:
+    container_name: medwatch_redis
+    image: redis:alpine3.18
+    ports:
+      - 6379:6379
+    command: redis-server
+    networks:
+      - medwatch_network
+
+networks:
+  medwatch_network:
+    name: medwatch_network
+
+# volumes:
+#   postgres_data:
+#   # rabbitmq_data:
+#   mlops_files:
+#     driver: local
+#     driver_opts:
+#       type: 'none'
+#       o: 'bind'
+#       device: './services/mlops_files'
+  
+  

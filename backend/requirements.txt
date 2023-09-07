@@ -1,7 +1,10 @@
+beanie
 fastapi
+motor
 pika
 psycopg2
 PyJWT
+python-dotenv
 regex
 requests
 SQLAlchemy

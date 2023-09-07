@@ -16,7 +16,7 @@ export const heartrate = async (payload) => {
     // };
 
     const response = await fetch(
-        `${base_url}/1/heartrate`
+        `${base_url}/heartrate/1`
     ).then(
         response => {
             // console.log(response);

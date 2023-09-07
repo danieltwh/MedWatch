@@ -6,7 +6,8 @@ ENV VIRTUAL_ENV=/opt/venv
 RUN python3 -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
-COPY . ./Backend/
+COPY ./app ./Backend/app
+COPY ./requirements.txt ./Backend/
 WORKDIR /Backend
 
 # Upgrade packages
@@ -22,5 +23,5 @@ EXPOSE 5050
 # ENTRYPOINT ["gunicorn", "-w 4","-b 0.0.0.0:5050", "main:app"]
 
 # start FastAPI uvicorn
-ENTRYPOINT ["uvicorn", "--host", "0.0.0.0","--port", "5050", "main:app"]
+ENTRYPOINT ["python", "-m", "uvicorn", "--host", "0.0.0.0","--port", "5050", "app.main:app"]
 

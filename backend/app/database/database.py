@@ -17,7 +17,7 @@ if os.path.exists(dotenv_path):
 ENV = os.environ.get('ENV')
 print(ENV)
 if ENV == "DEV":
-    mongodb_path = 'mongodb://localhost:27017'
+    mongodb_path = 'mongodb://localhost:27020'
 else:
     mongodb_path = 'mongodb://mongodb:27017'
 

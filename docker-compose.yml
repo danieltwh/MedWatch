@@ -24,7 +24,7 @@ services:
     image: mongo:jammy
     container_name: medwatch_mongodb
     ports:
-      - 27017:27017
+      - 27020:27017
     volumes:
         - './mongodb:/docker-entrypoint-initdb.d'
     #   - './mongodb/:/etc/mongo'

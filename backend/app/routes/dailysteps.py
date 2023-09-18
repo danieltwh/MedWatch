@@ -50,21 +50,13 @@ async def get_dailysteps(userId: int) -> List[DailyStepsResponse]:
 
     data = []
     for result in results:
-        data.append(DailyStepsResponse( 
-            id= result.userId, 
-            time= result.time,
-            value= result.value 
-            )
-        )
-
-    #for d in data:
-        # d['time'] = datetime.datetime.strptime(d['time'], "%d/%m/%Y %I:%M:%S %p")
-    #    d['time'] = datetime.datetime.fromisoformat(d['time'])
+        data.append({
+            "id": result.userId,
+            "time": result.time,
+            "value": result.value
+        })
     
-    data.sort(key=lambda x: datetime.datetime.fromisoformat(x.time))
-
-    #for d in data:
-    #    d['time'] = d['time'].isoformat()
+    data.sort(key=lambda x: datetime.datetime.fromisoformat(x['time']))
     
     resp_body = {
         "data": data

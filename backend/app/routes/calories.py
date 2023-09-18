@@ -7,21 +7,21 @@ import json
 import datetime
 
 # Models
-from app.database.models import HeartRate
+from app.database.models import Calories
 
 
 router = APIRouter(
-    prefix="/heartrate",
-    tags=["Heart Rate"],
+    prefix="/calories",
+    tags=["Calories"],
     responses={
         404: {"description": "Not found"}, 
         302: {"description": "The item was moved"},
         403: {"description": "Not enough privileges"},},
 )
 
-class HeartRateResponse(BaseModel):
+class CaloriesResponse(BaseModel):
     id: int
-    time: str
+    date: str
     value: int
 
 
@@ -38,30 +38,28 @@ class HeartRateResponse(BaseModel):
                     }
                 }
             },
-            "description": """Returns the list of stocker tickers that 
-            users select for more information""",
+            "description": """Returns the list of calories data for the selected user""",
         },
     },
 )
-async def get_heartrate(userId: int) -> List[HeartRateResponse]:
-    results = await HeartRate.find(HeartRate.userId == userId).to_list()
+async def get_calories(userId: int) -> List[CaloriesResponse]:
+    results = await Calories.find(Calories.userId == userId).to_list()
 
     data = []
     for result in results:
         data.append({
             "id": result.userId,
-            "time": result.time,
+            "date": result.date,
             "value": result.value
         })
 
     for d in data:
-        # d['time'] = datetime.datetime.strptime(d['time'], "%d/%m/%Y %I:%M:%S %p")
-        d['time'] = datetime.datetime.fromisoformat(d['time'])
+        d['date'] = datetime.date.fromisoformat(d['date'])
     
-    data.sort(key=lambda x: (x['time'], x["id"]))
+    data.sort(key=lambda x: (x['date'], x["id"]))
 
     for d in data:
-        d['time'] = d['time'].isoformat()
+        d['date'] = d['date'].isoformat()
     
     resp_body = {
         "data": data

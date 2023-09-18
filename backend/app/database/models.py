@@ -23,4 +23,11 @@ class UpdateHeartRate(BaseModel):
     userId: int
     time: str
     value: int
-    
+
+class Calories(Document):
+    userId: int
+    date: str
+    value: int
+
+    class Settings:
+        name = "calories"

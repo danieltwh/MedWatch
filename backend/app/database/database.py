@@ -8,7 +8,7 @@ from pydantic import BaseModel
 
 from beanie import Document, Indexed, init_beanie
 
-from .models import HeartRate
+from .models import HeartRate, DailySteps
 
 dotenv_path = os.path.join(".env")
 if os.path.exists(dotenv_path):
@@ -28,4 +28,4 @@ async def init_mongodb():
     client = AsyncIOMotorClient(mongodb_path)
 
     # Initialize beanie with the Product document class
-    await init_beanie(database=client.medwatch, document_models=[HeartRate])
+    await init_beanie(database=client.medwatch, document_models=[HeartRate,DailySteps])

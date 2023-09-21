@@ -7,8 +7,7 @@ import json
 import datetime
 
 # Models
-from app.database.models import DailyIntensity, HourlyIntensity
-
+from app.database.models import DailyIntensity, HourlyIntensity, MinuteIntensity
 
 router = APIRouter(
     prefix="/intensity",
@@ -36,6 +35,11 @@ class HourlyIntensityResponse(BaseModel):
     time: str
     total_intensity: int
     average_intensity: int
+
+class MinuteIntensityResponse(BaseModel):
+    id: int
+    time: str
+    intensity: int
 
 
 @router.get(
@@ -96,7 +100,8 @@ async def get_daily_intensity(userId: int) -> List[DailyIntensityResponse]:
             "content": {
                 "application/json": {
                     "example": {
-                        "Users": [{"time": 0, "value": 97}, {"time": 0, "value": 102}]
+                        "Users": [{"id": 159382, "time": "2016-12-04T07:21:00", "intensity": 0}, 
+                                  {"id": 159382, "time": "2016-12-04T08:21:00", "intensity": 1}]
                     }
                 }
             },
@@ -129,3 +134,41 @@ async def get_hourly_intensity(userId: int) -> List[HourlyIntensityResponse]:
     }
 
     return Response(content=json.dumps(resp_body), media_type="application/json")
+
+@router.get(
+    "/minute/{userId}",
+    response_model=List[str],
+    tags=["Health Data"],
+    responses={
+        200: {
+            "content": {
+                "application/json": {
+                    "example": {
+                        "Users": [{"id": 159382, "time": "2016-12-04T07:21:00", "intensity": 0}, 
+                                  {"id": 159382, "time": "2016-12-04T07:22:00", "intensity": 1}]
+                    }
+                }
+            },
+            "description": """Returns the list of intensity data by minute for the selected user""",
+        },
+    },
+)
+async def get_minute_intensity(userId: int) -> List[MinuteIntensityResponse]:
+    results = await MinuteIntensity.find(MinuteIntensity.userId == userId).to_list()
+
+    data = []
+    for result in results:
+        data.append({
+            "id": result.userId,
+            "time": result.time,
+            "intensity": result.intensity,
+        })
+
+    data.sort(key=lambda x: datetime.datetime.fromisoformat(x['time']))
+    
+    resp_body = {
+        "data": data
+    }
+
+    return Response(content=json.dumps(resp_body), media_type="application/json")
+

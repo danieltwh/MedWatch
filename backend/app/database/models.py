@@ -48,7 +48,7 @@ class User(PostgresBase):
             "date_created": self.date_created,
         }
 
-
+#heartrate
 class HeartRate(Document):
     userId: int
     time: str
@@ -66,11 +66,7 @@ class HeartRate(Document):
             }
         }
 
-class UpdateHeartRate(BaseModel):
-    userId: int
-    time: str
-    value: int
-
+#calories
 class DailyCalories(Document):
     userId: int
     date: str
@@ -95,6 +91,7 @@ class MinuteCalories(Document):
     class Settings:
         name = "minute_calories"
 
+#activity
 class DailyActivity(Document):
     userId: int
     date: str
@@ -115,6 +112,18 @@ class DailyActivity(Document):
     class Settings:
         name = "daily_activity"
 
+#weight
+class WeightLog(Document):
+    userId: int
+    datetime: str
+    weight_kg: float
+    #weight_pounds: float
+    bmi: float
+
+    class Settings:
+        name = "weight"
+
+#intensity
 class DailyIntensity(Document):
     userId: int
     date: str
@@ -139,6 +148,23 @@ class HourlyIntensity(Document):
     class Settings:
         name = "hourly_intensity"
 
+class MinuteIntensity(Document):
+    userId: int
+    time: str
+    intensity: int
+
+    class Settings:
+        name = "minute_intensity"
+
+#steps
+class DailyStep(Document):
+    userId: int
+    time: str
+    value: int
+    
+    class Settings:
+        name = "daily_step"
+
 class HourlyStep(Document):
     userId: int
     time: str
@@ -146,3 +172,42 @@ class HourlyStep(Document):
 
     class Settings:
         name = "hourly_step"
+
+class MinuteStep(Document):
+    userId: int
+    time: str
+    value: int
+
+    class Settings:
+        name = "minute_step"
+
+#MET (metabolic equivalent of task)
+class MET(Document):
+    userId: int
+    time: str
+    metvalue: int
+
+    class Settings:
+        name = "met"
+
+#Sleep (metabolic equivalent of task)
+class MinuteSleep(Document):
+    userId: int
+    time: str
+    value: int
+
+    class Settings:
+        name = "minute_sleep"
+
+class DailySleep(Document):
+    userId: int
+    date: str
+    sleeprecords: int
+    minutesasleep: int
+    totaltimeinbed: int
+
+    class Settings:
+        name = "daily_sleep"
+
+
+    

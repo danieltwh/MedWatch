@@ -9,8 +9,9 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from beanie import Document, Indexed, init_beanie
 
 
-from .models import HeartRate, DailyCalories, HourlyCalories, MinuteCalories, DailyActivity, \
-                    DailyIntensity, HourlyIntensity, HourlyStep
+from .models import HeartRate, DailyCalories, HourlyCalories, MinuteCalories, DailyActivity, WeightLog,\
+                    DailyIntensity, HourlyIntensity, MinuteIntensity, HourlyStep, DailyStep, MinuteStep, MET,\
+                    MinuteSleep, DailySleep
 
 # PostgreSQL
 from sqlalchemy import create_engine
@@ -18,9 +19,6 @@ from sqlalchemy.orm import sessionmaker
 
 # Redis
 import redis
-
-from .models import HeartRate
-
 
 dotenv_path = os.path.join(".env")
 if os.path.exists(dotenv_path):
@@ -45,8 +43,10 @@ async def init_mongodb():
     # Initialize beanie with the Product document class
     await init_beanie(database=client.medwatch, document_models=[HeartRate, DailyCalories, 
                                                                  HourlyCalories, MinuteCalories, 
-                                                                 DailyActivity, DailyIntensity, 
-                                                                 HourlyIntensity, HourlyStep])
+                                                                 DailyActivity, WeightLog, DailyIntensity, 
+                                                                 HourlyIntensity, MinuteIntensity, 
+                                                                 DailyStep, HourlyStep, MinuteStep, MET, 
+                                                                 MinuteSleep, DailySleep])
 
 
 # Initialise PostgreSQL Connection

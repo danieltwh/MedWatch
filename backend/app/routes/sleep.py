@@ -31,7 +31,7 @@ class MinuteSleepResponse(BaseModel):
     value: int
 
 @router.get(
-    "/daily/{userId}",
+    "/daily/{patientId}",
     response_model=List[str],
     tags=["Health Data"],
     responses={
@@ -50,13 +50,13 @@ class MinuteSleepResponse(BaseModel):
         },
     },
 )
-async def get_daily_sleep(userId: int) -> List[DailySleepResponse]:
-    results = await DailySleep.find(DailySleep.userId == userId).to_list()
+async def get_daily_sleep(patientId: int) -> List[DailySleepResponse]:
+    results = await DailySleep.find(DailySleep.patientId == patientId).to_list()
 
     data = []
     for result in results:
         data.append({
-            "id": result.userId,
+            "id": result.patientId,
             "date": result.date,
             "sleeprecords": result.sleeprecords,
             "minutesasleep":  result.minutesasleep,
@@ -72,7 +72,7 @@ async def get_daily_sleep(userId: int) -> List[DailySleepResponse]:
     return Response(content=json.dumps(resp_body), media_type="application/json")
 
 @router.get(
-    "/minute/{userId}",
+    "/minute/{patientId}",
     response_model=List[str],
     tags=["Health Data"],
     responses={
@@ -89,13 +89,13 @@ async def get_daily_sleep(userId: int) -> List[DailySleepResponse]:
         },
     },
 )
-async def get_minute_sleep(userId: int) -> List[MinuteSleepResponse]:
-    results = await MinuteSleep.find(MinuteSleep.userId == userId).to_list()
+async def get_minute_sleep(patientId: int) -> List[MinuteSleepResponse]:
+    results = await MinuteSleep.find(MinuteSleep.patientId == patientId).to_list()
 
     data = []
     for result in results:
         data.append({
-            "id": result.userId,
+            "id": result.patientId,
             "time": result.time,
             "value": result.value
         })

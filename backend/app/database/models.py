@@ -50,7 +50,7 @@ class User(PostgresBase):
 
 #heartrate
 class HeartRate(Document):
-    userId: int
+    patientId: int
     time: str
     value: int
     
@@ -67,13 +67,13 @@ class HeartRate(Document):
         }
 
 class UpdateHeartRate(BaseModel):
-    userId: int
+    patientId: int
     time: str
     value: int
 
 #calories
 class DailyCalories(Document):
-    userId: int
+    patientId: int
     date: str
     value: int
 
@@ -81,7 +81,7 @@ class DailyCalories(Document):
         name = "daily_calories"
 
 class HourlyCalories(Document):
-    userId: int
+    patientId: int
     time: str
     value: int
 
@@ -89,7 +89,7 @@ class HourlyCalories(Document):
         name = "hourly_calories"
 
 class MinuteCalories(Document):
-    userId: int
+    patientId: int
     time: str
     value: int
 
@@ -98,7 +98,7 @@ class MinuteCalories(Document):
 
 #activity
 class DailyActivity(Document):
-    userId: int
+    patientId: int
     date: str
     total_steps: int
     total_distance: int
@@ -119,7 +119,7 @@ class DailyActivity(Document):
 
 #intensity
 class DailyIntensity(Document):
-    userId: int
+    patientId: int
     date: str
     sedentary_minute: int
     lightly_active_minute: int
@@ -134,7 +134,7 @@ class DailyIntensity(Document):
         name = "daily_intensity"
 
 class HourlyIntensity(Document):
-    userId: int
+    patientId: int
     time: str
     total_intensity: int
     average_intensity: int
@@ -143,7 +143,7 @@ class HourlyIntensity(Document):
         name = "hourly_intensity"
 
 class MinuteIntensity(Document):
-    userId: int
+    patientId: int
     time: str
     intensity: int
 
@@ -152,7 +152,7 @@ class MinuteIntensity(Document):
 
 #steps
 class DailyStep(Document):
-    userId: int
+    patientId: int
     time: str
     value: int
 
@@ -160,7 +160,7 @@ class DailyStep(Document):
         name = "daily_step"
 
 class HourlyStep(Document):
-    userId: int
+    patientId: int
     time: str
     value: int
 
@@ -168,7 +168,7 @@ class HourlyStep(Document):
         name = "hourly_step"
 
 class MinuteStep(Document):
-    userId: int
+    patientId: int
     time: str
     value: int
 
@@ -177,7 +177,7 @@ class MinuteStep(Document):
     
 #met
 class MET(Document):
-    userId: int
+    patientId: int
     time: str
     metvalue: int
 
@@ -186,7 +186,7 @@ class MET(Document):
 
 #sleep
 class DailySleep(Document):
-    userId: int
+    patientId: int
     date: str
     sleeprecords: int
     minutesasleep: int
@@ -196,7 +196,7 @@ class DailySleep(Document):
         name = "daily_sleep"
 
 class MinuteSleep(Document):
-    userId: int
+    patientId: int
     time: str
     value: int
 
@@ -205,7 +205,7 @@ class MinuteSleep(Document):
 
 #weight
 class WeightLog(Document):
-    userId: int
+    patientId: int
     datetime: str
     weight_kg: float
     bmi: float

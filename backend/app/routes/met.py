@@ -24,7 +24,7 @@ class MinuteMETResponse(BaseModel):
     met: int
 
 @router.get(
-    "/minute/{userId}",
+    "/minute/{patientId}",
     response_model=List[str],
     tags=["Health Data"],
     responses={
@@ -41,13 +41,13 @@ class MinuteMETResponse(BaseModel):
         },
     },
 )
-async def get_minute_met(userId: int) -> List[MinuteMETResponse]:
-    results = await MET.find(MET.userId == userId).to_list()
+async def get_minute_met(patientId: int) -> List[MinuteMETResponse]:
+    results = await MET.find(MET.patientId == patientId).to_list()
 
     data = []
     for result in results:
         data.append({
-            "id": result.userId,
+            "id": result.patientId,
             "time": result.time,
             "met_value": result.metvalue
         })

@@ -26,7 +26,7 @@ class WeightResponse(BaseModel):
     bmi: float
 
 @router.get(
-    "/{userId}",
+    "/{patientId}",
     response_model=List[str],
     tags=["Health Data"],
     responses={
@@ -45,13 +45,13 @@ class WeightResponse(BaseModel):
         },
     },
 )
-async def get_weight(userId: int) -> List[WeightResponse]:
-    results = await WeightLog.find(WeightLog.userId == userId).to_list()
+async def get_weight(patientId: int) -> List[WeightResponse]:
+    results = await WeightLog.find(WeightLog.patientId == patientId).to_list()
 
     data = []
     for result in results:
         data.append({
-            "id": result.userId,
+            "id": result.patientId,
             "datetime": result.datetime,
             "weight_kg": result.weight_kg,
             "bmi":  result.bmi

@@ -38,7 +38,7 @@ class DailyActivityResponse(BaseModel):
 
 
 @router.get(
-    "/daily/{userId}",
+    "/daily/{patientId}",
     response_model=List[str],
     tags=["Health Data"],
     responses={
@@ -46,7 +46,7 @@ class DailyActivityResponse(BaseModel):
             "content": {
                 "application/json": {
                     "example": {
-                        "Users": [{"userId": 1,
+                        "Users": [{"patientId": 1,
                         "date": "2016-12-04",
                         "total_steps": 1,
                         "total_distance": 1,
@@ -68,13 +68,13 @@ class DailyActivityResponse(BaseModel):
         },
     },
 )
-async def get_daily_activity(userId: int) -> List[DailyActivityResponse]:
-    results = await DailyActivity.find(DailyActivity.userId == userId).to_list()
+async def get_daily_activity(patientId: int) -> List[DailyActivityResponse]:
+    results = await DailyActivity.find(DailyActivity.patientId == patientId).to_list()
 
     data = []
     for result in results:
         data.append({
-            "id": result.userId,
+            "id": result.patientId,
             "date": result.date,
             "total_steps": result.total_steps,
             "total_distance": result.total_distance,

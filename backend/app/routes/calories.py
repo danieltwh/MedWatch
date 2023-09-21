@@ -36,7 +36,7 @@ class MinuteCaloriesResponse(BaseModel):
 
 
 @router.get(
-    "/daily/{userId}",
+    "/daily/{patientId}",
     response_model=List[str],
     tags=["Health Data"],
     responses={
@@ -52,13 +52,13 @@ class MinuteCaloriesResponse(BaseModel):
         },
     },
 )
-async def get_daily_calories(userId: int) -> List[DailyCaloriesResponse]:
-    results = await DailyCalories.find(DailyCalories.userId == userId).to_list()
+async def get_daily_calories(patientId: int) -> List[DailyCaloriesResponse]:
+    results = await DailyCalories.find(DailyCalories.patientId == patientId).to_list()
 
     data = []
     for result in results:
         data.append({
-            "id": result.userId,
+            "id": result.patientId,
             "date": result.date,
             "value": result.value
         })
@@ -78,7 +78,7 @@ async def get_daily_calories(userId: int) -> List[DailyCaloriesResponse]:
     return Response(content=json.dumps(resp_body), media_type="application/json")
 
 @router.get(
-    "/hourly/{userId}",
+    "/hourly/{patientId}",
     response_model=List[str],
     tags=["Health Data"],
     responses={
@@ -94,13 +94,13 @@ async def get_daily_calories(userId: int) -> List[DailyCaloriesResponse]:
         },
     },
 )
-async def get_hourly_calories(userId: int) -> List[HourlyCaloriesResponse]:
-    results = await HourlyCalories.find(HourlyCalories.userId == userId).to_list()
+async def get_hourly_calories(patientId: int) -> List[HourlyCaloriesResponse]:
+    results = await HourlyCalories.find(HourlyCalories.patientId == patientId).to_list()
 
     data = []
     for result in results:
         data.append({
-            "id": result.userId,
+            "id": result.patientId,
             "time": result.time,
             "value": result.value
         })
@@ -120,7 +120,7 @@ async def get_hourly_calories(userId: int) -> List[HourlyCaloriesResponse]:
     return Response(content=json.dumps(resp_body), media_type="application/json")
 
 @router.get(
-    "/minute/{userId}",
+    "/minute/{patientId}",
     response_model=List[str],
     tags=["Health Data"],
     responses={
@@ -136,13 +136,13 @@ async def get_hourly_calories(userId: int) -> List[HourlyCaloriesResponse]:
         },
     },
 )
-async def get_minute_calories(userId: int) -> List[MinuteCaloriesResponse]:
-    results = await MinuteCalories.find(MinuteCalories.userId == userId).to_list()
+async def get_minute_calories(patientId: int) -> List[MinuteCaloriesResponse]:
+    results = await MinuteCalories.find(MinuteCalories.patientId == patientId).to_list()
 
     data = []
     for result in results:
         data.append({
-            "id": result.userId,
+            "id": result.patientId,
             "time": result.time,
             "value": result.value
         })

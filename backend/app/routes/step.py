@@ -36,7 +36,7 @@ class MinuteStepsResponse(BaseModel):
 
 
 @router.get(
-    "/hourly/{userId}",
+    "/hourly/{patientId}",
     response_model=List[str],
     tags=["Health Data"],
     responses={
@@ -52,13 +52,13 @@ class MinuteStepsResponse(BaseModel):
         },
     },
 )
-async def get_hourly_steps(userId: int) -> List[HourlyStepResponse]:
-    results = await HourlyStep.find(HourlyStep.userId == userId).to_list()
+async def get_hourly_steps(patientId: int) -> List[HourlyStepResponse]:
+    results = await HourlyStep.find(HourlyStep.patientId == patientId).to_list()
 
     data = []
     for result in results:
         data.append({
-            "id": result.userId,
+            "id": result.patientId,
             "time": result.time,
             "value": result.value
         })
@@ -79,7 +79,7 @@ async def get_hourly_steps(userId: int) -> List[HourlyStepResponse]:
 
 
 @router.get(
-    "/daily/{userId}",
+    "/daily/{patientId}",
     response_model=List[str],
     tags=["Health Data"],
     responses={
@@ -98,13 +98,13 @@ async def get_hourly_steps(userId: int) -> List[HourlyStepResponse]:
         },
     },
 )
-async def get_daily_steps(userId: int) -> List[DailyStepsResponse]:
-    results = await DailyStep.find(DailyStep.userId == userId).to_list()
+async def get_daily_steps(patientId: int) -> List[DailyStepsResponse]:
+    results = await DailyStep.find(DailyStep.patientId == patientId).to_list()
 
     data = []
     for result in results:
         data.append({
-            "id": result.userId, 
+            "id": result.patientId, 
             "time": result.time,
             "value": result.value 
             })
@@ -118,7 +118,7 @@ async def get_daily_steps(userId: int) -> List[DailyStepsResponse]:
     return Response(content=json.dumps(resp_body), media_type="application/json")
 
 @router.get(
-    "/minute/{userId}",
+    "/minute/{patientId}",
     response_model=List[str],
     tags=["Health Data"],
     responses={
@@ -137,13 +137,13 @@ async def get_daily_steps(userId: int) -> List[DailyStepsResponse]:
         },
     },
 )
-async def get_minute_steps(userId: int) -> List[MinuteStepsResponse]:
-    results = await MinuteStep.find(MinuteStep.userId == userId).to_list()
+async def get_minute_steps(patientId: int) -> List[MinuteStepsResponse]:
+    results = await MinuteStep.find(MinuteStep.patientId == patientId).to_list()
 
     data = []
     for result in results:
         data.append({
-            "id": result.userId, 
+            "id": result.patientId, 
             "time": result.time,
             "value": result.value 
             })

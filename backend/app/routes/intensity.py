@@ -43,7 +43,7 @@ class MinuteIntensityResponse(BaseModel):
 
 
 @router.get(
-    "/daily/{userId}",
+    "/daily/{patientId}",
     response_model=List[str],
     tags=["Health Data"],
     responses={
@@ -59,13 +59,13 @@ class MinuteIntensityResponse(BaseModel):
         },
     },
 )
-async def get_daily_intensity(userId: int) -> List[DailyIntensityResponse]:
-    results = await DailyIntensity.find(DailyIntensity.userId == userId).to_list()
+async def get_daily_intensity(patientId: int) -> List[DailyIntensityResponse]:
+    results = await DailyIntensity.find(DailyIntensity.patientId == patientId).to_list()
 
     data = []
     for result in results:
         data.append({
-            "id": result.userId,
+            "id": result.patientId,
             "date": result.date,
             "sedentary_minute": result.sedentary_minute,
             "lightly_active_minute": result.lightly_active_minute,
@@ -92,7 +92,7 @@ async def get_daily_intensity(userId: int) -> List[DailyIntensityResponse]:
     return Response(content=json.dumps(resp_body), media_type="application/json")
 
 @router.get(
-    "/hourly/{userId}",
+    "/hourly/{patientId}",
     response_model=List[str],
     tags=["Health Data"],
     responses={
@@ -109,13 +109,13 @@ async def get_daily_intensity(userId: int) -> List[DailyIntensityResponse]:
         },
     },
 )
-async def get_hourly_intensity(userId: int) -> List[HourlyIntensityResponse]:
-    results = await HourlyIntensity.find(HourlyIntensity.userId == userId).to_list()
+async def get_hourly_intensity(patientId: int) -> List[HourlyIntensityResponse]:
+    results = await HourlyIntensity.find(HourlyIntensity.patientId == patientId).to_list()
 
     data = []
     for result in results:
         data.append({
-            "id": result.userId,
+            "id": result.patientId,
             "time": result.time,
             "total_intensity": result.total_intensity,
             "average_intensity": result.average_intensity
@@ -136,7 +136,7 @@ async def get_hourly_intensity(userId: int) -> List[HourlyIntensityResponse]:
     return Response(content=json.dumps(resp_body), media_type="application/json")
 
 @router.get(
-    "/minute/{userId}",
+    "/minute/{patientId}",
     response_model=List[str],
     tags=["Health Data"],
     responses={
@@ -153,13 +153,13 @@ async def get_hourly_intensity(userId: int) -> List[HourlyIntensityResponse]:
         },
     },
 )
-async def get_minute_intensity(userId: int) -> List[MinuteIntensityResponse]:
-    results = await MinuteIntensity.find(MinuteIntensity.userId == userId).to_list()
+async def get_minute_intensity(patientId: int) -> List[MinuteIntensityResponse]:
+    results = await MinuteIntensity.find(MinuteIntensity.patientId == patientId).to_list()
 
     data = []
     for result in results:
         data.append({
-            "id": result.userId,
+            "id": result.patientId,
             "time": result.time,
             "intensity": result.intensity,
         })

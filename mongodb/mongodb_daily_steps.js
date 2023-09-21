@@ -6,7 +6,7 @@ const conn = connect('mongodb://localhost:27017')
 var db = conn.getSiblingDB("medwatch")
 
 // Insert documents
-db.dailysteps.insertMany([
+db.daily_step.insertMany([
     {"userId": 1, "time": "2016-12-04T07:21:00", "value": 10205}, 
     {"userId": 1, "time": "2016-12-05T07:21:00", "value": 10206}, 
     {"userId": 1, "time": "2016-12-06T07:21:00", "value": 10524}, 

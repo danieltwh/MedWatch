@@ -7,53 +7,49 @@ import json
 import datetime
 
 # Models
-from app.database.models import DailySteps
-
+from app.database.models import MET
 
 router = APIRouter(
-    prefix="/dailysteps",
-    tags=["Daily Steps"],
+    prefix="/met",
+    tags=["MET"],
     responses={
         404: {"description": "Not found"}, 
         302: {"description": "The item was moved"},
         403: {"description": "Not enough privileges"},},
 )
 
-class DailyStepsResponse(BaseModel):
+class MinuteMETResponse(BaseModel):
     id: int
     time: str
-    value: int
-
+    met: int
 
 @router.get(
-    "/{userId}",
+    "/minute/{userId}",
     response_model=List[str],
-    tags=["Daily Steps Data for User ID"],
+    tags=["Health Data"],
     responses={
         200: {
             "content": {
                 "application/json": {
                     "example": {
-                        "data": [
-                            {"id": 500, "time": "2016-12-04T07:21:00", "value": 10102}, 
-                            {"id": 500, "time": "2016-12-05T07:21:00", "value": 11250}
-                            ]
+                        "Users": [{"id": 1503960366, "time": "2016-12-04T07:21:00", "met": 10}, 
+                                  {"id": 1503960366, "time": "2016-12-04T07:22:00", "met": 12}]
                     }
                 }
             },
-            "description": """Daily steps data for given userID""",
+            "description": """Returns the list of MET values by minute for the selected user""",
         },
     },
 )
-async def get_dailysteps(userId: int) -> List[DailyStepsResponse]:
-    results = await DailySteps.find(DailySteps.userId == userId).to_list()
+async def get_minute_met(userId: int) -> List[MinuteMETResponse]:
+    results = await MET.find(MET.userId == userId).to_list()
 
     data = []
     for result in results:
         data.append({
             "id": result.userId,
             "time": result.time,
-            "value": result.value
+            "met_value": result.metvalue
         })
     
     data.sort(key=lambda x: datetime.datetime.fromisoformat(x['time']))
@@ -63,3 +59,4 @@ async def get_dailysteps(userId: int) -> List[DailyStepsResponse]:
     }
 
     return Response(content=json.dumps(resp_body), media_type="application/json")
+

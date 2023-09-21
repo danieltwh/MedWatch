@@ -13,6 +13,8 @@ from app.routes import routes
 from app.utils import serialize_datetime
 from app.database.database import init_mongodb
 
+# from app.security import aut
+
 responses = {
     404: {"description": "Item not found"},
     302: {"description": "The item was moved"},
@@ -87,55 +89,55 @@ async def home():
 
 
 ########################################
-@app.get(
-    "/users",
-    response_model=List[str],
-    tags=["Administrative"],
-    responses={
-        **responses,
-        200: {
-            "content": {
-                "application/json": {
-                    "example": {
-                        "Users": [
-                            {
-                                "userId": 0,
-                                "firstname": "Chad",
-                                "lastname": "Richman",
-                                "email": "chad@example.com",
-                            },
-                            {
-                                "userId": 1,
-                                "firstname": "Les",
-                                "lastname": "Goh",
-                                "email": "les@example.com",
-                            },
-                        ]
-                    }
-                }
-            },
-            "description": """Returns the list of stocker tickers that 
-            users select for more information""",
-        },
-    },
-)
-async def get_all_users():
-    result = {
-        "Users": [
-            {
-                "userId": 0,
-                "firstname": "Chad",
-                "lastname": "Richman",
-                "email": "chad@example.com",
-            },
-            {
-                "userId": 1,
-                "firstname": "Les",
-                "lastname": "Goh",
-                "email": "les@example.com",
-            },
-        ]
-    }
-    return Response(content=json.dumps(result), media_type="application/json")
+# @app.get(
+#     "/users",
+#     response_model=List[str],
+#     tags=["Administrative"],
+#     responses={
+#         **responses,
+#         200: {
+#             "content": {
+#                 "application/json": {
+#                     "example": {
+#                         "Users": [
+#                             {
+#                                 "userId": 0,
+#                                 "firstname": "Chad",
+#                                 "lastname": "Richman",
+#                                 "email": "chad@example.com",
+#                             },
+#                             {
+#                                 "userId": 1,
+#                                 "firstname": "Les",
+#                                 "lastname": "Goh",
+#                                 "email": "les@example.com",
+#                             },
+#                         ]
+#                     }
+#                 }
+#             },
+#             "description": """Returns the list of stocker tickers that 
+#             users select for more information""",
+#         },
+#     },
+# )
+# async def get_all_users():
+#     result = {
+#         "Users": [
+#             {
+#                 "userId": 0,
+#                 "firstname": "Chad",
+#                 "lastname": "Richman",
+#                 "email": "chad@example.com",
+#             },
+#             {
+#                 "userId": 1,
+#                 "firstname": "Les",
+#                 "lastname": "Goh",
+#                 "email": "les@example.com",
+#             },
+#         ]
+#     }
+#     return Response(content=json.dumps(result), media_type="application/json")
 
 

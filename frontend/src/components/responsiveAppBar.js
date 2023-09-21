@@ -13,14 +13,18 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 
-import {Outlet, Link} from "react-router-dom";
+import {Outlet, Link, useNavigate} from "react-router-dom";
+
+import { logout } from '../api/api';
 
 const pages = ['Home', 'Dashboard', 'XXX'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const settings = ['Profile', 'Account', 'Dashboard'];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+
+  const nav = useNavigate();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -37,6 +41,19 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
 
+  const handleLogout = async () => {
+    handleCloseNavMenu();
+    const resp = await logout();
+    if(resp.status == 200 && resp.body == "OK") {
+      console.log('Successfully logged out.')
+    }
+    localStorage.removeItem("authenticated");
+    localStorage.removeItem("token");
+    localStorage.removeItem("token_type");
+    nav("/login", {replace: true})
+    // nav("/")
+  }
+
   return (
     <>
       <AppBar position="static" sx={{backgroundColor:"#3699db"}}>
@@ -50,7 +67,7 @@ function ResponsiveAppBar() {
               variant="h6"
               noWrap
               component="a"
-              href="/"
+              href="/home"
               sx={{
                 mr: 2,
                 display: { xs: 'none', md: 'flex' },
@@ -94,7 +111,11 @@ function ResponsiveAppBar() {
                 }}
               >
                 {pages.map((page) => (
-                  <MenuItem key={page} onClick={handleCloseNavMenu}>
+                  <MenuItem key={page} onClick={handleCloseNavMenu} 
+                  component={Link} 
+           
+                  to={`/${page}`}
+                  >
                     <Typography textAlign="center">{page}</Typography>
                   </MenuItem>
                 ))}
@@ -125,6 +146,7 @@ function ResponsiveAppBar() {
                   key={page}
                   onClick={handleCloseNavMenu}
                   sx={{ my: 2, color: 'white', display: 'block' }}
+                  href={`/${page}`}
                 >
                   {page}
                 </Button>
@@ -158,6 +180,10 @@ function ResponsiveAppBar() {
                     <Typography textAlign="center">{setting}</Typography>
                   </MenuItem>
                 ))}
+
+                <MenuItem key="logout" onClick={handleLogout}>
+                    <Typography textAlign="center">Logout</Typography>
+                </MenuItem>
               </Menu>
             </Box>
           </Toolbar>

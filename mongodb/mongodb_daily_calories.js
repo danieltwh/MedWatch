@@ -6,7 +6,7 @@ const conn = connect('mongodb://localhost:27017')
 var db = conn.getSiblingDB("medwatch")
 
 // Insert documents
-db.calories.insertMany([
+db.daily_calories.insertMany([
     {"userId": 1, "date": "2016-12-04", "value": 97}, 
     {"userId": 1, "date": "2016-12-04", "value": 102}, 
     {"userId": 1, "date": "2016-12-04", "value": 105}, 

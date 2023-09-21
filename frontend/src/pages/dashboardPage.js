@@ -1,5 +1,6 @@
 import '../App.css';
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Chart from "chart.js/auto"
 
 import { 
@@ -15,12 +16,21 @@ import { DateTime } from 'luxon';
 function DashboardPage() {
   const [heartRateData, setHeartRateData] = useState([]);
 
+  const nav = useNavigate();
 
   const fetchData = async () => {
     let userHeartRate = await heartrateAPI().catch(error => {
       console.log('There was an error', error);
     });
-    setHeartRateData(userHeartRate);
+    if (userHeartRate.status == 200) {
+      setHeartRateData(userHeartRate.body);
+    } else if (userHeartRate.status == 401) {
+      // Logout
+      localStorage.removeItem("authenticated");
+      localStorage.removeItem("token");
+      localStorage.removeItem("token_type");
+      nav("/", {replace: true})
+    }
   }
 
   useEffect(() => {

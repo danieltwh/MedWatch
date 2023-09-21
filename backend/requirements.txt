@@ -2,12 +2,17 @@ beanie
 fastapi
 motor
 pika
-psycopg2
+# psycopg2
+psycopg2-binary
 PyJWT
 python-dotenv
+python-multipart
+pytz
+redis
 regex
 requests
 SQLAlchemy
 typing
+typing-extensions
 urllib3
 uvicorn

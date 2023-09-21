@@ -8,6 +8,10 @@ from pydantic import BaseModel
 from motor.motor_asyncio import AsyncIOMotorClient
 from beanie import Document, Indexed, init_beanie
 
+
+from .models import HeartRate, DailyCalories, HourlyCalories, MinuteCalories, DailyActivity, \
+                    DailyIntensity, HourlyIntensity, HourlyStep
+
 # PostgreSQL
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -16,6 +20,7 @@ from sqlalchemy.orm import sessionmaker
 import redis
 
 from .models import HeartRate
+
 
 dotenv_path = os.path.join(".env")
 if os.path.exists(dotenv_path):
@@ -38,7 +43,11 @@ async def init_mongodb():
     client = AsyncIOMotorClient(mongodb_path)
 
     # Initialize beanie with the Product document class
-    await init_beanie(database=client.medwatch, document_models=[HeartRate])
+    await init_beanie(database=client.medwatch, document_models=[HeartRate, DailyCalories, 
+                                                                 HourlyCalories, MinuteCalories, 
+                                                                 DailyActivity, DailyIntensity, 
+                                                                 HourlyIntensity, HourlyStep])
+
 
 # Initialise PostgreSQL Connection
 engine = create_engine(
@@ -55,5 +64,3 @@ def init_postgres():
 
 # Init redis
 redis_conn = redis.Redis(host=redis_path, port=6379, db=0)
-
-    

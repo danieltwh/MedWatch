@@ -1,13 +1,18 @@
-from fastapi import APIRouter,  Response, HTTPException, status
+from fastapi import APIRouter,  Response, HTTPException, status, Depends
 from pydantic import BaseModel
 
 # Other libraries
-from typing import Union, List
+from typing import Union, List, Tuple
+from typing_extensions import Annotated
 import json
 import datetime
+import os
 
 # Models
 from app.database.models import HeartRate
+
+# Security
+from app.security.authentication import oauth2_scheme, Token, Credentials, User, hash_new_password, check_password, generate_token, authenticate_user
 
 
 router = APIRouter(
@@ -43,7 +48,7 @@ class HeartRateResponse(BaseModel):
         },
     },
 )
-async def get_heartrate(userId: int) -> List[HeartRateResponse]:
+async def get_heartrate(userId: int, user: Annotated[User, Depends(authenticate_user)]) -> List[HeartRateResponse]:
     results = await HeartRate.find(HeartRate.userId >= userId).to_list()
 
     data = []

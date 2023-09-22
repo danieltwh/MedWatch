@@ -8,7 +8,7 @@ var db = conn.getSiblingDB("medwatch")
 // Insert documents
 db.daily_intensity.insertMany([
     {
-        "userId": 1,
+        "patientId": 1,
         "date": "2016-12-04",
         "sedentary_minute": 1,
         "lightly_active_minute": 1,

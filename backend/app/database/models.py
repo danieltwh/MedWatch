@@ -50,7 +50,7 @@ class User(PostgresBase):
 
 
 class HeartRate(Document):
-    userId: int
+    patientId: int
     time: str
     value: int
     
@@ -67,12 +67,12 @@ class HeartRate(Document):
         }
 
 class UpdateHeartRate(BaseModel):
-    userId: int
+    patientId: int
     time: str
     value: int
 
 class DailyCalories(Document):
-    userId: int
+    patientId: int
     date: str
     value: int
 
@@ -80,7 +80,7 @@ class DailyCalories(Document):
         name = "daily_calories"
 
 class HourlyCalories(Document):
-    userId: int
+    patientId: int
     time: str
     value: int
 
@@ -88,7 +88,7 @@ class HourlyCalories(Document):
         name = "hourly_calories"
 
 class MinuteCalories(Document):
-    userId: int
+    patientId: int
     time: str
     value: int
 
@@ -96,7 +96,7 @@ class MinuteCalories(Document):
         name = "minute_calories"
 
 class DailyActivity(Document):
-    userId: int
+    patientId: int
     date: str
     total_steps: int
     total_distance: int
@@ -116,7 +116,7 @@ class DailyActivity(Document):
         name = "daily_activity"
 
 class DailyIntensity(Document):
-    userId: int
+    patientId: int
     date: str
     sedentary_minute: int
     lightly_active_minute: int
@@ -131,7 +131,7 @@ class DailyIntensity(Document):
         name = "daily_intensity"
 
 class HourlyIntensity(Document):
-    userId: int
+    patientId: int
     time: str
     total_intensity: int
     average_intensity: int
@@ -140,7 +140,7 @@ class HourlyIntensity(Document):
         name = "hourly_intensity"
 
 class HourlyStep(Document):
-    userId: int
+    patientId: int
     time: str
     value: int
 

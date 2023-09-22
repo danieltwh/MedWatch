@@ -1,13 +1,17 @@
-from fastapi import APIRouter,  Response, HTTPException, status
+from fastapi import APIRouter,  Response, HTTPException, status, Depends
 from pydantic import BaseModel
 
 # Other libraries
-from typing import Union, List
+from typing import Union, List, Tuple
+from typing_extensions import Annotated
 import json
 import datetime
 
 # Models
 from app.database.models import DailyIntensity, HourlyIntensity
+
+# Security
+from app.security.authentication import oauth2_scheme, Token, Credentials, User, hash_new_password, check_password, generate_token, authenticate_user
 
 
 router = APIRouter(
@@ -39,7 +43,7 @@ class HourlyIntensityResponse(BaseModel):
 
 
 @router.get(
-    "/daily/{userId}",
+    "/daily/{patientId}",
     response_model=List[str],
     tags=["Health Data"],
     responses={
@@ -51,17 +55,17 @@ class HourlyIntensityResponse(BaseModel):
                     }
                 }
             },
-            "description": """Returns the list of daily intensity data for the selected user""",
+            "description": """Returns the list of daily intensity data for the selected patient""",
         },
     },
 )
-async def get_daily_intensity(userId: int) -> List[DailyIntensityResponse]:
-    results = await DailyIntensity.find(DailyIntensity.userId == userId).to_list()
+async def get_daily_intensity(patientId: int, user: Annotated[User, Depends(authenticate_user)]) -> List[DailyIntensityResponse]:
+    results = await DailyIntensity.find(DailyIntensity.patientId == patientId).to_list()
 
     data = []
     for result in results:
         data.append({
-            "id": result.userId,
+            "id": result.patientId,
             "date": result.date,
             "sedentary_minute": result.sedentary_minute,
             "lightly_active_minute": result.lightly_active_minute,
@@ -88,7 +92,7 @@ async def get_daily_intensity(userId: int) -> List[DailyIntensityResponse]:
     return Response(content=json.dumps(resp_body), media_type="application/json")
 
 @router.get(
-    "/hourly/{userId}",
+    "/hourly/{patientId}",
     response_model=List[str],
     tags=["Health Data"],
     responses={
@@ -100,17 +104,17 @@ async def get_daily_intensity(userId: int) -> List[DailyIntensityResponse]:
                     }
                 }
             },
-            "description": """Returns the list of hourly intensity data for the selected user""",
+            "description": """Returns the list of hourly intensity data for the selected patient""",
         },
     },
 )
-async def get_hourly_intensity(userId: int) -> List[HourlyIntensityResponse]:
-    results = await HourlyIntensity.find(HourlyIntensity.userId == userId).to_list()
+async def get_hourly_intensity(patientId: int, user: Annotated[User, Depends(authenticate_user)]) -> List[HourlyIntensityResponse]:
+    results = await HourlyIntensity.find(HourlyIntensity.patientId == patientId).to_list()
 
     data = []
     for result in results:
         data.append({
-            "id": result.userId,
+            "id": result.patientId,
             "time": result.time,
             "total_intensity": result.total_intensity,
             "average_intensity": result.average_intensity

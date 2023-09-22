@@ -1,13 +1,17 @@
-from fastapi import APIRouter,  Response, HTTPException, status
+from fastapi import APIRouter,  Response, HTTPException, status, Depends
 from pydantic import BaseModel
 
 # Other libraries
-from typing import Union, List
+from typing import Union, List, Tuple
+from typing_extensions import Annotated
 import json
 import datetime
 
 # Models
 from app.database.models import HourlyStep
+
+# Security
+from app.security.authentication import oauth2_scheme, Token, Credentials, User, hash_new_password, check_password, generate_token, authenticate_user
 
 
 router = APIRouter(
@@ -26,7 +30,7 @@ class HourlyStepResponse(BaseModel):
 
 
 @router.get(
-    "/hourly/{userId}",
+    "/hourly/{patientId}",
     response_model=List[str],
     tags=["Health Data"],
     responses={
@@ -38,17 +42,17 @@ class HourlyStepResponse(BaseModel):
                     }
                 }
             },
-            "description": """Returns the list of hourly step data for the selected user""",
+            "description": """Returns the list of hourly step data for the selected patient""",
         },
     },
 )
-async def get_hourly_calories(userId: int) -> List[HourlyStepResponse]:
-    results = await HourlyStep.find(HourlyStep.userId == userId).to_list()
+async def get_hourly_calories(patientId: int, user: Annotated[User, Depends(authenticate_user)]) -> List[HourlyStepResponse]:
+    results = await HourlyStep.find(HourlyStep.patientId == patientId).to_list()
 
     data = []
     for result in results:
         data.append({
-            "id": result.userId,
+            "id": result.patientId,
             "time": result.time,
             "value": result.value
         })

@@ -1,13 +1,17 @@
-from fastapi import APIRouter,  Response, HTTPException, status
+from fastapi import APIRouter,  Response, HTTPException, status, Depends
 from pydantic import BaseModel
 
 # Other libraries
-from typing import Union, List
+from typing import Union, List, Tuple
+from typing_extensions import Annotated
 import json
 import datetime
 
 # Models
 from app.database.models import DailyActivity
+
+# Security
+from app.security.authentication import oauth2_scheme, Token, Credentials, User, hash_new_password, check_password, generate_token, authenticate_user
 
 
 router = APIRouter(
@@ -38,7 +42,7 @@ class DailyActivityResponse(BaseModel):
 
 
 @router.get(
-    "/daily/{userId}",
+    "/daily/{patientId}",
     response_model=List[str],
     tags=["Health Data"],
     responses={
@@ -50,17 +54,17 @@ class DailyActivityResponse(BaseModel):
                     }
                 }
             },
-            "description": """Returns the list of daily activity data for the selected user""",
+            "description": """Returns the list of daily activity data for the selected patient""",
         },
     },
 )
-async def get_daily_activity(userId: int) -> List[DailyActivityResponse]:
-    results = await DailyActivity.find(DailyActivity.userId == userId).to_list()
+async def get_daily_activity(patientId: int, user: Annotated[User, Depends(authenticate_user)]) -> List[DailyActivityResponse]:
+    results = await DailyActivity.find(DailyActivity.patientId == patientId).to_list()
 
     data = []
     for result in results:
         data.append({
-            "id": result.userId,
+            "id": result.patientId,
             "date": result.date,
             "total_steps": result.total_steps,
             "total_distance": result.total_distance,

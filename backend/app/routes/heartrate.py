@@ -31,7 +31,7 @@ class HeartRateResponse(BaseModel):
 
 
 @router.get(
-    "/{userId}",
+    "/{patientId}",
     response_model=List[str],
     tags=["Health Data"],
     responses={
@@ -48,13 +48,13 @@ class HeartRateResponse(BaseModel):
         },
     },
 )
-async def get_heartrate(userId: int, user: Annotated[User, Depends(authenticate_user)]) -> List[HeartRateResponse]:
-    results = await HeartRate.find(HeartRate.userId == userId).to_list()
+async def get_heartrate(patientId: int, user: Annotated[User, Depends(authenticate_user)]) -> List[HeartRateResponse]:
+    results = await HeartRate.find(HeartRate.patientId == patientId).to_list()
 
     data = []
     for result in results:
         data.append({
-            "id": result.userId,
+            "id": result.patientId,
             "time": result.time,
             "value": result.value
         })

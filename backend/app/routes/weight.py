@@ -1,13 +1,17 @@
-from fastapi import APIRouter,  Response, HTTPException, status
+from fastapi import APIRouter,  Response, HTTPException, status, Depends
 from pydantic import BaseModel
 
 # Other libraries
 from typing import Union, List
+from typing_extensions import Annotated
 import json
 import datetime
 
 # Models
 from app.database.models import WeightLog
+
+# Security
+from app.security.authentication import oauth2_scheme, Token, Credentials, User, hash_new_password, check_password, generate_token, authenticate_user
 
 router = APIRouter(
     prefix="/weight",
@@ -45,7 +49,7 @@ class WeightResponse(BaseModel):
         },
     },
 )
-async def get_weight(patientId: int) -> List[WeightResponse]:
+async def get_weight(patientId: int, user: Annotated[User, Depends(authenticate_user)]) -> List[WeightResponse]:
     results = await WeightLog.find(WeightLog.patientId == patientId).to_list()
 
     data = []

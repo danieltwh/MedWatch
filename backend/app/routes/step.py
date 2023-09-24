@@ -1,14 +1,17 @@
-from fastapi import APIRouter,  Response, HTTPException, status
+from fastapi import APIRouter,  Response, HTTPException, status, Depends
 from pydantic import BaseModel
 
 # Other libraries
 from typing import Union, List
+from typing_extensions import Annotated
 import json
 import datetime
 
 # Models
 from app.database.models import HourlyStep, DailyStep, MinuteStep
 
+# Security
+from app.security.authentication import oauth2_scheme, Token, Credentials, User, hash_new_password, check_password, generate_token, authenticate_user
 
 router = APIRouter(
     prefix="/step",
@@ -98,7 +101,7 @@ async def get_hourly_steps(patientId: int) -> List[HourlyStepResponse]:
         },
     },
 )
-async def get_daily_steps(patientId: int) -> List[DailyStepsResponse]:
+async def get_daily_steps(patientId: int, user: Annotated[User, Depends(authenticate_user)]) -> List[DailyStepsResponse]:
     results = await DailyStep.find(DailyStep.patientId == patientId).to_list()
 
     data = []
@@ -137,7 +140,7 @@ async def get_daily_steps(patientId: int) -> List[DailyStepsResponse]:
         },
     },
 )
-async def get_minute_steps(patientId: int) -> List[MinuteStepsResponse]:
+async def get_minute_steps(patientId: int, user: Annotated[User, Depends(authenticate_user)]) -> List[MinuteStepsResponse]:
     results = await MinuteStep.find(MinuteStep.patientId == patientId).to_list()
 
     data = []

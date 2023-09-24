@@ -1,13 +1,17 @@
-from fastapi import APIRouter,  Response, HTTPException, status
+from fastapi import APIRouter,  Response, HTTPException, status, Depends
 from pydantic import BaseModel
 
 # Other libraries
 from typing import Union, List
+from typing_extensions import Annotated
 import json
 import datetime
 
 # Models
 from app.database.models import MinuteSleep, DailySleep
+
+# Security
+from app.security.authentication import oauth2_scheme, Token, Credentials, User, hash_new_password, check_password, generate_token, authenticate_user
 
 router = APIRouter(
     prefix="/sleep",
@@ -50,7 +54,7 @@ class MinuteSleepResponse(BaseModel):
         },
     },
 )
-async def get_daily_sleep(patientId: int) -> List[DailySleepResponse]:
+async def get_daily_sleep(patientId: int, user: Annotated[User, Depends(authenticate_user)]) -> List[DailySleepResponse]:
     results = await DailySleep.find(DailySleep.patientId == patientId).to_list()
 
     data = []
@@ -89,7 +93,7 @@ async def get_daily_sleep(patientId: int) -> List[DailySleepResponse]:
         },
     },
 )
-async def get_minute_sleep(patientId: int) -> List[MinuteSleepResponse]:
+async def get_minute_sleep(patientId: int, user: Annotated[User, Depends(authenticate_user)]) -> List[MinuteSleepResponse]:
     results = await MinuteSleep.find(MinuteSleep.patientId == patientId).to_list()
 
     data = []

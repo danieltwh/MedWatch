@@ -1,13 +1,17 @@
-from fastapi import APIRouter,  Response, HTTPException, status
+from fastapi import APIRouter,  Response, HTTPException, status, Depends
 from pydantic import BaseModel
 
 # Other libraries
 from typing import Union, List
+from typing_extensions import Annotated
 import json
 import datetime
 
 # Models
 from app.database.models import MET
+
+# Security
+from app.security.authentication import oauth2_scheme, Token, Credentials, User, hash_new_password, check_password, generate_token, authenticate_user
 
 router = APIRouter(
     prefix="/met",
@@ -41,7 +45,7 @@ class MinuteMETResponse(BaseModel):
         },
     },
 )
-async def get_minute_met(patientId: int) -> List[MinuteMETResponse]:
+async def get_minute_met(patientId: int, user: Annotated[User, Depends(authenticate_user)]) -> List[MinuteMETResponse]:
     results = await MET.find(MET.patientId == patientId).to_list()
 
     data = []

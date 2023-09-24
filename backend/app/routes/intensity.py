@@ -1,13 +1,17 @@
-from fastapi import APIRouter,  Response, HTTPException, status
+from fastapi import APIRouter,  Response, HTTPException, status, Depends
 from pydantic import BaseModel
 
 # Other libraries
 from typing import Union, List
+from typing_extensions import Annotated
 import json
 import datetime
 
 # Models
 from app.database.models import DailyIntensity, HourlyIntensity, MinuteIntensity
+
+# Security
+from app.security.authentication import oauth2_scheme, Token, Credentials, User, hash_new_password, check_password, generate_token, authenticate_user
 
 router = APIRouter(
     prefix="/intensity",
@@ -153,7 +157,7 @@ async def get_hourly_intensity(patientId: int) -> List[HourlyIntensityResponse]:
         },
     },
 )
-async def get_minute_intensity(patientId: int) -> List[MinuteIntensityResponse]:
+async def get_minute_intensity(patientId: int, user: Annotated[User, Depends(authenticate_user)]) -> List[MinuteIntensityResponse]:
     results = await MinuteIntensity.find(MinuteIntensity.patientId == patientId).to_list()
 
     data = []

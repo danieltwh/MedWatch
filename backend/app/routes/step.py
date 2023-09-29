@@ -26,7 +26,7 @@ router = APIRouter(
 class HourlyStepResponse(BaseModel):
     id: int
     time: str
-    value: int
+    value: float
 
 
 @router.get(

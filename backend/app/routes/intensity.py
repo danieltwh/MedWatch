@@ -26,20 +26,20 @@ router = APIRouter(
 class DailyIntensityResponse(BaseModel):
     id: int
     date: str
-    sedentary_minute: int
-    lightly_active_minute: int
-    fairly_active_minute: int
-    very_active_minute: int
-    sedentary_active_distance: int
-    light_active_distance: int
-    moderately_active_distance: int
-    very_active_distance: int
+    sedentary_minute: float
+    lightly_active_minute: float
+    fairly_active_minute: float
+    very_active_minute: float
+    sedentary_active_distance: float
+    light_active_distance: float
+    moderately_active_distance: float
+    very_active_distance: float
 
 class HourlyIntensityResponse(BaseModel):
     id: int
     time: str
-    total_intensity: int
-    average_intensity: int
+    total_intensity: float
+    average_intensity: float
 
 
 @router.get(

@@ -26,17 +26,17 @@ router = APIRouter(
 class DailyCaloriesResponse(BaseModel):
     id: int
     date: str
-    value: int
+    value: float
 
 class HourlyCaloriesResponse(BaseModel):
     id: int
     time: str
-    value: int
+    value: float
 
 class MinuteCaloriesResponse(BaseModel):
     id: int
     time: str
-    value: int
+    value: float
 
 
 @router.get(

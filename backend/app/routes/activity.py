@@ -26,19 +26,19 @@ router = APIRouter(
 class DailyActivityResponse(BaseModel):
     id: int
     date: str
-    total_steps: int
-    total_distance: int
-    tracker_distance: int
-    logged_activities_distance: int
-    very_active_distance: int
-    moderately_active_distance: int
-    light_active_distance: int
-    sedentary_active_distance: int
-    very_active_minute: int
-    fairly_active_minute: int
-    light_active_minute: int
-    sedentary_minute: int
-    calories: int
+    total_steps: float
+    total_distance: float
+    tracker_distance: float
+    logged_activities_distance: float
+    very_active_distance: float
+    moderately_active_distance: float
+    light_active_distance: float
+    sedentary_active_distance: float
+    very_active_minute: float
+    fairly_active_minute: float
+    light_active_minute: float
+    sedentary_minute: float
+    calories: float
 
 
 @router.get(

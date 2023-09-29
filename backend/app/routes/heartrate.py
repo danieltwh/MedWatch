@@ -27,7 +27,7 @@ router = APIRouter(
 class HeartRateResponse(BaseModel):
     id: int
     time: str
-    value: int
+    value: float
 
 
 @router.get(

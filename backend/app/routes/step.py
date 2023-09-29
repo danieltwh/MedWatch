@@ -1,37 +1,32 @@
-from fastapi import APIRouter,  Response, HTTPException, status, Depends
+from fastapi import APIRouter,  Response, HTTPException, status
 from pydantic import BaseModel
 
 # Other libraries
-from typing import Union, List, Tuple
-from typing_extensions import Annotated
+from typing import Union, List
 import json
 import datetime
-import os
 
 # Models
-from app.database.models import HeartRate
-
-# Security
-from app.security.authentication import oauth2_scheme, Token, Credentials, User, hash_new_password, check_password, generate_token, authenticate_user
+from app.database.models import HourlyStep
 
 
 router = APIRouter(
-    prefix="/heartrate",
-    tags=["Heart Rate"],
+    prefix="/step",
+    tags=["Step"],
     responses={
         404: {"description": "Not found"}, 
         302: {"description": "The item was moved"},
         403: {"description": "Not enough privileges"},},
 )
 
-class HeartRateResponse(BaseModel):
+class HourlyStepResponse(BaseModel):
     id: int
     time: str
     value: int
 
 
 @router.get(
-    "/{userId}",
+    "/hourly/{userId}",
     response_model=List[str],
     tags=["Health Data"],
     responses={
@@ -43,13 +38,12 @@ class HeartRateResponse(BaseModel):
                     }
                 }
             },
-            "description": """Returns the list of stocker tickers that 
-            users select for more information""",
+            "description": """Returns the list of hourly step data for the selected user""",
         },
     },
 )
-async def get_heartrate(userId: int, user: Annotated[User, Depends(authenticate_user)]) -> List[HeartRateResponse]:
-    results = await HeartRate.find(HeartRate.userId == userId).to_list()
+async def get_hourly_calories(userId: int) -> List[HourlyStepResponse]:
+    results = await HourlyStep.find(HourlyStep.userId == userId).to_list()
 
     data = []
     for result in results:
@@ -60,7 +54,6 @@ async def get_heartrate(userId: int, user: Annotated[User, Depends(authenticate_
         })
 
     for d in data:
-        # d['time'] = datetime.datetime.strptime(d['time'], "%d/%m/%Y %I:%M:%S %p")
         d['time'] = datetime.datetime.fromisoformat(d['time'])
     
     data.sort(key=lambda x: (x['time'], x["id"]))

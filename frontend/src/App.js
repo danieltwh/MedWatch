@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
 
+import { useDispatch, useSelector } from "react-redux";
+
+import { authActions, selectAuth } from "./features/authSlice";
+
 // import Protected, { ProtectedRoute } from "./components/Protected";
 // import ProtectedRoute from "./components/Protected";
 // import { ProtectedRoutes } from "./components/Protected";
@@ -11,6 +15,7 @@ import LoginPage from "./pages/loginPage";
 import HomePage from './pages/homePage';
 import DashboardPage from './pages/dashboardPage';
 
+let isInitial  = true;
 
 function App() {
   // const [authenticated, setAuthentciated] = useState(
@@ -30,28 +35,56 @@ function App() {
 
   // }, []);
 
-  const authenticated = localStorage.getItem("authenticated");
+  // const authenticated = localStorage.getItem("authenticated");
+  // console.log(authenticated);
 
-  console.log(authenticated);
+  const dispatch = useDispatch();
+  const auth = useSelector(selectAuth);
+
+
 
   function checkUserAuthenticated() {
     var userLogged = localStorage.getItem("authenticated");
     return userLogged == 'true';
   }
 
+  function getUser() {
+    return {
+      token_type: localStorage.getItem("token_type"),
+      token: localStorage.getItem("token"),
+      authenticated: localStorage.getItem("authenticated")
+    }
+  }
+
+  useEffect(() => {
+    if(isInitial) {
+      if (checkUserAuthenticated()) {
+        var user = getUser();
+        // console.log(user);
+        dispatch(authActions.login(user));
+      } else {
+        dispatch(authActions.logout());
+      }
+      // console.log(auth);
+      isInitial = false;
+    }
+  }, [dispatch])
+
 
   return (
     <BrowserRouter>
     <Routes >
-      <Route element={<PublicRoutes />}>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="*" element={<Navigate to="/login"/>} />
+      <Route element={<PublicRoutes authenticated={auth.authenticated}/>}>
+        <Route exact path="/login" element={<LoginPage />} />
+        <Route exact path="/*" element={<Navigate to="/login"/>} />
       </Route> 
 
-      <Route element={<ProtectedRoutes />}>
-        <Route path="/" element={<ResponsiveAppBar/>}>
-          <Route path="/home" element={<HomePage />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
+      <Route element={<ProtectedRoutes authenticated={auth.authenticated} />}>
+        <Route path="" element={<ResponsiveAppBar/>}>
+          <Route exact path="/home" element={<HomePage />} />
+          <Route exact path="/dashboard" element={<DashboardPage />} />
+          {/* <Route path="/*" element={<Navigate to="/home"/>} /> */}
+          <Route exact path="/*" element={<Navigate to="/home"/>} />
         </Route>
       </Route>    
     </Routes>

@@ -5,25 +5,30 @@ import Chart from "chart.js/auto"
 
 import { 
   heartrate as heartrateAPI
-} from '../api/api';
+} from '../features/api';
+
+import { heartrateActions, selectHeartrate } from '../features/heartrateSlice';
 
 import LineChart from '../components/LineChart';
 import { Line } from 'react-chartjs-2';
 import { DateTime } from 'luxon';
+import { useDispatch, useSelector } from 'react-redux';
 
-
+let isInitial  = true;
 
 function DashboardPage() {
-  const [heartRateData, setHeartRateData] = useState([]);
+  const dispatch = useDispatch();
+  const heartrate = useSelector(selectHeartrate);
 
   const nav = useNavigate();
 
-  const fetchData = async () => {
+  const fetchHeartrateData = async () => {
     let userHeartRate = await heartrateAPI().catch(error => {
       console.log('There was an error', error);
     });
     if (userHeartRate.status == 200) {
-      setHeartRateData(userHeartRate.body);
+      // setHeartRateData(userHeartRate.body);
+      dispatch(heartrateActions.set(userHeartRate.body));
     } else if (userHeartRate.status == 401) {
       // Logout
       localStorage.removeItem("authenticated");
@@ -34,8 +39,12 @@ function DashboardPage() {
   }
 
   useEffect(() => {
-    fetchData()
-  }, [])
+    if(isInitial) {
+      // console.log(heartrate.status);
+      isInitial = false;
+      fetchHeartrateData();
+    }
+  }, [dispatch])
 
   var lineChartOptions = {
     scales: {
@@ -53,14 +62,14 @@ function DashboardPage() {
       {/* <ResponsiveAppBar /> */}
       <div>
         <Line data ={{
-          labels: heartRateData.map(data => {
-            let luxonDate = DateTime.fromJSDate(data.time);
+          labels: heartrate.data.map(data => {
+            let luxonDate = DateTime.fromJSDate(new Date(data.time));
             return luxonDate.toFormat("hh:mm:ss")
           }),
           datasets: [
             {
               label: "Heart Rate",
-              data: heartRateData.map(data => data.value)
+              data: heartrate.data.map(data => data.value)
             }
           ],
           borderColor: "black",

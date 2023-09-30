@@ -1,0 +1,100 @@
+/* Settings.module.css */
+.container {
+    background: #14618F;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    color: #FFFFFF;
+  }
+  
+  .title {
+    font-size: 36px;
+    margin-bottom: 40px;
+   
+  }
+  
+  .settingsWrapper {
+    display: flex;
+    justify-content: space-between;
+    width: 60%;
+    align-items: center;
+  }
+  
+  .leftColumn {
+    width: 50%; 
+  }
+  
+  .rightColumn {
+    
+    width: 50%; 
+  }
+  
+  .formGroup {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 16px;
+    margin-bottom: 40px;
+  }
+ 
+  
+  .formGroup input {
+    border: none;
+    border-bottom: 1px solid #FFFFFF;
+    background: transparent;
+    color: #FFFFFF;
+    outline: none;
+    font-size: 16px;
+    width: 220px;
+  }
+  
+  .emailInput {
+    background: transparent;
+    border: none;
+    color: #FFFFFF;
+    font-size: 16px;
+    cursor: not-allowed;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .changePassButton {
+    background-color: #FFFFFF;
+    color: #14618F;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 16px;
+    margin-top: 20px;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  
+  .saveButton {
+    background-color: #FFFFFF;
+    color: #14618F;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 16px;
+    margin-top: 40px;
+    cursor: pointer;
+  }
+
+@media (max-width: 768px) {
+
+
+  .settingsWrapper {
+    flex-direction: column;
+  }
+
+  .leftColumn,
+  .rightColumn {
+    width: 100%; 
+  }
+
+}
+
+  

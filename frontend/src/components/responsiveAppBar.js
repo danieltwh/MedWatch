@@ -15,7 +15,9 @@ import AdbIcon from '@mui/icons-material/Adb';
 
 import {Outlet, Link, useNavigate} from "react-router-dom";
 
-import { logout } from '../api/api';
+import { logout } from '../features/api';
+import { useDispatch } from 'react-redux';
+import { authActions, selectAuth } from '../features/authSlice';
 
 const pages = ['Home', 'Dashboard', 'XXX'];
 const settings = ['Profile', 'Account', 'Dashboard'];
@@ -25,6 +27,8 @@ function ResponsiveAppBar() {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
   const nav = useNavigate();
+  const dispatch = useDispatch();
+  const auth = useDispatch(selectAuth);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -50,6 +54,7 @@ function ResponsiveAppBar() {
     localStorage.removeItem("authenticated");
     localStorage.removeItem("token");
     localStorage.removeItem("token_type");
+    dispatch(authActions.logout());
     nav("/login", {replace: true})
     // nav("/")
   }

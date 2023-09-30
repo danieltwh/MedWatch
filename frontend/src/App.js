@@ -83,7 +83,7 @@ function App() {
         {/* <Route exact path="/*" element={<Navigate to="/login"/>} /> */}
         <Route exact path="/" element={<SignIn/>} />
         <Route exact path="/signup" element={<SignUp/>} />
-       
+
       </Route> 
 
       <Route element={<ProtectedRoutes authenticated={auth.authenticated} />}>
@@ -91,9 +91,9 @@ function App() {
           <Route exact path="/home" element={<HomePage />} />
           <Route exact path="/dashboard" element={<DashboardPage />} />
           <Route exact path="/settings" element={<Settings/>} />
-        <Route exact path="/resetpass" element={<ResetPass/>} />
+          <Route exact path="/resetpass" element={<ResetPass/>} />
           {/* <Route path="/*" element={<Navigate to="/home"/>} /> */}
-          <Route exact path="/*" element={<Navigate to="/home"/>} />
+           <Route exact path="/*" element={<Navigate to="/home"/>} />
         </Route>
       </Route>    
     </Routes>

@@ -87,11 +87,11 @@ export const heartrate = async (payload) => {
     ).then(
         response => response.json().then(
             data => {
-                if(data.data) {
-                    data['data'].forEach(data => {
-                        data.time = new Date(data.time)
-                    })
-                }
+                // if(data.data) {
+                //     data['data'].forEach(data => {
+                //         data.time = new Date(data.time)
+                //     })
+                // }
 
                 // return data['data']
                 return {

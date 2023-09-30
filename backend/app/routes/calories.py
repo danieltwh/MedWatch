@@ -1,13 +1,17 @@
-from fastapi import APIRouter,  Response, HTTPException, status
+from fastapi import APIRouter,  Response, HTTPException, status, Depends
 from pydantic import BaseModel
 
 # Other libraries
-from typing import Union, List
+from typing import Union, List, Tuple
+from typing_extensions import Annotated
 import json
 import datetime
 
 # Models
 from app.database.models import DailyCalories, HourlyCalories, MinuteCalories
+
+# Security
+from app.security.authentication import oauth2_scheme, Token, Credentials, User, hash_new_password, check_password, generate_token, authenticate_user
 
 
 router = APIRouter(
@@ -22,21 +26,21 @@ router = APIRouter(
 class DailyCaloriesResponse(BaseModel):
     id: int
     date: str
-    value: int
+    value: float
 
 class HourlyCaloriesResponse(BaseModel):
     id: int
     time: str
-    value: int
+    value: float
 
 class MinuteCaloriesResponse(BaseModel):
     id: int
     time: str
-    value: int
+    value: float
 
 
 @router.get(
-    "/daily/{userId}",
+    "/daily/{patientId}",
     response_model=List[str],
     tags=["Health Data"],
     responses={
@@ -48,17 +52,17 @@ class MinuteCaloriesResponse(BaseModel):
                     }
                 }
             },
-            "description": """Returns the list of daily calories data for the selected user""",
+            "description": """Returns the list of daily calories data for the selected patient""",
         },
     },
 )
-async def get_daily_calories(userId: int) -> List[DailyCaloriesResponse]:
-    results = await DailyCalories.find(DailyCalories.userId == userId).to_list()
+async def get_daily_calories(patientId: int, user: Annotated[User, Depends(authenticate_user)]) -> List[DailyCaloriesResponse]:
+    results = await DailyCalories.find(DailyCalories.patientId == patientId).to_list()
 
     data = []
     for result in results:
         data.append({
-            "id": result.userId,
+            "id": result.patientId,
             "date": result.date,
             "value": result.value
         })
@@ -78,7 +82,7 @@ async def get_daily_calories(userId: int) -> List[DailyCaloriesResponse]:
     return Response(content=json.dumps(resp_body), media_type="application/json")
 
 @router.get(
-    "/hourly/{userId}",
+    "/hourly/{patientId}",
     response_model=List[str],
     tags=["Health Data"],
     responses={
@@ -90,17 +94,17 @@ async def get_daily_calories(userId: int) -> List[DailyCaloriesResponse]:
                     }
                 }
             },
-            "description": """Returns the list of hourly calories data for the selected user""",
+            "description": """Returns the list of hourly calories data for the selected patient""",
         },
     },
 )
-async def get_hourly_calories(userId: int) -> List[HourlyCaloriesResponse]:
-    results = await HourlyCalories.find(HourlyCalories.userId == userId).to_list()
+async def get_hourly_calories(patientId: int, user: Annotated[User, Depends(authenticate_user)]) -> List[HourlyCaloriesResponse]:
+    results = await HourlyCalories.find(HourlyCalories.patientId == patientId).to_list()
 
     data = []
     for result in results:
         data.append({
-            "id": result.userId,
+            "id": result.patientId,
             "time": result.time,
             "value": result.value
         })
@@ -120,7 +124,7 @@ async def get_hourly_calories(userId: int) -> List[HourlyCaloriesResponse]:
     return Response(content=json.dumps(resp_body), media_type="application/json")
 
 @router.get(
-    "/minute/{userId}",
+    "/minute/{patientId}",
     response_model=List[str],
     tags=["Health Data"],
     responses={
@@ -132,17 +136,17 @@ async def get_hourly_calories(userId: int) -> List[HourlyCaloriesResponse]:
                     }
                 }
             },
-            "description": """Returns the list of minutes calories data for the selected user""",
+            "description": """Returns the list of minutes calories data for the selected patient""",
         },
     },
 )
-async def get_minute_calories(userId: int) -> List[MinuteCaloriesResponse]:
-    results = await MinuteCalories.find(MinuteCalories.userId == userId).to_list()
+async def get_minute_calories(patientId: int, user: Annotated[User, Depends(authenticate_user)]) -> List[MinuteCaloriesResponse]:
+    results = await MinuteCalories.find(MinuteCalories.patientId == patientId).to_list()
 
     data = []
     for result in results:
         data.append({
-            "id": result.userId,
+            "id": result.patientId,
             "time": result.time,
             "value": result.value
         })

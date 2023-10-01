@@ -18,7 +18,9 @@ import Typography from '@mui/material/Typography';
 import { Alert } from "@mui/material";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-import { login } from '../api/api';
+import { login } from '../features/api';
+import { useDispatch } from 'react-redux';
+import { authActions, selectAuth } from '../features/authSlice';
 const login_wallpaper = process.env.PUBLIC_URL + '/login_wallpaper.jpeg';
 
 function Copyright(props) {
@@ -49,6 +51,9 @@ function LoginPage() {
 
   const nav = useNavigate();
   const {location} = useLocation();
+  
+  const dispatch = useDispatch();
+  const auth = useDispatch(selectAuth);
 
   const clearError = () => {
     if(loginError || errorMsg != "") {
@@ -75,6 +80,13 @@ function LoginPage() {
       localStorage.setItem("authenticated", true);
       localStorage.setItem("token", resp.body.access_token);
       localStorage.setItem("token_type", resp.body.token_type);
+
+      // Dispatch action
+      dispatch(authActions.login({
+        token: resp.body.access_token,
+        token_type: resp.body.token_type
+      }));
+
       // nav(location?.path || "/dashboard", { replace: true });
       nav(location?.path || "/dashboard", {replace: true});
     } else if(resp.status == 400) {

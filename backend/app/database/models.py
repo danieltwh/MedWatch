@@ -27,7 +27,7 @@ class User(PostgresBase):
     def __repr__(self):
         return f'<{self.id}: User {self.firstname}>'
     
-    def __init__(self, firstname, lastname, email, salt, password, role, date_created, github_id, github_credentials):
+    def __init__(self, firstname, lastname, email, salt, password, role, date_created):
         self.firstname = firstname
         self.lastname = lastname
         self.email = email
@@ -39,13 +39,43 @@ class User(PostgresBase):
     def serialize(self):
         return {
             "id": self.id,
-            "firstname": self.firstname,
-            "lastname": self.lastname,
+            "firstName": self.firstname,
+            "lastName": self.lastname,
             "email": self.email,
             "salt": self.salt, 
             "password": self.password,
             "role": self.role,
             "date_created": self.date_created,
+        }
+
+class Patient(PostgresBase):
+    __tablename__ = "patients"
+
+    id = Column(Integer,  unique=True, nullable=False, primary_key=True, autoincrement=True)
+    firstname = Column(String(80), nullable=False)
+    lastname = Column(String(80), nullable=False)
+    underProfessionalCare = Column(Boolean, nullable=False)
+    age = Column(Integer, nullable=False)
+    isMale = Column(Boolean, nullable=False)
+
+    def __repr__(self):
+        return f'<{self.id}: User {self.firstname}>'
+    
+    def __init__(self, firstname, lastname, underProfessionalCare, age, isMale):
+        self.firstname = firstname
+        self.lastname = lastname
+        self.underProfessionalCare = underProfessionalCare
+        self.age = age
+        self.isMale = isMale
+    
+    def serialize(self):
+        return {
+            "id": self.id,
+            "firstName": self.firstname,
+            "lastName": self.lastname,
+            "underProfessionalCare": self.underProfessionalCare,
+            "age": self.age,
+            "isMale": self.isMale
         }
 
 

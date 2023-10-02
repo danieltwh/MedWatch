@@ -2,7 +2,7 @@ from fastapi import APIRouter,  Response, HTTPException, status, Depends
 from pydantic import BaseModel
 
 # Other libraries
-from typing import Union, List
+from typing import Union, List, Tuple
 from typing_extensions import Annotated
 import json
 import datetime
@@ -25,7 +25,7 @@ router = APIRouter(
 class HourlyStepResponse(BaseModel):
     id: int
     time: str
-    value: int
+    value: float
 
 class DailyStepsResponse(BaseModel):
     id: int
@@ -35,7 +35,7 @@ class DailyStepsResponse(BaseModel):
 class MinuteStepsResponse(BaseModel):
     id: int
     time: str
-    value: int
+    value: float
 
 
 @router.get(
@@ -51,11 +51,11 @@ class MinuteStepsResponse(BaseModel):
                     }
                 }
             },
-            "description": """Returns the list of hourly step data for the selected user""",
+            "description": """Returns the list of hourly step data for the selected patient""",
         },
     },
 )
-async def get_hourly_steps(patientId: int) -> List[HourlyStepResponse]:
+async def get_hourly_calories(patientId: int, user: Annotated[User, Depends(authenticate_user)]) -> List[HourlyStepResponse]:
     results = await HourlyStep.find(HourlyStep.patientId == patientId).to_list()
 
     data = []

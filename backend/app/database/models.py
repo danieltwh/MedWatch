@@ -52,7 +52,7 @@ class User(PostgresBase):
 class HeartRate(Document):
     patientId: int
     time: str
-    value: int
+    value: float
     
     class Settings:
         name = "heartrate"
@@ -75,7 +75,7 @@ class UpdateHeartRate(BaseModel):
 class DailyCalories(Document):
     patientId: int
     date: str
-    value: int
+    value: float
 
     class Settings:
         name = "daily_calories"
@@ -83,7 +83,7 @@ class DailyCalories(Document):
 class HourlyCalories(Document):
     patientId: int
     time: str
-    value: int
+    value: float
 
     class Settings:
         name = "hourly_calories"
@@ -91,7 +91,7 @@ class HourlyCalories(Document):
 class MinuteCalories(Document):
     patientId: int
     time: str
-    value: int
+    value: float
 
     class Settings:
         name = "minute_calories"
@@ -100,19 +100,19 @@ class MinuteCalories(Document):
 class DailyActivity(Document):
     patientId: int
     date: str
-    total_steps: int
-    total_distance: int
-    tracker_distance: int
-    logged_activities_distance: int
-    very_active_distance: int
-    moderately_active_distance: int
-    light_active_distance: int
-    sedentary_active_distance: int
-    very_active_minute: int
-    fairly_active_minute: int
-    light_active_minute: int
-    sedentary_minute: int
-    calories: int
+    total_steps: float
+    total_distance: float
+    tracker_distance: float
+    logged_activities_distance: float
+    very_active_distance: float
+    moderately_active_distance: float
+    light_active_distance: float
+    sedentary_active_distance: float
+    very_active_minute: float
+    fairly_active_minute: float
+    light_active_minute: float
+    sedentary_minute: float
+    calories: float
 
     class Settings:
         name = "daily_activity"
@@ -121,14 +121,14 @@ class DailyActivity(Document):
 class DailyIntensity(Document):
     patientId: int
     date: str
-    sedentary_minute: int
-    lightly_active_minute: int
-    fairly_active_minute: int
-    very_active_minute: int
-    sedentary_active_distance: int
-    light_active_distance: int
-    moderately_active_distance: int
-    very_active_distance: int
+    sedentary_minute: float
+    lightly_active_minute: float
+    fairly_active_minute: float
+    very_active_minute: float
+    sedentary_active_distance: float
+    light_active_distance: float
+    moderately_active_distance: float
+    very_active_distance: float
 
     class Settings:
         name = "daily_intensity"
@@ -136,8 +136,8 @@ class DailyIntensity(Document):
 class HourlyIntensity(Document):
     patientId: int
     time: str
-    total_intensity: int
-    average_intensity: int
+    total_intensity: float
+    average_intensity: float
 
     class Settings:
         name = "hourly_intensity"
@@ -162,7 +162,7 @@ class DailyStep(Document):
 class HourlyStep(Document):
     patientId: int
     time: str
-    value: int
+    value: float
 
     class Settings:
         name = "hourly_step"

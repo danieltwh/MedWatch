@@ -12,6 +12,7 @@ from app.database.models import UserPatientRelation, Patient
 
 # Security
 from app.security.authentication import oauth2_scheme, Token, Credentials, hash_new_password, check_password, generate_token, authenticate_user
+from app.security.authentication import User as auth_user
 import app.database.models as models
 from app.database.database import init_postgres
 
@@ -31,17 +32,33 @@ router = APIRouter(
     responses={
         200: {
             "content": {
-                "application/json": {
-                    "example": {
-                        "Users": [{"time": 0, "value": 97}, {"time": 0, "value": 102}]
+                "application/json":
+                    {"example": 
+                        [
+                            {
+                                "id": 4,
+                                "firstName": "Minji",
+                                "lastName": "Kim",
+                                "underProfessionalCare": False,
+                                "age": 21,
+                                "isMale": False
+                            },
+                            {
+                                "id": 5,
+                                "firstName": "Hong",
+                                "lastName": "Eunchae",
+                                "underProfessionalCare": False,
+                                "age": 20,
+                                "isMale": False
+                            }
+                        ]
                     }
-                }
             },
             "description": """Returns the all patients under selected user""",
         },
     },
 )
-async def get_related_patients(userId: int):
+async def get_related_patients(userId: int, user: Annotated[auth_user, Depends(authenticate_user)]):
     postgres = init_postgres()
     user = postgres.query(models.User).filter(models.User.id == userId).first()
 
@@ -60,17 +77,27 @@ async def get_related_patients(userId: int):
     responses={
         200: {
             "content": {
-                "application/json": {
-                    "example": {
-                        "Users": [{"time": 0, "value": 97}, {"time": 0, "value": 102}]
+                "application/json":
+                    {"example": 
+                        [
+                            {
+                                "id": 1,
+                                "firstName": "Chad",
+                                "lastName": "Richman",
+                                "email": "chad@example.com",
+                                "salt": "abcde",
+                                "password": "12345 ",
+                                "role": "0",
+                                "date_created": "2023-03-13 20:46:43.902410"
+                            }
+                        ]
                     }
-                }
             },
             "description": """Returns the all user under selected patient""",
         },
     },
 )
-async def get_related_users(patientId: int):
+async def get_related_users(patientId: int, user: Annotated[auth_user, Depends(authenticate_user)]):
     postgres = init_postgres()
     patient = postgres.query(models.Patient).filter(models.Patient.id == patientId).first()
 
@@ -89,11 +116,30 @@ async def get_related_users(patientId: int):
     responses={
         200: {
             "content": {
-                "application/json": {
-                    "example": {
-                        "Users": [{"time": 0, "value": 97}, {"time": 0, "value": 102}]
+                "application/json":
+                    {"example": 
+                        {
+                            "Status": "Success",
+                            "User": {
+                                "id": 1,
+                                "firstName": "Chad",
+                                "lastName": "Richman",
+                                "email": "chad@example.com",
+                                "salt": "abcde",
+                                "password": "12345 ",
+                                "role": "0",
+                                "date_created": "2023-03-13 20:46:43.902410"
+                            },
+                            "Patient": {
+                                "id": 4,
+                                "firstName": "Minji",
+                                "lastName": "Kim",
+                                "underProfessionalCare": False,
+                                "age": 21,
+                                "isMale": False
+                            }
+                        }
                     }
-                }
             },
             "description": """Links patient to user""",
         },
@@ -101,12 +147,18 @@ async def get_related_users(patientId: int):
 )
 async def link_patient_to_user(
     user_id: Annotated[int, Form()], 
-    patient_id: Annotated[int, Form()]
+    patient_id: Annotated[int, Form()],
+    user: Annotated[auth_user, Depends(authenticate_user)]
     ):
     postgres = init_postgres()
     user = postgres.query(models.User).filter(models.User.id == user_id).first()
     patient = postgres.query(models.Patient).filter(models.Patient.id == patient_id).first()
     user.patient_list.append(patient)
     postgres.commit()
+    response = {
+        "Status": "Success",
+        "User": user.serialize(),
+        "Patient": patient.serialize()
+    }
     
-    return Response(content=json.dumps(patient.serialize(), default=str), media_type="application/json")
+    return Response(content=json.dumps(response, default=str), media_type="application/json")

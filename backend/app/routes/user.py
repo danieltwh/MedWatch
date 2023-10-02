@@ -12,6 +12,7 @@ from app.database.models import User
 
 # Security
 from app.security.authentication import oauth2_scheme, Token, Credentials, hash_new_password, check_password, generate_token, authenticate_user
+from app.security.authentication import User as auth_user
 import app.database.models as models
 from app.database.database import init_postgres
 
@@ -31,17 +32,25 @@ router = APIRouter(
     responses={
         200: {
             "content": {
-                "application/json": {
-                    "example": {
-                        "Users": [{"time": 0, "value": 97}, {"time": 0, "value": 102}]
+                "application/json":
+                    {"example": 
+                        {
+                            "id": 1,
+                            "firstName": "Chad",
+                            "lastName": "Richman",
+                            "email": "chad@example.com",
+                            "salt": "abcde",
+                            "password": "123456",
+                            "role": "0",
+                            "date_created": "2023-03-13 20:46:43.902410"
+                        }
                     }
-                }
             },
             "description": """Returns the details for the selected user""",
         },
     },
 )
-async def get_user_details(userId: int):
+async def get_user_details(userId: int, user: Annotated[auth_user, Depends(authenticate_user)]):
     postgres = init_postgres()
     patient_details = postgres.query(models.User).filter(models.User.id == userId).first()
     if not patient_details:
@@ -54,11 +63,19 @@ async def get_user_details(userId: int):
     responses={
         200: {
             "content": {
-                "application/json": {
-                    "example": {
-                        "Users": [{"time": 0, "value": 97}, {"time": 0, "value": 102}]
+                "application/json":
+                    {"example": 
+                        {
+                            "id": 4,
+                            "firstName": "Alex",
+                            "lastName": "Tan",
+                            "email": "alex@gmail.com",
+                            "salt": "abcde",
+                            "password": "12345",
+                            "role": "Family",
+                            "date_created": "2023-10-02 06:22:51.188309"
+                        }
                     }
-                }
             },
             "description": """Add a new user""",
         },
@@ -70,6 +87,7 @@ async def add_user(
     email: Annotated[str, Form()],
     password: Annotated[str, Form()],
     role: Annotated[str, Form()],
+    user: Annotated[auth_user, Depends(authenticate_user)]
     ):
     date_created = datetime.datetime.now()
     salt, hashed_password = hash_new_password(password)

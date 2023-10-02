@@ -31,17 +31,23 @@ router = APIRouter(
     responses={
         200: {
             "content": {
-                "application/json": {
-                    "example": {
-                        "Users": [{"time": 0, "value": 97}, {"time": 0, "value": 102}]
+                "application/json":
+                    {"example": 
+                        {
+                            "id": 1,
+                            "firstName": "Ben",
+                            "lastName": "White",
+                            "underProfessionalCare": True,
+                            "age": 29,
+                            "isMale": True
+                        }
                     }
-                }
             },
             "description": """Returns the details for the selected patient""",
         },
     },
 )
-async def get_patient_details(patientId: int):
+async def get_patient_details(patientId: int, user: Annotated[User, Depends(authenticate_user)]):
     postgres = init_postgres()
     patient_details = postgres.query(models.Patient).filter(models.Patient.id == patientId).first()
     if not patient_details:
@@ -54,11 +60,17 @@ async def get_patient_details(patientId: int):
     responses={
         200: {
             "content": {
-                "application/json": {
-                    "example": {
-                        "Users": [{"time": 0, "value": 97}, {"time": 0, "value": 102}]
+                "application/json":
+                    {"example": 
+                        {
+                            "id": 5,
+                            "firstName": "Hong",
+                            "lastName": "Eunchae",
+                            "underProfessionalCare": False,
+                            "age": 20,
+                            "isMale": False
+                        }
                     }
-                }
             },
             "description": """Add a new patient""",
         },
@@ -69,7 +81,8 @@ async def add_patient(
     lastname: Annotated[str, Form()],
     under_professional_care: Annotated[bool, Form()],
     age: Annotated[int, Form()],
-    is_male: Annotated[bool, Form()]
+    is_male: Annotated[bool, Form()], 
+    user: Annotated[User, Depends(authenticate_user)]
     ):
     postgres = init_postgres()
     new_patient = Patient(firstname, lastname, under_professional_care, age, is_male)

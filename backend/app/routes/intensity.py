@@ -54,7 +54,32 @@ class MinuteIntensityResponse(BaseModel):
             "content": {
                 "application/json": {
                     "example": {
-                        "Users": [{"time": 0, "value": 97}, {"time": 0, "value": 102}]
+                        "data": [
+                           {
+                                "id": 1,
+                                "date": "2016-04-12",
+                                "sedentary_minute": 728.0,
+                                "lightly_active_minute": 328.0,
+                                "fairly_active_minute": 13.0,
+                                "very_active_minute": 25.0,
+                                "sedentary_active_distance": 0.0,
+                                "light_active_distance": 6.05999994277954,
+                                "moderately_active_distance": 0.550000011920929,
+                                "very_active_distance": 1.87999999523163
+                            },
+                            {
+                                "id": 1,
+                                "date": "2016-04-13",
+                                "sedentary_minute": 776.0,
+                                "lightly_active_minute": 217.0,
+                                "fairly_active_minute": 19.0,
+                                "very_active_minute": 21.0,
+                                "sedentary_active_distance": 0.0,
+                                "light_active_distance": 4.71000003814697,
+                                "moderately_active_distance": 0.689999997615814,
+                                "very_active_distance": 1.57000005245209
+                            }
+                        ]
                     }
                 }
             },
@@ -103,8 +128,20 @@ async def get_daily_intensity(patientId: int, user: Annotated[User, Depends(auth
             "content": {
                 "application/json": {
                     "example": {
-                        "Users": [{"id": 159382, "time": "2016-12-04T07:21:00", "intensity": 0}, 
-                                  {"id": 159382, "time": "2016-12-04T08:21:00", "intensity": 1}]
+                        "data": [
+                            {
+                                "id": 1,
+                                "time": "2016-04-12T00:00:00",
+                                "total_intensity": 20.0,
+                                "average_intensity": 0.333333
+                            },
+                            {
+                                "id": 1,
+                                "time": "2016-04-12T01:00:00",
+                                "total_intensity": 8.0,
+                                "average_intensity": 0.133333
+                            }
+                        ]
                     }
                 }
             },

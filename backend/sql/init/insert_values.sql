@@ -16,3 +16,13 @@ INSERT INTO users
 		role = excluded.role,
 		date_created = excluded.date_created
 ;
+
+-- Insert values into patients
+INSERT INTO patients
+	(firstname, lastname, under_professional_care, age, is_male)
+	VALUES
+    ('Ben', 'White', TRUE, 29, TRUE),
+	('Aaron', 'Ramsdale', FALSE, 24, TRUE),
+	('Hanni', 'Pham', FALSE, 20, FALSE),
+	('Minji', 'Kim', FALSE, 21, FALSE)
+;

@@ -50,21 +50,42 @@ class DailyActivityResponse(BaseModel):
             "content": {
                 "application/json": {
                     "example": {
-                        "Users": [{"patientId": 1,
-                        "date": "2016-12-04",
-                        "total_steps": 1,
-                        "total_distance": 1,
-                        "tracker_distance": 1,
-                        "logged_activities_distance": 1,
-                        "very_active_distance": 1,
-                        "moderately_active_distance": 1,
-                        "light_active_distance": 1,
-                        "sedentary_active_distance": 1,
-                        "very_active_minute": 1,
-                        "fairly_active_minute": 1,
-                        "light_active_minute": 1,
-                        "sedentary_minute": 1,
-                        "calories": 1}]
+                        "data": [
+                            {
+                                "id": 1,
+                                "date": "2016-04-12",
+                                "total_steps": 13162.0,
+                                "total_distance": 8.5,
+                                "tracker_distance": 8.5,
+                                "logged_activities_distance": 0.0,
+                                "very_active_distance": 1.87999999523163,
+                                "moderately_active_distance": 0.550000011920929,
+                                "light_active_distance": 6.05999994277954,
+                                "sedentary_active_distance": 0.0,
+                                "very_active_minute": 25.0,
+                                "fairly_active_minute": 13.0,
+                                "light_active_minute": 328.0,
+                                "sedentary_minute": 728.0,
+                                "calories": 1985.0
+                            },
+                            {
+                                "id": 1,
+                                "date": "2016-04-13",
+                                "total_steps": 10735.0,
+                                "total_distance": 6.96999979019165,
+                                "tracker_distance": 6.96999979019165,
+                                "logged_activities_distance": 0.0,
+                                "very_active_distance": 1.57000005245209,
+                                "moderately_active_distance": 0.689999997615814,
+                                "light_active_distance": 4.71000003814697,
+                                "sedentary_active_distance": 0.0,
+                                "very_active_minute": 21.0,
+                                "fairly_active_minute": 19.0,
+                                "light_active_minute": 217.0,
+                                "sedentary_minute": 776.0,
+                                "calories": 1797.0
+                            }
+                        ]
                     }
                 }
             },

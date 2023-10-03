@@ -38,7 +38,18 @@ class HourlyStepResponse(BaseModel):
             "content": {
                 "application/json": {
                     "example": {
-                        "Users": [{"time": 0, "value": 97}, {"time": 0, "value": 102}]
+                        "data": [
+                            {
+                                "id": 1,
+                                "time": "2016-04-12T00:00:00",
+                                "value": 1
+                            },
+                            {
+                                "id": 1,
+                                "time": "2016-04-12T01:00:00",
+                                "value": 2
+                            },
+                        ]
                     }
                 }
             },

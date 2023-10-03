@@ -48,7 +48,18 @@ class MinuteCaloriesResponse(BaseModel):
             "content": {
                 "application/json": {
                     "example": {
-                        "Users": [{"time": 0, "value": 97}, {"time": 0, "value": 102}]
+                        "data": [
+                            {
+                                "id": 1,
+                                "date": "2016-04-12",
+                                "value": 1985.0
+                            },
+                            {
+                                "id": 1,
+                                "date": "2016-04-13",
+                                "value": 1797.0
+                            }
+                        ]
                     }
                 }
             },
@@ -90,7 +101,18 @@ async def get_daily_calories(patientId: int, user: Annotated[User, Depends(authe
             "content": {
                 "application/json": {
                     "example": {
-                        "Users": [{"time": 0, "value": 97}, {"time": 0, "value": 102}]
+                        "data": [
+                            {
+                                "id": 1,
+                                "time": "2016-04-12T00:00:00",
+                                "value": 81.0
+                            },
+                            {
+                                "id": 1,
+                                "time": "2016-04-12T01:00:00",
+                                "value": 61.0
+                            }
+                        ]
                     }
                 }
             },
@@ -132,7 +154,18 @@ async def get_hourly_calories(patientId: int, user: Annotated[User, Depends(auth
             "content": {
                 "application/json": {
                     "example": {
-                        "Users": [{"time": 0, "value": 97}, {"time": 0, "value": 102}]
+                        "data": [
+                            {
+                                "id": 1,
+                                "time": "2016-04-12T00:00:00",
+                                "value": 0.786499977111816
+                            },
+                            {
+                                "id": 1,
+                                "time": "2016-04-12T00:01:00",
+                                "value": 0.786499977111816
+                            }
+                        ]
                     }
                 }
             },

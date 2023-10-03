@@ -39,12 +39,22 @@ class HeartRateResponse(BaseModel):
             "content": {
                 "application/json": {
                     "example": {
-                        "Users": [{"time": 0, "value": 97}, {"time": 0, "value": 102}]
+                        "data": [
+                            {
+                                "id": 1,
+                                "time": "2016-04-12T07:21:00",
+                                "value": 97.0
+                            },
+                            {
+                                "id": 1,
+                                "time": "2016-04-12T07:21:05",
+                                "value": 102.0
+                            }
+                        ]
                     }
                 }
             },
-            "description": """Returns the list of stocker tickers that 
-            users select for more information""",
+            "description": """Returns heartrate details for the patient""",
         },
     },
 )

@@ -36,7 +36,7 @@ class MinuteMETResponse(BaseModel):
             "content": {
                 "application/json": {
                     "example": {
-                        "Users": [{"id": 1503960366, "time": "2016-12-04T07:21:00", "met": 10}, 
+                        "data": [{"id": 1503960366, "time": "2016-12-04T07:21:00", "met": 10}, 
                                   {"id": 1503960366, "time": "2016-12-04T07:22:00", "met": 12}]
                     }
                 }

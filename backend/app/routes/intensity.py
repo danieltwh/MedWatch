@@ -184,7 +184,7 @@ async def get_hourly_intensity(patientId: int, user: Annotated[User, Depends(aut
             "content": {
                 "application/json": {
                     "example": {
-                        "Users": [{"id": 159382, "time": "2016-12-04T07:21:00", "intensity": 0}, 
+                        "data": [{"id": 159382, "time": "2016-12-04T07:21:00", "intensity": 0}, 
                                   {"id": 159382, "time": "2016-12-04T07:22:00", "intensity": 1}]
                     }
                 }

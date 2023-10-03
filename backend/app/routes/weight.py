@@ -38,7 +38,7 @@ class WeightResponse(BaseModel):
             "content": {
                 "application/json": {
                     "example": {
-                        "Users": [{"id": 1503960366, "datetime": "2016-12-04T07:21:00", "weight_kg": 52.934934,
+                        "data": [{"id": 1503960366, "datetime": "2016-12-04T07:21:00", "weight_kg": 52.934934,
                                     "bmi": 22.653234}, 
                                   {"id": 1503960366, "datetime": "2016-12-05T07:21:00", "weight_kg": 52.934934,
                                     "bmi": 22.653234}]

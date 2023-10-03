@@ -43,7 +43,7 @@ class MinuteSleepResponse(BaseModel):
             "content": {
                 "application/json": {
                     "example": {
-                        "Users": [{"id": 1503960366, "date": "2016-12-04T00:00:00", "sleeprecords": 1,
+                        "data": [{"id": 1503960366, "date": "2016-12-04T00:00:00", "sleeprecords": 1,
                                     "minutesasleep": 327, "totaltimeinbed": 346}, 
                                   {"id": 1503960366, "date": "2016-12-05T00:00:00", "sleeprecords": 2,
                                     "minutesasleep": 354, "totaltimeinbed": 370}]
@@ -84,7 +84,7 @@ async def get_daily_sleep(patientId: int, user: Annotated[User, Depends(authenti
             "content": {
                 "application/json": {
                     "example": {
-                        "Users": [{"id": 1503960366, "time": "2016-12-04T00:00:00", "value": 1}, 
+                        "data": [{"id": 1503960366, "time": "2016-12-04T00:00:00", "value": 1}, 
                                   {"id": 1503960366, "time": "2016-12-05T00:00:00", "value": 2}]
                     }
                 }

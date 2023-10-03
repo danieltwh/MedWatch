@@ -10,7 +10,8 @@ from beanie import Document, Indexed, init_beanie
 
 
 from .models import HeartRate, DailyCalories, HourlyCalories, MinuteCalories, DailyActivity, \
-                    DailyIntensity, HourlyIntensity, HourlyStep
+                    DailyIntensity, HourlyIntensity, MinuteIntensity, DailyStep, HourlyStep, \
+                    MinuteStep, MET, DailySleep, MinuteSleep, WeightLog
 
 # PostgreSQL
 from sqlalchemy import create_engine
@@ -46,7 +47,10 @@ async def init_mongodb():
     await init_beanie(database=client.medwatch, document_models=[HeartRate, DailyCalories, 
                                                                  HourlyCalories, MinuteCalories, 
                                                                  DailyActivity, DailyIntensity, 
-                                                                 HourlyIntensity, HourlyStep])
+                                                                 HourlyIntensity, MinuteIntensity,
+                                                                 DailyStep, HourlyStep, MinuteStep,
+                                                                 MET, DailySleep, MinuteSleep, 
+                                                                 WeightLog])
 
 
 # Initialise PostgreSQL Connection

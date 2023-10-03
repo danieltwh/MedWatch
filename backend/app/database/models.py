@@ -83,7 +83,7 @@ class Patient(PostgresBase):
             "age": self.age,
             "isMale": self.is_male
         }
-
+#heartrate
 class HeartRate(Document):
     patientId: int
     time: str
@@ -106,6 +106,7 @@ class UpdateHeartRate(BaseModel):
     time: str
     value: int
 
+#calories
 class DailyCalories(Document):
     patientId: int
     date: str
@@ -130,6 +131,7 @@ class MinuteCalories(Document):
     class Settings:
         name = "minute_calories"
 
+#activity
 class DailyActivity(Document):
     patientId: int
     date: str
@@ -150,6 +152,7 @@ class DailyActivity(Document):
     class Settings:
         name = "daily_activity"
 
+#intensity
 class DailyIntensity(Document):
     patientId: int
     date: str
@@ -174,6 +177,23 @@ class HourlyIntensity(Document):
     class Settings:
         name = "hourly_intensity"
 
+class MinuteIntensity(Document):
+    patientId: int
+    time: str
+    intensity: int
+
+    class Settings:
+        name = "minute_intensity"
+
+#steps
+class DailyStep(Document):
+    patientId: int
+    time: str
+    value: int
+
+    class Settings:
+        name = "daily_step"
+
 class HourlyStep(Document):
     patientId: int
     time: str
@@ -181,3 +201,49 @@ class HourlyStep(Document):
 
     class Settings:
         name = "hourly_step"
+
+class MinuteStep(Document):
+    patientId: int
+    time: str
+    value: int
+
+    class Settings:
+        name = "minute_step"
+    
+#met
+class MET(Document):
+    patientId: int
+    time: str
+    metvalue: int
+
+    class Settings:
+        name = "met"
+
+#sleep
+class DailySleep(Document):
+    patientId: int
+    date: str
+    sleeprecords: int
+    minutesasleep: int
+    totaltimeinbed: int
+
+    class Settings:
+        name = "daily_sleep"
+
+class MinuteSleep(Document):
+    patientId: int
+    time: str
+    value: int
+
+    class Settings:
+        name = "minute_sleep"
+
+#weight
+class WeightLog(Document):
+    patientId: int
+    datetime: str
+    weight_kg: float
+    bmi: float
+
+    class Settings:
+        name = "weight"

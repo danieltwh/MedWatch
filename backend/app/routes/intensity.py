@@ -8,11 +8,10 @@ import json
 import datetime
 
 # Models
-from app.database.models import DailyIntensity, HourlyIntensity
+from app.database.models import DailyIntensity, HourlyIntensity, MinuteIntensity
 
 # Security
 from app.security.authentication import oauth2_scheme, Token, Credentials, User, hash_new_password, check_password, generate_token, authenticate_user
-
 
 router = APIRouter(
     prefix="/intensity",
@@ -41,6 +40,10 @@ class HourlyIntensityResponse(BaseModel):
     total_intensity: float
     average_intensity: float
 
+class MinuteIntensityResponse(BaseModel):
+    id: int
+    time: str
+    intensity: int
 
 @router.get(
     "/daily/{patientId}",
@@ -171,3 +174,41 @@ async def get_hourly_intensity(patientId: int, user: Annotated[User, Depends(aut
     }
 
     return Response(content=json.dumps(resp_body), media_type="application/json")
+
+@router.get(
+    "/minute/{patientId}",
+    response_model=List[str],
+    tags=["Health Data"],
+    responses={
+        200: {
+            "content": {
+                "application/json": {
+                    "example": {
+                        "data": [{"id": 159382, "time": "2016-12-04T07:21:00", "intensity": 0}, 
+                                  {"id": 159382, "time": "2016-12-04T07:22:00", "intensity": 1}]
+                    }
+                }
+            },
+            "description": """Returns the list of intensity data by minute for the selected user""",
+        },
+    },
+)
+async def get_minute_intensity(patientId: int, user: Annotated[User, Depends(authenticate_user)]) -> List[MinuteIntensityResponse]:
+    results = await MinuteIntensity.find(MinuteIntensity.patientId == patientId).to_list()
+
+    data = []
+    for result in results:
+        data.append({
+            "id": result.patientId,
+            "time": result.time,
+            "intensity": result.intensity,
+        })
+
+    data.sort(key=lambda x: datetime.datetime.fromisoformat(x['time']))
+    
+    resp_body = {
+        "data": data
+    }
+
+    return Response(content=json.dumps(resp_body), media_type="application/json")
+

@@ -5,17 +5,22 @@ from typing import Optional
 from datetime import datetime
 import pytz
 
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime, Table
 from sqlalchemy.orm import relationship
 # from app.database.database import PostgresBase
 
 from sqlalchemy.ext.declarative import declarative_base    
 PostgresBase = declarative_base()
 
+UserPatientRelation = Table('user_patient_relation', PostgresBase.metadata,
+    Column('user_id', Integer, ForeignKey('users.id')),
+    Column('patient_id', Integer, ForeignKey('patients.id'))
+)
+
 class User(PostgresBase):
     __tablename__ = "users"
 
-    id = Column(Integer,  unique=True, nullable=False, primary_key=True, autoincrement=True)
+    id = Column(Integer, unique=True, nullable=False, primary_key=True, autoincrement=True)
     firstname = Column(String(80), nullable=False)
     lastname = Column(String(80), nullable=False)
     email = Column(String(120), unique=True, nullable=False)
@@ -23,11 +28,12 @@ class User(PostgresBase):
     password = Column(String(200), nullable=False)
     role = Column(String(80), nullable=False)
     date_created = Column(DateTime, default=datetime.now(pytz.timezone("Asia/Singapore")))
+    patient_list = relationship('Patient', secondary=UserPatientRelation, backref='user_list')
 
     def __repr__(self):
         return f'<{self.id}: User {self.firstname}>'
     
-    def __init__(self, firstname, lastname, email, salt, password, role, date_created, github_id, github_credentials):
+    def __init__(self, firstname, lastname, email, salt, password, role, date_created):
         self.firstname = firstname
         self.lastname = lastname
         self.email = email
@@ -39,8 +45,8 @@ class User(PostgresBase):
     def serialize(self):
         return {
             "id": self.id,
-            "firstname": self.firstname,
-            "lastname": self.lastname,
+            "firstName": self.firstname,
+            "lastName": self.lastname,
             "email": self.email,
             "salt": self.salt, 
             "password": self.password,
@@ -48,7 +54,36 @@ class User(PostgresBase):
             "date_created": self.date_created,
         }
 
+class Patient(PostgresBase):
+    __tablename__ = "patients"
 
+    id = Column(Integer, unique=True, nullable=False, primary_key=True, autoincrement=True)
+    firstname = Column(String(80), nullable=False)
+    lastname = Column(String(80), nullable=False)
+    under_professional_care = Column(Boolean, nullable=False)
+    age = Column(Integer, nullable=False)
+    is_male = Column(Boolean, nullable=False)
+
+    def __repr__(self):
+        return f'<{self.id}: User {self.firstname}>'
+    
+    def __init__(self, firstname, lastname, under_professional_care, age, is_male):
+        self.firstname = firstname
+        self.lastname = lastname
+        self.under_professional_care = under_professional_care
+        self.age = age
+        self.is_male = is_male
+    
+    def serialize(self):
+        return {
+            "id": self.id,
+            "firstName": self.firstname,
+            "lastName": self.lastname,
+            "underProfessionalCare": self.under_professional_care,
+            "age": self.age,
+            "isMale": self.is_male
+        }
+#heartrate
 class HeartRate(Document):
     patientId: int
     time: str
@@ -71,6 +106,7 @@ class UpdateHeartRate(BaseModel):
     time: str
     value: int
 
+#calories
 class DailyCalories(Document):
     patientId: int
     date: str
@@ -95,6 +131,7 @@ class MinuteCalories(Document):
     class Settings:
         name = "minute_calories"
 
+#activity
 class DailyActivity(Document):
     patientId: int
     date: str
@@ -115,6 +152,7 @@ class DailyActivity(Document):
     class Settings:
         name = "daily_activity"
 
+#intensity
 class DailyIntensity(Document):
     patientId: int
     date: str
@@ -139,6 +177,23 @@ class HourlyIntensity(Document):
     class Settings:
         name = "hourly_intensity"
 
+class MinuteIntensity(Document):
+    patientId: int
+    time: str
+    intensity: int
+
+    class Settings:
+        name = "minute_intensity"
+
+#steps
+class DailyStep(Document):
+    patientId: int
+    time: str
+    value: int
+
+    class Settings:
+        name = "daily_step"
+
 class HourlyStep(Document):
     patientId: int
     time: str
@@ -146,3 +201,49 @@ class HourlyStep(Document):
 
     class Settings:
         name = "hourly_step"
+
+class MinuteStep(Document):
+    patientId: int
+    time: str
+    value: int
+
+    class Settings:
+        name = "minute_step"
+    
+#met
+class MET(Document):
+    patientId: int
+    time: str
+    metvalue: int
+
+    class Settings:
+        name = "met"
+
+#sleep
+class DailySleep(Document):
+    patientId: int
+    date: str
+    sleeprecords: int
+    minutesasleep: int
+    totaltimeinbed: int
+
+    class Settings:
+        name = "daily_sleep"
+
+class MinuteSleep(Document):
+    patientId: int
+    time: str
+    value: int
+
+    class Settings:
+        name = "minute_sleep"
+
+#weight
+class WeightLog(Document):
+    patientId: int
+    datetime: str
+    weight_kg: float
+    bmi: float
+
+    class Settings:
+        name = "weight"

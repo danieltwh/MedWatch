@@ -12,6 +12,27 @@ CREATE TABLE users (
     date_created timestamp without time zone DEFAULT (now() at time zone 'Singapore Standard Time')
 );
 
+-- Create patients table
+DROP TABLE IF EXISTS patients CASCADE;
+
+CREATE TABLE patients (
+	id SERIAL PRIMARY KEY,
+    firstname VARCHAR(80) NOT NULL,
+    lastname VARCHAR(80) NOT NULL,
+    under_professional_care BOOLEAN NOT NULL,
+    age INT NOT NULL,
+    is_male BOOLEAN NOT NULL
+);
+
+-- Create user_patient_relation table
+DROP TABLE IF EXISTS user_patient_relation CASCADE;
+
+CREATE TABLE user_patient_relation (
+	user_id SERIAL,
+    patient_id SERIAL,
+    FOREIGN KEY(user_id) REFERENCES users(id),
+    FOREIGN KEY(patient_id) REFERENCES patients(id)
+);
 
 -- -- Create projects table
 -- DROP TABLE IF EXISTS projects CASCADE;

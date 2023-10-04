@@ -87,13 +87,16 @@ async def add_user(
     email: Annotated[str, Form()],
     password: Annotated[str, Form()],
     role: Annotated[str, Form()],
-    user: Annotated[auth_user, Depends(authenticate_user)]
     ):
     date_created = datetime.datetime.now()
     salt, hashed_password = hash_new_password(password)
 
     postgres = init_postgres()
     new_user = User(firstname, lastname, email, salt, hashed_password, role, date_created)
+
+    user_details = postgres.query(models.User).filter(models.User.email == new_user.email).first()
+    if user_details:
+        raise HTTPException(status_code=409, detail="Email already taken.")
   
     postgres.add(new_user)
     postgres.commit()

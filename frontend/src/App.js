@@ -28,6 +28,7 @@ import PatientList from 'pages/PatientList'
 import VideoPage from "pages/videoPage"
 
 
+
 let isInitial  = true;
 
 const config = {

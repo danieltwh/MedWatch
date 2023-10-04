@@ -53,6 +53,30 @@ export const logout = async () => {
     return data;
 }
 
+export const signup = async (payload) => {
+    const requestOptions = {
+        method: "POST",
+        body: payload,
+        headers: {
+            // "Content-Type": "application/x-www-form-urlencoded"
+        }
+    }
+    console.log(requestOptions);
+
+    const data = await fetch(
+        `${base_url}/user/add`, 
+        requestOptions
+    ).then(
+        response => response.json().then(data => {
+            return {
+                body: data,
+                status: response.status
+            };
+        })
+    );
+    return data;
+}
+
 
 export const heartrate = async (payload) => {
     // const requestOptions = {

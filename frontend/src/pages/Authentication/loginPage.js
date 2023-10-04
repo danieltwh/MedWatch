@@ -1,4 +1,8 @@
-import '../App.css';
+import 'App.css';
+import styles from './signin.module.css';
+import { blue } from '@mui/material/colors';
+
+
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -18,17 +22,18 @@ import Typography from '@mui/material/Typography';
 import { Alert } from "@mui/material";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-import { login } from '../features/api';
+import { login } from 'features/api';
 import { useDispatch } from 'react-redux';
-import { authActions, selectAuth } from '../features/authSlice';
+import { authActions, selectAuth } from 'features/authSlice';
 const login_wallpaper = process.env.PUBLIC_URL + '/login_wallpaper.jpeg';
+
 
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
       <Link color="inherit" href="https://mui.com/">
-        Your Website
+        MedWatch
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -122,18 +127,30 @@ function LoginPage() {
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
           <Box
             sx={{
-              my: 8,
+              my: 0,
               mx: 4,
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-              <LockOutlinedIcon />
-            </Avatar>
+            {/* <img src="logo_black.png" alt="Logo" />  */}
+            {/* <Typography component="h1"  className={styles.title} >Welcome to MedWatch</Typography> */}
+            
+            
+
+            <Typography sx={{ my: 7 ,display: "flex", alignItems: "center" }} component="h1" variant="h4">
+              <Avatar sx={{ m: 1, bgcolor: "primary.dark", padding:"6px"  }} src="logo.png" id="avatar" alt="M">
+              </Avatar>
+              MedWatch
+            </Typography>
+
+            {/* <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }} img="static/images/logo.png" /> */}
+              {/* <LockOutlinedIcon /> */}
+              {/* <img src="./logo.png" alt="Logo" />  */}
+            {/* </Avatar> */}
             <Typography component="h1" variant="h5">
-              Sign in
+              Sign In
             </Typography>
             {loginError && <Alert severity="error">{errorMsg}</Alert>}
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
@@ -176,7 +193,7 @@ function LoginPage() {
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link href="#" variant="body2">
+                  <Link href="/signup" variant="body2">
                     {"Don't have an account? Sign Up"}
                   </Link>
                 </Grid>

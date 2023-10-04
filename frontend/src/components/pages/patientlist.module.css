@@ -1,0 +1,343 @@
+.container {
+    width: 100vw;
+    min-height: 100vh;
+    height: fit-content;
+    display: flex;
+    flex-direction: row;
+}
+
+.leftPanel {
+    width: 10vw;
+    height: 100%;
+    min-height: 100vh;
+    background-color: white;
+    padding: 2vw 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.mainPanel {
+    width: 65vw;
+    min-height: 100%;
+    height: 70vw;
+    background-color: rgb(233,232,238);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 2vw;
+}
+
+.detailPanel {
+    width: 25vw;
+    min-height: 100%;
+    height: 70vw;
+    background-color: rgb(35,29,94);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: 2vw 0;
+}
+
+.topLine {
+    width: 65vw;
+    height: 10%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+.icon {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 50px;
+}
+.icon img {
+    height: 50%;
+    margin-right: 10px;
+}
+.title {
+    color: rgb(35,29,94);
+    font-weight: 700;
+    font-size: 28px;
+}
+.cardsTitle {
+    color: rgb(35,29,94);
+    font-weight: 700;
+    font-size: 24px;
+    align-self: flex-start;
+    margin-bottom: 1.5vw;
+    font-size: 28px;
+}
+
+.functions {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.notification {
+    height: 50px;
+    background-color: white;
+    margin-right: 10px;
+}
+
+.dateDropdown {
+    height: 50px;
+    width: 120px;
+    background-color: rgb(35,29,94);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    border-radius: 8px;
+}
+.dateDropdown span {
+    color: white;
+    font-weight: 800;
+}
+.dateDropdown img {
+    height: 10px;
+}
+
+.search {
+    height: 25px;
+    width: 280px;
+    background-color: white;
+    border-radius: 12.5px;
+    box-shadow:0px 2px 14px rgba(35,29,94,.3);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.search img {
+    height: 15px;
+    margin: 0 8px;
+}
+.noDecInput {
+    text-decoration: none;
+    border: none;
+    background-color: transparent;
+    width: 80%;
+}
+textarea:focus, input:focus{
+    outline: none;
+}
+
+.patienList {
+    height: 74%;
+    width: 61vw;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow:0px 2px 14px rgba(35,29,94,.3);
+    padding: 2vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.cardStacks {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.card, .cardSelected {
+    width: 14vw;
+    height: 14vw;
+    background-color: rgb(233,232,238);
+    border-radius: 1vw;
+    margin-top: 1vw;
+    box-shadow:0px 2px 14px rgba(35,29,94,.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    cursor: pointer;
+}
+.cardSelected {
+    background-color: rgb(35,29,94);
+}
+.cardSelected > .name {
+    color: white;
+}
+.avatar {
+    width: 8vw;
+    height: 8vw;
+    border-radius: 1.5vw;
+}
+.name {
+    font-size: 15px;
+    font-weight: 700;
+    color: rgb(35,29,94);
+}
+
+.pageLine {
+    margin-top: 2vw;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.pageLine > * {
+    margin: 0 .2vw;
+}
+.pageLine > img {
+    height: 1vw;
+    width: 1vw;
+    cursor: pointer;
+}
+.pageDot,.pageDotSelected {
+    height: .5vw;
+    width: .5vw;
+    border-radius: 50%;
+}
+.pageDot {
+    background-color: transparent;
+    border: 2px solid rgb(35,29,94);
+    cursor: pointer;
+}
+.pageDotSelected {
+    background-color: rgb(35,29,94);
+    border: 2px solid transparent;
+}
+
+.topPanel, .bottomPanel {
+    width: 18vw;
+    height: 40vh;
+    min-height: fit-content;
+    border: 2px solid rgb(158,147,177);
+    border-radius: 2vw;
+    padding: 1.5vw 1vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    margin: 1vw 0;
+}
+.topPanel {
+    height: 22vw;
+}
+.bottomPanel {
+    height: 30vw;
+}
+.topPanel span {
+    color: white;
+}
+.callContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.pannelWrapper {
+    height: fit-content;
+}
+.topPanel > .name {
+    font-weight: 700;
+}
+.topPanel > .age {
+    font-weight: 500;
+}
+.topPanel > .goto {
+    color: rgb(242,200,90);
+    text-decoration: underline;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.info {
+    width: 90%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.infoCard {
+    width: 5vw;
+    height: 6vw;
+    background-color: rgb(158,147,177);
+    border-radius: 1vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    margin-top: 5px;
+}
+.infoCard > img {
+    width: 2.5vw;
+    height: 2.5vw;
+}
+.infoCard > span {
+    font-size: 10px;
+}
+.infoCard > span.number {
+    font-weight: 500;
+    font-size: 12px;
+}
+
+.objectPanel {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 1vw;
+}
+
+.objectTitle {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.objectTitle > img {
+    width: 3vw;
+    height: 3vw;
+    margin-right: 5px;
+}
+.objectName {
+    color: white;
+    font-weight: 800;
+    font-size: 20px;
+}
+
+.whiteBoard {
+    background-color: rgb(158,147,177);
+    border-radius: 1.5vw;
+    width: 15vw;
+    height: fit-content;
+    padding: 1vw;
+    margin-top: 1vw;
+}
+.whiteBoard li {
+    color: white;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.iconWrapper {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    height: 10%;
+}
+.iconWrapperBig {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    height: 70%;
+}
+
+.leftPanel img {
+    width: 5vw;
+    margin: .8vw;
+}
+
+
+/* img {
+    max-width: 5vw;
+} */
+
+/* .page */

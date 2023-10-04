@@ -17,6 +17,7 @@ import DashboardPage from './pages/dashboardPage';
 import SignIn from './components/pages/SignIn'
 import SignUp from './components/pages/SignUP'
 import Settings from './components/pages/Settings'
+import PatientList from './components/pages/PatientList'
 import ResetPass from './components/pages/ResetPass'
 
 let isInitial  = true;
@@ -91,6 +92,7 @@ function App() {
           <Route exact path="/home" element={<HomePage />} />
           <Route exact path="/dashboard" element={<DashboardPage />} />
           <Route exact path="/settings" element={<Settings/>} />
+          <Route exact path="/patientlist" element={<PatientList/>} />
         <Route exact path="/resetpass" element={<ResetPass/>} />
           {/* <Route path="/*" element={<Navigate to="/home"/>} /> */}
           <Route exact path="/*" element={<Navigate to="/home"/>} />

@@ -18,12 +18,15 @@ import LoginPage from "pages/Authentication/loginPage";
 import SignupPage from "pages/Authentication/signupPage";
 import HomePage from 'pages/homePage';
 // import DashboardPage from './pages/dashboardPage';
+
 import SignIn from 'pages/Authentication/SignIn'
 import SignUp from 'pages/Authentication/SignUP'
 import Settings from 'pages/Authentication/Settings'
 import ResetPass from 'pages/Authentication/ResetPass'
 import Dashboard from "pages/Dashboard";
 import PatientList from 'pages/PatientList'
+import VideoPage from "pages/videoPage"
+
 
 let isInitial  = true;
 
@@ -110,7 +113,7 @@ function App() {
             {/* <Route exact path="/signup2" element={<SignUp/>} /> */}
             <Route exact path="/*" element={<Navigate to="/login"/>} />
 
-          </Route> 
+          </Route>
 
           <Route element={<ProtectedRoutes authenticated={auth.authenticated} />}>
             <Route element={<ResponsiveAppBar/>}>
@@ -118,11 +121,13 @@ function App() {
               {/* <Route exact path="/dashboard" element={<DashboardPage />} /> */}
               <Route exact path="/dashboard" element={<Dashboard />} />
               <Route exact path="/patientlist" element={<PatientList/>} />
+              <Route exact path="/stream" element={<VideoPage />}/>
               <Route exact path="/settings" element={<Settings/>} />
+              <Route exact path="/patientlist" element={<PatientList/>} />
               <Route exact path="/resetpass" element={<ResetPass/>} />
               <Route exact path="/*" element={<Navigate to="/home"/>} />
             </Route>
-          </Route>    
+          </Route>
         </Routes>
         </BrowserRouter>
       </ThemeProvider>

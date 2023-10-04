@@ -14,14 +14,15 @@ import themes from 'themes';
 import {ProtectedRoutes, PublicRoutes} from "./components/Protected";
 
 import ResponsiveAppBar from "./components/responsiveAppBar";
-import LoginPage from "./pages/loginPage";
-import HomePage from './pages/homePage';
+import LoginPage from "pages/Authentication/loginPage";
+import SignupPage from "pages/Authentication/signupPage";
+import HomePage from 'pages/homePage';
 // import DashboardPage from './pages/dashboardPage';
-import SignIn from './components/pages/SignIn'
-import SignUp from './components/pages/SignUP'
-import Settings from './components/pages/Settings'
-import ResetPass from './components/pages/ResetPass'
-import Dashboard from "./pages/Dashboard";
+import SignIn from 'pages/Authentication/SignIn'
+import SignUp from 'pages/Authentication/SignUP'
+import Settings from 'pages/Authentication/Settings'
+import ResetPass from 'pages/Authentication/ResetPass'
+import Dashboard from "pages/Dashboard";
 
 let isInitial  = true;
 
@@ -103,8 +104,9 @@ function App() {
         <Routes >
           <Route element={<PublicRoutes authenticated={auth.authenticated}/>}>
             <Route exact path="/login" element={<LoginPage />} />
-            {/* <Route exact path="/" element={<SignIn/>} /> */}
-            <Route exact path="/signup" element={<SignUp/>} />
+            {/* <Route exact path="/signin" element={<SignIn/>} /> */}
+            <Route exact path="/signup" element={<SignupPage/>} />
+            {/* <Route exact path="/signup2" element={<SignUp/>} /> */}
             <Route exact path="/*" element={<Navigate to="/login"/>} />
 
           </Route> 

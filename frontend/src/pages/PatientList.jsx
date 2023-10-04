@@ -1,11 +1,11 @@
 // Settings.js
 import React from 'react';
 import styles from './patientlist.module.css';
-import arrow_left from '../../static/images/arrow_left.svg';
-import arrow_right from '../../static/images/arrow_right.svg';
-import arrow_down from '../../static/images/arrow_down.svg';
-import logo_black from '../../static/images/logo_black.png';
-import search from '../../static/images/search.svg';
+import arrow_left from 'static/images/arrow_left.svg';
+import arrow_right from 'static/images/arrow_right.svg';
+import arrow_down from 'static/images/arrow_down.svg';
+import logo_black from 'static/images/logo_black.png';
+import search from 'static/images/search.svg';
 
 import { useState, useEffect  } from "react";
 import { useDispatch } from 'react-redux';

@@ -20,6 +20,7 @@ import HomePage from './pages/homePage';
 import SignIn from './components/pages/SignIn'
 import SignUp from './components/pages/SignUP'
 import Settings from './components/pages/Settings'
+import PatientList from './components/pages/PatientList'
 import ResetPass from './components/pages/ResetPass'
 import Dashboard from "./pages/Dashboard";
 
@@ -115,6 +116,7 @@ function App() {
               {/* <Route exact path="/dashboard" element={<DashboardPage />} /> */}
               <Route exact path="/dashboard" element={<Dashboard />} />
               <Route exact path="/settings" element={<Settings/>} />
+              <Route exact path="/patientlist" element={<PatientList/>} />
               <Route exact path="/resetpass" element={<ResetPass/>} />
               <Route exact path="/*" element={<Navigate to="/home"/>} />
             </Route>

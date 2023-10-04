@@ -23,6 +23,7 @@ import Settings from './components/pages/Settings'
 import PatientList from './components/pages/PatientList'
 import ResetPass from './components/pages/ResetPass'
 import Dashboard from "./pages/Dashboard";
+import VideoPage from "./pages/videoPage"
 
 let isInitial  = true;
 
@@ -108,19 +109,20 @@ function App() {
             <Route exact path="/signup" element={<SignUp/>} />
             <Route exact path="/*" element={<Navigate to="/login"/>} />
 
-          </Route> 
+          </Route>
 
           <Route element={<ProtectedRoutes authenticated={auth.authenticated} />}>
             <Route element={<ResponsiveAppBar/>}>
               <Route exact path="/home" element={<HomePage />} />
               {/* <Route exact path="/dashboard" element={<DashboardPage />} /> */}
               <Route exact path="/dashboard" element={<Dashboard />} />
+              <Route exact path="/stream" element={<VideoPage />}/>
               <Route exact path="/settings" element={<Settings/>} />
               <Route exact path="/patientlist" element={<PatientList/>} />
               <Route exact path="/resetpass" element={<ResetPass/>} />
               <Route exact path="/*" element={<Navigate to="/home"/>} />
             </Route>
-          </Route>    
+          </Route>
         </Routes>
         </BrowserRouter>
       </ThemeProvider>

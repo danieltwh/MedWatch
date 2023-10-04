@@ -19,7 +19,7 @@ import { logout } from '../features/api';
 import { useDispatch } from 'react-redux';
 import { authActions, selectAuth } from '../features/authSlice';
 
-const pages = ['Home', 'Dashboard', 'PatientList', 'XXX'];
+const pages = ['Home', 'Dashboard', 'PatientList', 'Stream', 'XXX'];
 const settings = ['Profile', 'Account', 'Dashboard'];
 
 function ResponsiveAppBar() {

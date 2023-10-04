@@ -99,5 +99,6 @@ export const ProtectedRoutes = () => {
     // return (authenticated) ? <Outlet /> : <Navigate to="/login" replace state={{path: location.pathname}}/>;
 
     // return (auth.authenticated != null || auth.authenticated == "true") ? <Outlet /> : <Navigate to="/login" replace state={{path: location.pathname}}/>;
-    return (auth.authenticated) ? <Outlet /> : <Navigate to="/login" replace state={{path: location.pathname}}/>;
+    // return (auth.authenticated) ? <Outlet /> : <Navigate to="/login" replace state={{path: location.pathname}}/>;
+    return <Outlet />;
 }

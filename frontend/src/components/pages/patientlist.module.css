@@ -11,7 +11,6 @@
     height: 100%;
     min-height: 100vh;
     background-color: white;
-    padding: 2vw 0;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -44,7 +43,7 @@
 }
 
 .topLine {
-    width: 65vw;
+    width: 100%;
     height: 10%;
     display: flex;
     flex-direction: row;
@@ -89,7 +88,7 @@
 
 .dateDropdown {
     height: 50px;
-    width: 120px;
+    width: 12vw;
     background-color: rgb(35,29,94);
     display: flex;
     flex-direction: row;
@@ -130,7 +129,8 @@ textarea:focus, input:focus{
 }
 
 .patienList {
-    height: 74%;
+    min-height: 74%;
+    height: fit-content;
     width: 61vw;
     background-color: white;
     border-radius: 10px;
@@ -209,8 +209,7 @@ textarea:focus, input:focus{
 
 .topPanel, .bottomPanel {
     width: 18vw;
-    height: 40vh;
-    min-height: fit-content;
+    height: fit-content;
     border: 2px solid rgb(158,147,177);
     border-radius: 2vw;
     padding: 1.5vw 1vw;
@@ -220,12 +219,12 @@ textarea:focus, input:focus{
     justify-content: space-between;
     margin: 1vw 0;
 }
-.topPanel {
+/* .topPanel {
     height: 22vw;
 }
 .bottomPanel {
     height: 30vw;
-}
+} */
 .topPanel span {
     color: white;
 }
@@ -248,10 +247,12 @@ textarea:focus, input:focus{
     text-decoration: underline;
     cursor: pointer;
     font-weight: 700;
+    font-size: .8em;
+    padding: .5vw 0;
 }
 
 .info {
-    width: 90%;
+    width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -264,8 +265,9 @@ textarea:focus, input:focus{
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: space-between;
     margin-top: 5px;
+    padding: .2vw;
 }
 .infoCard > img {
     width: 2.5vw;
@@ -322,6 +324,7 @@ textarea:focus, input:focus{
     flex-direction: column;
     width: fit-content;
     height: 10%;
+    margin-top: 20px;
 }
 .iconWrapperBig {
     display: flex;

@@ -7,7 +7,7 @@ import { Avatar, Box, Grid, Menu, MenuItem, Typography } from "@mui/material";
 
 // project imports
 import MainCard from "ui-component/cards/MainCard";
-import SkeletonEarningCard from "ui-component/cards/Skeleton/EarningCard";
+import SkeletonMetricsCard from "ui-component/cards/Skeleton/MetricsCard";
 import { gridSpacing } from "shared/constant";
 
 // assets
@@ -18,6 +18,7 @@ import GetAppTwoToneIcon from "@mui/icons-material/GetAppOutlined";
 import FileCopyTwoToneIcon from "@mui/icons-material/FileCopyOutlined";
 import PictureAsPdfTwoToneIcon from "@mui/icons-material/PictureAsPdfOutlined";
 import ArchiveTwoToneIcon from "@mui/icons-material/ArchiveOutlined";
+import WhatshotIcon from "@mui/icons-material/Whatshot";
 
 const CardWrapper = styled(MainCard)(({ theme }) => ({
 	backgroundColor: theme.palette.secondary.dark,
@@ -57,7 +58,7 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 
 // ===========================|| DASHBOARD DEFAULT - EARNING CARD ||=========================== //
 
-const EarningCard = ({ isLoading }) => {
+const CaloriesCard = ({ isLoading }) => {
 	const theme = useTheme();
 
 	const [anchorEl, setAnchorEl] = useState(null);
@@ -73,12 +74,12 @@ const EarningCard = ({ isLoading }) => {
 	return (
 		<>
 			{isLoading ? (
-				<SkeletonEarningCard />
+				<SkeletonMetricsCard />
 			) : (
 				<CardWrapper border={false} content={false}>
 					<Box sx={{ p: 2.25 }}>
 						<Grid container direction="column">
-							<Grid item>
+							{/* <Grid item>
 								<Grid container justifyContent="space-between">
 									<Grid item>
 										<Avatar
@@ -163,22 +164,9 @@ const EarningCard = ({ isLoading }) => {
 										</Menu>
 									</Grid>
 								</Grid>
-							</Grid>
+							</Grid> */}
 							<Grid item>
 								<Grid container alignItems="center">
-									<Grid item>
-										<Typography
-											sx={{
-												fontSize: "2.125rem",
-												fontWeight: 500,
-												mr: 1,
-												mt: 1.75,
-												mb: 0.75,
-											}}
-										>
-											$500.00
-										</Typography>
-									</Grid>
 									<Grid item>
 										<Avatar
 											sx={{
@@ -191,14 +179,21 @@ const EarningCard = ({ isLoading }) => {
 													.dark,
 											}}
 										>
-											<ArrowUpwardIcon
-												fontSize="inherit"
-												sx={{
-													transform:
-														"rotate3d(1, 1, 1, 45deg)",
-												}}
-											/>
+											<WhatshotIcon fontSize="inherit" />
 										</Avatar>
+									</Grid>
+									<Grid item p={1}>
+										<Typography
+											sx={{
+												fontSize: "2.125rem",
+												fontWeight: 800,
+												mr: 1,
+												mt: 1.75,
+												mb: 0.75,
+											}}
+										>
+											532 kcal
+										</Typography>
 									</Grid>
 								</Grid>
 							</Grid>
@@ -206,11 +201,25 @@ const EarningCard = ({ isLoading }) => {
 								<Typography
 									sx={{
 										fontSize: "1rem",
-										fontWeight: 500,
-										color: theme.palette.secondary[200],
+										fontWeight: 800,
+										// color: theme.palette.secondary[200],
+										color: "White",
 									}}
 								>
-									Total Earning
+									Calories Burned
+								</Typography>
+							</Grid>
+							<Grid item sx={{ mb: 1.25 }}>
+								<Typography
+									sx={{
+										fontSize: "1rem",
+										fontWeight: 500,
+										// color: theme.palette.secondary[200],
+										color: "White",
+									}}
+								>
+									Brandon's calories burned is in the normal
+									range.
 								</Typography>
 							</Grid>
 						</Grid>
@@ -221,8 +230,8 @@ const EarningCard = ({ isLoading }) => {
 	);
 };
 
-EarningCard.propTypes = {
+CaloriesCard.propTypes = {
 	isLoading: PropTypes.bool,
 };
 
-export default EarningCard;
+export default CaloriesCard;

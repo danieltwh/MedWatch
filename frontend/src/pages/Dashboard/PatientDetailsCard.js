@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { useState } from "react";
 
 // material-ui
-import { styled, useTheme } from "@mui/material/styles";
+import { styled, useTheme, responsiveFontSizes } from "@mui/material/styles";
 import { Avatar, Box, Grid, Menu, MenuItem, Typography } from "@mui/material";
 
 // project imports
@@ -21,6 +21,10 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 	color: "#fff",
 	overflow: "hidden",
 	position: "relative",
+	"&>div": {
+		position: "relative",
+		zIndex: 5,
+	},
 	"&:after": {
 		content: '""',
 		position: "absolute",
@@ -54,32 +58,49 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 
 const CardStyle = {
 	color: "White",
-	backgroundColor: "#8a94bd",
-	borderRadius: "20px",
+	backgroundColor: "#b39ddb",
+	borderRadius: "10px",
 };
 
 const CardHeaderTextStyle = {
-	fontSize: "2.125rem",
+	fontSize: {
+		lg: "1.5rem",
+		md: "1.5rem",
+		sm: "1.5rem",
+		xs: "1rem",
+	},
 	fontWeight: 800,
 	mr: 1,
 	mt: 1.75,
 	mb: 0.75,
-	fontFamily: "Helvetica Neue",
+};
+
+const CardInfoHeaderTextStyle = {
+	fontSize: {
+		lg: "1.25rem",
+		md: "1.25rem",
+		sm: "1.25rem",
+		xs: "0.875rem",
+	},
+	fontWeight: 800,
+	mr: 1,
+	mt: 1.25,
+	mb: 1.25,
 };
 
 const CardInfoTextStyle = {
-	fontSize: "1.000rem",
+	fontSize: "1rem",
 	fontWeight: 400,
 	mr: 1,
-	mt: 1.75,
-	mb: 0.75,
-	fontFamily: "Helvetica Neue",
+	mt: 0.5,
+	mb: 0.5,
 };
 
 // ===========================|| DASHBOARD DEFAULT - PATIENT DETAILS CARD ||=========================== //
 
 const PatientDetailCard = ({ isLoading }) => {
-	const theme = useTheme();
+	let theme = useTheme();
+	theme = responsiveFontSizes(theme);
 
 	const [anchorEl, setAnchorEl] = useState(null);
 
@@ -96,259 +117,145 @@ const PatientDetailCard = ({ isLoading }) => {
 			{isLoading ? (
 				<SkeletonMetricsCard />
 			) : (
-				<CardWrapper
-					border={false}
-					content={false}
-					style={{
-						color: "White",
-						backgroundColor: "#001670",
-					}}
-				>
+				<CardWrapper border={false} content={false}>
 					<Box sx={{ p: 2.25 }}>
 						<Grid container direction="column">
 							<Grid item>
-								<Grid
-									container
-									justifyContent="center"
-									spacing={gridSpacing}
-								>
+								<Grid container justifyContent="center">
 									<Grid item>
 										<Box
 											component="img"
 											sx={{
-												height: 250,
-												width: 250,
+												height: 150,
+												width: 150,
 												maxHeight: { xs: 250, md: 250 },
 												maxWidth: { xs: 250, md: 250 },
+												borderRadius: "50%",
 											}}
 											alt="Patient Photo"
 											src={PatientPhoto}
 										></Box>
 									</Grid>
-									{/* <Grid item>
-										<Avatar
-											variant="rounded"
-											sx={{
-												...theme.typography
-													.commonAvatar,
-												...theme.typography
-													.mediumAvatar,
-												backgroundColor:
-													theme.palette.secondary
-														.dark,
-												color: theme.palette
-													.secondary[200],
-												zIndex: 1,
-											}}
-											aria-controls="menu-earning-card"
-											aria-haspopup="true"
-											onClick={handleClick}
-										>
-											<MoreHorizIcon fontSize="inherit" />
-										</Avatar>
-										<Menu
-											id="menu-earning-card"
-											anchorEl={anchorEl}
-											keepMounted
-											open={Boolean(anchorEl)}
-											onClose={handleClose}
-											variant="selectedMenu"
-											anchorOrigin={{
-												vertical: "bottom",
-												horizontal: "right",
-											}}
-											transformOrigin={{
-												vertical: "top",
-												horizontal: "right",
-											}}
-										>
-											<MenuItem onClick={handleClose}>
-												<GetAppTwoToneIcon
-													sx={{ mr: 1.75 }}
-												/>{" "}
-												Import Card
-											</MenuItem>
-											<MenuItem onClick={handleClose}>
-												<FileCopyTwoToneIcon
-													sx={{ mr: 1.75 }}
-												/>{" "}
-												Copy Data
-											</MenuItem>
-											<MenuItem onClick={handleClose}>
-												<PictureAsPdfTwoToneIcon
-													sx={{ mr: 1.75 }}
-												/>{" "}
-												Export
-											</MenuItem>
-											<MenuItem onClick={handleClose}>
-												<ArchiveTwoToneIcon
-													sx={{ mr: 1.75 }}
-												/>{" "}
-												Archive File
-											</MenuItem>
-										</Menu>
-									</Grid> */}
 								</Grid>
 							</Grid>
+							<Grid item p={1}>
+								<Grid container justifyContent="center">
+									<Typography sx={CardHeaderTextStyle}>
+										Brandon Chiu Wei Le
+									</Typography>
+								</Grid>
+							</Grid>
+							{/* Basic Details */}
 							<Grid item>
-								<Grid
-									container
-									justifyContent="center"
-									alignItems="center"
-									spacing={gridSpacing}
-								>
-									<Grid>
-										<Typography sx={CardHeaderTextStyle}>
-											Brandon Chiu Wei Le
+								<Grid container alignItems="center">
+									<Grid item>
+										<Avatar
+											sx={{
+												cursor: "pointer",
+												...theme.typography.smallAvatar,
+												backgroundColor:
+													theme.palette
+														.secondary[200],
+												color: theme.palette.secondary
+													.dark,
+											}}
+										>
+											<PersonIcon fontSize="inherit" />
+										</Avatar>
+									</Grid>
+									<Grid item p={2}>
+										<Typography
+											sx={CardInfoHeaderTextStyle}
+										>
+											Basic Details
 										</Typography>
 									</Grid>
 								</Grid>
 							</Grid>
-
-							<Grid item xs={12}>
-								<Grid container>
-									<Grid
-										item
-										lg={4}
-										md={4}
-										sm={4}
-										xs={4}
-										align="center"
-										p={1}
-									>
-										<Grid item>
-											<Avatar
-												sx={{
-													cursor: "pointer",
-													...theme.typography
-														.smallAvatar,
-													backgroundColor:
-														theme.palette
-															.secondary[200],
-													color: theme.palette
-														.secondary.dark,
-												}}
-											>
-												<PersonIcon fontSize="inherit" />
-											</Avatar>
-										</Grid>
-										<Grid item>
-											<Typography
-												sx={CardHeaderTextStyle}
-											>
-												Basic Details
-											</Typography>
-										</Grid>
-										<Grid item style={CardStyle} p={1}>
-											<Typography sx={CardInfoTextStyle}>
-												Height: 178cm
-											</Typography>
-											<Typography sx={CardInfoTextStyle}>
-												Weight: 74.3kg
-											</Typography>
-											<Typography sx={CardInfoTextStyle}>
-												Blood Type: A+
-											</Typography>
-										</Grid>
+							<Grid item style={CardStyle} p={2}>
+								<Typography sx={CardInfoTextStyle}>
+									<b>Height: </b>178cm
+								</Typography>
+								<Typography sx={CardInfoTextStyle}>
+									<b>Weight: </b>74.3kg
+								</Typography>
+								<Typography sx={CardInfoTextStyle}>
+									<b>Blood Type: </b>A+
+								</Typography>
+							</Grid>
+							{/* Medical Condition */}
+							<Grid item>
+								<Grid container alignItems="center">
+									<Grid item>
+										<Avatar
+											sx={{
+												cursor: "pointer",
+												...theme.typography.smallAvatar,
+												backgroundColor:
+													theme.palette
+														.secondary[200],
+												color: theme.palette.secondary
+													.dark,
+											}}
+										>
+											<MedicalInformationIcon fontSize="inherit" />
+										</Avatar>
 									</Grid>
-									<Grid
-										item
-										lg={4}
-										md={4}
-										sm={4}
-										xs={4}
-										align="center"
-										p={1}
-									>
-										<Grid item>
-											<Avatar
-												sx={{
-													cursor: "pointer",
-													...theme.typography
-														.smallAvatar,
-													backgroundColor:
-														theme.palette
-															.secondary[200],
-													color: theme.palette
-														.secondary.dark,
-												}}
-											>
-												<MedicationIcon fontSize="inherit" />
-											</Avatar>
-										</Grid>
-										<Grid>
-											<Typography
-												sx={CardHeaderTextStyle}
-											>
-												Medication
-											</Typography>
-										</Grid>
-										<Grid item style={CardStyle} p={1}>
-											<Typography sx={CardInfoTextStyle}>
-												Prinivil: 20mg, Once a day
-											</Typography>
-											<Typography sx={CardInfoTextStyle}>
-												Metformin: 500mg, Twice a day
-											</Typography>
-										</Grid>
-									</Grid>
-									<Grid
-										item
-										lg={4}
-										md={4}
-										sm={4}
-										xs={4}
-										align="center"
-										p={1}
-									>
-										<Grid item>
-											<Avatar
-												sx={{
-													cursor: "pointer",
-													...theme.typography
-														.smallAvatar,
-													backgroundColor:
-														theme.palette
-															.secondary[200],
-													color: theme.palette
-														.secondary.dark,
-												}}
-											>
-												<MedicalInformationIcon fontSize="inherit" />
-											</Avatar>
-										</Grid>
-										<Grid>
-											<Typography
-												sx={CardHeaderTextStyle}
-											>
-												Medical Condition
-											</Typography>
-										</Grid>
-										<Grid item style={CardStyle} p={1}>
-											<Typography sx={CardInfoTextStyle}>
-												High Blood Pressure
-											</Typography>
-											<Typography sx={CardInfoTextStyle}>
-												Type II Diabetes
-											</Typography>
-											<Typography sx={CardInfoTextStyle}>
-												Allergic to Ibuprofen
-											</Typography>
-										</Grid>
+									<Grid item p={2}>
+										<Typography
+											sx={CardInfoHeaderTextStyle}
+										>
+											Medical Condition
+										</Typography>
 									</Grid>
 								</Grid>
 							</Grid>
-							{/* <Grid item sx={{ mb: 1.25 }}>
-								<Typography
-									sx={{
-										fontSize: "1rem",
-										fontWeight: 500,
-										color: theme.palette.secondary[200],
-									}}
-								>
-									Total Earning
+							<Grid item style={CardStyle} p={2}>
+								<Typography sx={CardInfoTextStyle}>
+									<b>High Blood Pressure</b>
 								</Typography>
-							</Grid> */}
+								<Typography sx={CardInfoTextStyle}>
+									<b>Type II Diabetes</b>
+								</Typography>
+								<Typography sx={CardInfoTextStyle}>
+									<b>Allergic to Ibuprofen</b>
+								</Typography>
+							</Grid>
+							{/* Medication */}
+							<Grid item>
+								<Grid container alignItems="center">
+									<Grid item>
+										<Avatar
+											sx={{
+												cursor: "pointer",
+												...theme.typography.smallAvatar,
+												backgroundColor:
+													theme.palette
+														.secondary[200],
+												color: theme.palette.secondary
+													.dark,
+											}}
+										>
+											<MedicationIcon fontSize="inherit" />
+										</Avatar>
+									</Grid>
+									<Grid item p={2}>
+										<Typography
+											sx={CardInfoHeaderTextStyle}
+										>
+											Medication
+										</Typography>
+									</Grid>
+								</Grid>
+							</Grid>
+							<Grid item style={CardStyle} p={2}>
+								<Typography sx={CardInfoTextStyle}>
+									<b>Prinivil: </b>20mg, Once a day
+								</Typography>
+								<Typography sx={CardInfoTextStyle}>
+									<b>Metformin: </b>500mg, Twice a day
+								</Typography>
+							</Grid>
 						</Grid>
 					</Box>
 				</CardWrapper>

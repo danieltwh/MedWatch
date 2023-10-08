@@ -20,18 +20,65 @@ import PictureAsPdfTwoToneIcon from "@mui/icons-material/PictureAsPdfOutlined";
 import ArchiveTwoToneIcon from "@mui/icons-material/ArchiveOutlined";
 import DirectionsWalkIcon from "@mui/icons-material/DirectionsWalk";
 
+// const CardWrapper = styled(MainCard)(({ theme }) => ({
+// 	backgroundColor: "#fff",
+// 	color: theme.palette.secondary.dark,
+// 	overflow: "hidden",
+// 	position: "relative",
+// 	"&>div": {
+// 		position: "relative",
+// 		zIndex: 5,
+// 	},
+// 	"&:after": {
+// 		content: '""',
+// 		position: "absolute",
+// 		width: 210,
+// 		height: 210,
+// 		background: theme.palette.secondary[800],
+// 		borderRadius: "50%",
+// 		zIndex: 1,
+// 		top: -85,
+// 		right: -95,
+// 		[theme.breakpoints.down("sm")]: {
+// 			top: -105,
+// 			right: -140,
+// 		},
+// 	},
+// 	"&:before": {
+// 		content: '""',
+// 		position: "absolute",
+// 		zIndex: 1,
+// 		width: 210,
+// 		height: 210,
+// 		background: theme.palette.secondary[800],
+// 		borderRadius: "50%",
+// 		top: -125,
+// 		right: -15,
+// 		opacity: 0.5,
+// 		[theme.breakpoints.down("sm")]: {
+// 			top: -155,
+// 			right: -70,
+// 		},
+// 	},
+// }));
+
 const CardWrapper = styled(MainCard)(({ theme }) => ({
-	backgroundColor: theme.palette.secondary.dark,
-	color: "#fff",
+	backgroundColor: "#ffffff",
+	color: theme.palette.primary.dark,
 	overflow: "hidden",
 	position: "relative",
+	"&>div": {
+		position: "relative",
+		zIndex: 5,
+	},
 	"&:after": {
 		content: '""',
 		position: "absolute",
 		width: 210,
 		height: 210,
-		background: theme.palette.secondary[800],
+		background: theme.palette.primary[800],
 		borderRadius: "50%",
+		zIndex: 1,
 		top: -85,
 		right: -95,
 		[theme.breakpoints.down("sm")]: {
@@ -42,9 +89,10 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 	"&:before": {
 		content: '""',
 		position: "absolute",
+		zIndex: 1,
 		width: 210,
 		height: 210,
-		background: theme.palette.secondary[800],
+		background: theme.palette.primary[800],
 		borderRadius: "50%",
 		top: -125,
 		right: -15,
@@ -79,92 +127,6 @@ const StepsCard = ({ isLoading }) => {
 				<CardWrapper border={false} content={false}>
 					<Box sx={{ p: 2.25 }}>
 						<Grid container direction="column">
-							{/* <Grid item>
-								<Grid container justifyContent="space-between">
-									<Grid item>
-										<Avatar
-											variant="rounded"
-											sx={{
-												...theme.typography
-													.commonAvatar,
-												...theme.typography.largeAvatar,
-												backgroundColor:
-													theme.palette
-														.secondary[800],
-												mt: 1,
-											}}
-										>
-											<img
-												src={EarningIcon}
-												alt="Notification"
-											/>
-										</Avatar>
-									</Grid>
-									<Grid item>
-										<Avatar
-											variant="rounded"
-											sx={{
-												...theme.typography
-													.commonAvatar,
-												...theme.typography
-													.mediumAvatar,
-												backgroundColor:
-													theme.palette.secondary
-														.dark,
-												color: theme.palette
-													.secondary[200],
-												zIndex: 1,
-											}}
-											aria-controls="menu-earning-card"
-											aria-haspopup="true"
-											onClick={handleClick}
-										>
-											<MoreHorizIcon fontSize="inherit" />
-										</Avatar>
-										<Menu
-											id="menu-earning-card"
-											anchorEl={anchorEl}
-											keepMounted
-											open={Boolean(anchorEl)}
-											onClose={handleClose}
-											variant="selectedMenu"
-											anchorOrigin={{
-												vertical: "bottom",
-												horizontal: "right",
-											}}
-											transformOrigin={{
-												vertical: "top",
-												horizontal: "right",
-											}}
-										>
-											<MenuItem onClick={handleClose}>
-												<GetAppTwoToneIcon
-													sx={{ mr: 1.75 }}
-												/>{" "}
-												Import Card
-											</MenuItem>
-											<MenuItem onClick={handleClose}>
-												<FileCopyTwoToneIcon
-													sx={{ mr: 1.75 }}
-												/>{" "}
-												Copy Data
-											</MenuItem>
-											<MenuItem onClick={handleClose}>
-												<PictureAsPdfTwoToneIcon
-													sx={{ mr: 1.75 }}
-												/>{" "}
-												Export
-											</MenuItem>
-											<MenuItem onClick={handleClose}>
-												<ArchiveTwoToneIcon
-													sx={{ mr: 1.75 }}
-												/>{" "}
-												Archive File
-											</MenuItem>
-										</Menu>
-									</Grid>
-								</Grid>
-							</Grid> */}
 							<Grid item>
 								<Grid container alignItems="center">
 									<Grid item>
@@ -173,9 +135,8 @@ const StepsCard = ({ isLoading }) => {
 												cursor: "pointer",
 												...theme.typography.smallAvatar,
 												backgroundColor:
-													theme.palette
-														.secondary[200],
-												color: theme.palette.secondary
+													theme.palette.primary[200],
+												color: theme.palette.primary
 													.dark,
 											}}
 										>
@@ -185,7 +146,12 @@ const StepsCard = ({ isLoading }) => {
 									<Grid item p={1}>
 										<Typography
 											sx={{
-												fontSize: "2.125rem",
+												fontSize: {
+													lg: "1.75rem",
+													md: "1.75rem",
+													sm: "1.75rem",
+													xs: "1.25rem",
+												},
 												fontWeight: 800,
 												mr: 1,
 												mt: 1.75,
@@ -203,7 +169,7 @@ const StepsCard = ({ isLoading }) => {
 										fontSize: "1rem",
 										fontWeight: 800,
 										// color: theme.palette.secondary[200],
-										color: "White",
+										color: "#1e88e5",
 									}}
 								>
 									Steps Taken
@@ -215,7 +181,7 @@ const StepsCard = ({ isLoading }) => {
 										fontSize: "1rem",
 										fontWeight: 500,
 										// color: theme.palette.secondary[200],
-										color: "White",
+										color: "#1e88e5",
 									}}
 								>
 									Need 5,624 more steps to complete 10,000

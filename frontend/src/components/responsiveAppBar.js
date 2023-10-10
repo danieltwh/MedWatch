@@ -19,7 +19,7 @@ import { logout } from "../features/api";
 import { useDispatch } from "react-redux";
 import { authActions, selectAuth } from "../features/authSlice";
 
-const pages = ["Home", "Dashboard", "PatientList", "Stream", "XXX"];
+const pages = ["Dashboard", "PatientList"];
 const settings = ["Profile", "Account", "Dashboard"];
 
 function ResponsiveAppBar() {
@@ -61,7 +61,7 @@ function ResponsiveAppBar() {
 
 	return (
 		<>
-			<AppBar position="fixed" sx={{ backgroundColor: "#3699db" }}>
+			<AppBar position="fixed" sx={{ backgroundColor: "#1565c0" }}>
 				<Container maxWidth="xl">
 					<Toolbar disableGutters>
 						{/* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}

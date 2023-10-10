@@ -8,6 +8,7 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 COPY ./app ./Backend/app
 COPY ./requirements.txt ./Backend/
+COPY ./.secret ./Backend/
 WORKDIR /Backend
 
 # Upgrade packages

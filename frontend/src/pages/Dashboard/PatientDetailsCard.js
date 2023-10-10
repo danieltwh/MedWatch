@@ -1,5 +1,7 @@
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 // material-ui
 import { styled, useTheme, responsiveFontSizes } from "@mui/material/styles";
@@ -15,6 +17,9 @@ import PatientPhoto from "static/images/patientPicture.jpg";
 import PersonIcon from "@mui/icons-material/Person";
 import MedicationIcon from "@mui/icons-material/Medication";
 import MedicalInformationIcon from "@mui/icons-material/MedicalInformation";
+
+import Child from "./ChildPatientList";
+import PatientList from "../PatientList";
 
 const CardWrapper = styled(MainCard)(({ theme }) => ({
 	backgroundColor: theme.palette.secondary.dark,
@@ -56,46 +61,6 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 	},
 }));
 
-const CardStyle = {
-	color: "White",
-	backgroundColor: "#b39ddb",
-	borderRadius: "10px",
-};
-
-const CardHeaderTextStyle = {
-	fontSize: {
-		lg: "1.5rem",
-		md: "1.5rem",
-		sm: "1.5rem",
-		xs: "1rem",
-	},
-	fontWeight: 800,
-	mr: 1,
-	mt: 1.75,
-	mb: 0.75,
-};
-
-const CardInfoHeaderTextStyle = {
-	fontSize: {
-		lg: "1.25rem",
-		md: "1.25rem",
-		sm: "1.25rem",
-		xs: "0.875rem",
-	},
-	fontWeight: 800,
-	mr: 1,
-	mt: 1.25,
-	mb: 1.25,
-};
-
-const CardInfoTextStyle = {
-	fontSize: "1rem",
-	fontWeight: 400,
-	mr: 1,
-	mt: 0.5,
-	mb: 0.5,
-};
-
 // ===========================|| DASHBOARD DEFAULT - PATIENT DETAILS CARD ||=========================== //
 
 const PatientDetailCard = ({ isLoading }) => {
@@ -112,156 +77,30 @@ const PatientDetailCard = ({ isLoading }) => {
 		setAnchorEl(null);
 	};
 
-	return (
-		<>
-			{isLoading ? (
-				<SkeletonMetricsCard />
-			) : (
-				<CardWrapper border={false} content={false}>
-					<Box sx={{ p: 2.25 }}>
-						<Grid container direction="column">
-							<Grid item>
-								<Grid container justifyContent="center">
-									<Grid item>
-										<Box
-											component="img"
-											sx={{
-												height: 150,
-												width: 150,
-												maxHeight: { xs: 250, md: 250 },
-												maxWidth: { xs: 250, md: 250 },
-												borderRadius: "50%",
-											}}
-											alt="Patient Photo"
-											src={PatientPhoto}
-										></Box>
-									</Grid>
-								</Grid>
-							</Grid>
-							<Grid item p={1}>
-								<Grid container justifyContent="center">
-									<Typography sx={CardHeaderTextStyle}>
-										Brandon Chiu Wei Le
-									</Typography>
-								</Grid>
-							</Grid>
-							{/* Basic Details */}
-							<Grid item>
-								<Grid container alignItems="center">
-									<Grid item>
-										<Avatar
-											sx={{
-												cursor: "pointer",
-												...theme.typography.smallAvatar,
-												backgroundColor:
-													theme.palette
-														.secondary[200],
-												color: theme.palette.secondary
-													.dark,
-											}}
-										>
-											<PersonIcon fontSize="inherit" />
-										</Avatar>
-									</Grid>
-									<Grid item p={2}>
-										<Typography
-											sx={CardInfoHeaderTextStyle}
-										>
-											Basic Details
-										</Typography>
-									</Grid>
-								</Grid>
-							</Grid>
-							<Grid item style={CardStyle} p={2}>
-								<Typography sx={CardInfoTextStyle}>
-									<b>Height: </b>178cm
-								</Typography>
-								<Typography sx={CardInfoTextStyle}>
-									<b>Weight: </b>74.3kg
-								</Typography>
-								<Typography sx={CardInfoTextStyle}>
-									<b>Blood Type: </b>A+
-								</Typography>
-							</Grid>
-							{/* Medical Condition */}
-							<Grid item>
-								<Grid container alignItems="center">
-									<Grid item>
-										<Avatar
-											sx={{
-												cursor: "pointer",
-												...theme.typography.smallAvatar,
-												backgroundColor:
-													theme.palette
-														.secondary[200],
-												color: theme.palette.secondary
-													.dark,
-											}}
-										>
-											<MedicalInformationIcon fontSize="inherit" />
-										</Avatar>
-									</Grid>
-									<Grid item p={2}>
-										<Typography
-											sx={CardInfoHeaderTextStyle}
-										>
-											Medical Condition
-										</Typography>
-									</Grid>
-								</Grid>
-							</Grid>
-							<Grid item style={CardStyle} p={2}>
-								<Typography sx={CardInfoTextStyle}>
-									<b>High Blood Pressure</b>
-								</Typography>
-								<Typography sx={CardInfoTextStyle}>
-									<b>Type II Diabetes</b>
-								</Typography>
-								<Typography sx={CardInfoTextStyle}>
-									<b>Allergic to Ibuprofen</b>
-								</Typography>
-							</Grid>
-							{/* Medication */}
-							<Grid item>
-								<Grid container alignItems="center">
-									<Grid item>
-										<Avatar
-											sx={{
-												cursor: "pointer",
-												...theme.typography.smallAvatar,
-												backgroundColor:
-													theme.palette
-														.secondary[200],
-												color: theme.palette.secondary
-													.dark,
-											}}
-										>
-											<MedicationIcon fontSize="inherit" />
-										</Avatar>
-									</Grid>
-									<Grid item p={2}>
-										<Typography
-											sx={CardInfoHeaderTextStyle}
-										>
-											Medication
-										</Typography>
-									</Grid>
-								</Grid>
-							</Grid>
-							<Grid item style={CardStyle} p={2}>
-								<Typography sx={CardInfoTextStyle}>
-									<b>Prinivil: </b>20mg, Once a day
-								</Typography>
-								<Typography sx={CardInfoTextStyle}>
-									<b>Metformin: </b>500mg, Twice a day
-								</Typography>
-							</Grid>
-						</Grid>
-					</Box>
-				</CardWrapper>
-			)}
-		</>
-	);
+	const data = {
+		avatar: "https://i.imgur.com/oflMA1gb.jpg",
+		name: "fake1",
+		age: 90,
+		height: 1.88,
+		weight: 80,
+		blood_type: "A",
+		medication: [
+			{ name: "Prinivil", count: "20mg", freq: "once a day" },
+			{ name: "Metformin", count: "500mg", freq: "twice a day" },
+		],
+		medical_condition: [
+			"High Blood Pressure",
+			"Type II Diabetes",
+			"Allergic to Ibuprofen",
+		],
+		nok_contact: {
+			name: "Chiu Tien Le",
+			relationship: "Son",
+			phone_number: "+6591234567",
+		},
+	};
+
+	return <>{isLoading ? <SkeletonMetricsCard /> : <Child data={data} />}</>;
 };
 
 PatientDetailCard.propTypes = {

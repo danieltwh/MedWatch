@@ -1,45 +1,25 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 // material-ui
 import { useTheme, styled } from "@mui/material/styles";
-import { Container, Grid, Collapse, Typography } from "@mui/material";
-import Box from "@mui/material/Box";
+import { Container, Grid, Box } from "@mui/material";
 
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import ShareIcon from "@mui/icons-material/Share";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import IconButton from "@mui/material/IconButton";
 
 // project imports
-import EarningCard from "./EarningCard";
 import PatientDetailsCard from "./PatientDetailsCard";
 import CaloriesCard from "./CaloriesCard";
 import SleepDurationCard from "./SleepDurationCard";
 import StepsCard from "./StepsCard";
 import StreamCard from "./StreamCard";
-import PopularCard from "./PopularCard";
-import TotalOrderLineChartCard from "./TotalOrderLineChartCard";
-import TotalIncomeDarkCard from "./TotalIncomeDarkCard";
-import TotalIncomeLightCard from "./TotalIncomeLightCard";
-import TotalGrowthBarChart from "./TotalGrowthBarChart";
 import { gridSpacing } from "shared/constant";
 
-import { useNavigate } from "react-router-dom";
-import Chart from "chart.js/auto";
-
-import { heartrate as heartrateAPI } from "features/api";
-
-import { heartrateActions, selectHeartrate } from "features/heartrateSlice";
-
-import LineChart from "components/LineChart";
-import { Line } from "react-chartjs-2";
-import { DateTime } from "luxon";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import HeartRateLineChart from "./HeartRateLineChart";
 import ActivityLineChart from "./ActivityLineChart";
 
+import Parent from "./archive/Parent";
 
 // ==============================|| DEFAULT DASHBOARD ||============================== //
 
@@ -133,6 +113,13 @@ const Dashboard = () => {
 								</Grid>
 							</Grid>
 						</Grid>
+						{/* <Grid item xs={12}>
+							<Grid container spacing={gridSpacing}>
+								<Grid item xs={6} md={6}>
+									<Parent />
+								</Grid>
+							</Grid>
+						</Grid> */}
 					</Grid>
 				</Grid>
 				<Grid item lg={3} md={3} sm={3} xs={12}>

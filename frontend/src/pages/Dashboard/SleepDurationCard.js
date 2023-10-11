@@ -67,6 +67,46 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 	},
 }));
 
+// const CardWrapper = styled(MainCard)(({ theme }) => ({
+// 	backgroundColor: "#fff",
+// 	color: theme.palette.secondary.dark,
+// 	overflow: "hidden",
+// 	position: "relative",
+// 	"&>div": {
+// 		position: "relative",
+// 		zIndex: 5,
+// 	},
+// 	"&:after": {
+// 		content: '""',
+// 		position: "absolute",
+// 		width: 210,
+// 		height: 210,
+// 		background: theme.palette.secondary[800],
+// 		borderRadius: "50%",
+// 		top: -85,
+// 		right: -95,
+// 		[theme.breakpoints.down("sm")]: {
+// 			top: -105,
+// 			right: -140,
+// 		},
+// 	},
+// 	"&:before": {
+// 		content: '""',
+// 		position: "absolute",
+// 		width: 210,
+// 		height: 210,
+// 		background: theme.palette.secondary[800],
+// 		borderRadius: "50%",
+// 		top: -125,
+// 		right: -15,
+// 		opacity: 0.5,
+// 		[theme.breakpoints.down("sm")]: {
+// 			top: -155,
+// 			right: -70,
+// 		},
+// 	},
+// }));
+
 // ===========================|| DASHBOARD DEFAULT - EARNING CARD ||=========================== //
 
 const SleepDurationCard = ({ isLoading }) => {
@@ -109,7 +149,12 @@ const SleepDurationCard = ({ isLoading }) => {
 									<Grid item p={1}>
 										<Typography
 											sx={{
-												fontSize: "2.125rem",
+												fontSize: {
+													lg: "1.75rem",
+													md: "1.75rem",
+													sm: "1.75rem",
+													xs: "1.25rem",
+												},
 												fontWeight: 800,
 												mr: 1,
 												mt: 1.75,
@@ -131,7 +176,7 @@ const SleepDurationCard = ({ isLoading }) => {
 														fontSize: "1rem",
 														fontWeight: 800,
 														// color: theme.palette.secondary[200],
-														color: "White",
+														color: "#ffffff",
 													}}
 												>
 													Sleep Duration
@@ -143,7 +188,7 @@ const SleepDurationCard = ({ isLoading }) => {
 														fontSize: "1rem",
 														fontWeight: 500,
 														// color: theme.palette.secondary[200],
-														color: "White",
+														color: "#ffffff",
 													}}
 												>
 													Brandon need to take a break

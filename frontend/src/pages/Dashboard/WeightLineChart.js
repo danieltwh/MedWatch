@@ -22,14 +22,16 @@ import { useNavigate } from "react-router-dom";
 import Chart from "chart.js/auto";
 
 import { heartrate as heartrateAPI } from "features/api";
-
 import { heartrateActions, selectHeartrate } from "features/heartrateSlice";
+
+import { weight as weightAPI } from "features/api";
+import { weightActions, selectWeight } from "features/weightSlice";
 
 import LineChart from "components/LineChart";
 import { Line } from "react-chartjs-2";
 import { DateTime } from "luxon";
 
-import MonitorHeartIcon from "@mui/icons-material/MonitorHeart";
+import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 
 const status = [
 	{
@@ -132,7 +134,7 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 
 let isInitial = true;
 
-const HeartRateLineChart = ({ isLoading }) => {
+const WeightLineChart = ({ isLoading }) => {
 	const [value, setValue] = useState("today");
 	const theme = useTheme();
 	const customization = ["24h", "6h", "1h", "30min"];
@@ -213,16 +215,16 @@ const HeartRateLineChart = ({ isLoading }) => {
 	const nav = useNavigate();
 	const dispatch = useDispatch();
 
-	const heartrate = useSelector(selectHeartrate);
+	const weight = useSelector(selectWeight);
 
-	const fetchHeartrateData = async () => {
-		let userHeartRate = await heartrateAPI().catch((error) => {
+	const fetchWeightData = async () => {
+		let userWeight = await weightAPI().catch((error) => {
 			console.log("There was an error", error);
 		});
-		if (userHeartRate.status == 200) {
+		if (userWeight.status === 200) {
 			// setHeartRateData(userHeartRate.body);
-			dispatch(heartrateActions.set(userHeartRate.body));
-		} else if (userHeartRate.status == 401) {
+			dispatch(weightActions.set(userWeight.body));
+		} else if (userWeight.status === 401) {
 			// Logout
 			localStorage.removeItem("authenticated");
 			localStorage.removeItem("token");
@@ -235,7 +237,7 @@ const HeartRateLineChart = ({ isLoading }) => {
 		if (isInitial) {
 			// console.log(heartrate.status);
 			isInitial = false;
-			fetchHeartrateData();
+			fetchWeightData();
 		}
 	}, [dispatch]);
 
@@ -324,7 +326,7 @@ const HeartRateLineChart = ({ isLoading }) => {
 																.secondary.dark,
 														}}
 													>
-														<MonitorHeartIcon fontSize="inherit" />
+														<FitnessCenterIcon fontSize="inherit" />
 													</Avatar>
 												</Grid>
 												<Grid item p={1}>
@@ -342,7 +344,7 @@ const HeartRateLineChart = ({ isLoading }) => {
 															mb: 0.75,
 														}}
 													>
-														90 BPM
+														Moderately Active
 													</Typography>
 												</Grid>
 											</Grid>
@@ -356,7 +358,7 @@ const HeartRateLineChart = ({ isLoading }) => {
 													color: "#5e35b1",
 												}}
 											>
-												Heart Rate
+												Activity Level
 											</Typography>
 										</Grid>
 									</Grid>
@@ -386,17 +388,19 @@ const HeartRateLineChart = ({ isLoading }) => {
 							{/* <Chart {...chartData} /> */}
 							<Line
 								data={{
-									labels: heartrate.data.map((data) => {
+									labels: weight.data.map((data) => {
 										let luxonDate = DateTime.fromJSDate(
-											new Date(data.time)
+											new Date(data.datetime)
 										);
-										return luxonDate.toFormat("hh:mm:ss");
+										return luxonDate.toFormat(
+											"yyyy LLL dd"
+										);
 									}),
 									datasets: [
 										{
-											label: "Heart Rate",
-											data: heartrate.data.map(
-												(data) => data.value
+											label: "Weight Level",
+											data: weight.data.map(
+												(data) => data.weight_kg
 											),
 											borderColor: "#5e35b1",
 											backgroundColor: "#5e35b1",
@@ -416,8 +420,8 @@ const HeartRateLineChart = ({ isLoading }) => {
 	);
 };
 
-HeartRateLineChart.propTypes = {
+WeightLineChart.propTypes = {
 	isLoading: PropTypes.bool,
 };
 
-export default HeartRateLineChart;
+export default WeightLineChart;

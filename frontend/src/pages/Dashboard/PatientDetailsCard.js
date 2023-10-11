@@ -1,8 +1,10 @@
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 // material-ui
-import { styled, useTheme } from "@mui/material/styles";
+import { styled, useTheme, responsiveFontSizes } from "@mui/material/styles";
 import { Avatar, Box, Grid, Menu, MenuItem, Typography } from "@mui/material";
 
 // project imports
@@ -16,11 +18,18 @@ import PersonIcon from "@mui/icons-material/Person";
 import MedicationIcon from "@mui/icons-material/Medication";
 import MedicalInformationIcon from "@mui/icons-material/MedicalInformation";
 
+import Child from "./ChildPatientList";
+import PatientList from "../PatientList";
+
 const CardWrapper = styled(MainCard)(({ theme }) => ({
 	backgroundColor: theme.palette.secondary.dark,
 	color: "#fff",
 	overflow: "hidden",
 	position: "relative",
+	"&>div": {
+		position: "relative",
+		zIndex: 5,
+	},
 	"&:after": {
 		content: '""',
 		position: "absolute",
@@ -52,34 +61,11 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 	},
 }));
 
-const CardStyle = {
-	color: "White",
-	backgroundColor: "#8a94bd",
-	borderRadius: "20px",
-};
-
-const CardHeaderTextStyle = {
-	fontSize: "2.125rem",
-	fontWeight: 800,
-	mr: 1,
-	mt: 1.75,
-	mb: 0.75,
-	fontFamily: "Helvetica Neue",
-};
-
-const CardInfoTextStyle = {
-	fontSize: "1.000rem",
-	fontWeight: 400,
-	mr: 1,
-	mt: 1.75,
-	mb: 0.75,
-	fontFamily: "Helvetica Neue",
-};
-
 // ===========================|| DASHBOARD DEFAULT - PATIENT DETAILS CARD ||=========================== //
 
 const PatientDetailCard = ({ isLoading }) => {
-	const theme = useTheme();
+	let theme = useTheme();
+	theme = responsiveFontSizes(theme);
 
 	const [anchorEl, setAnchorEl] = useState(null);
 
@@ -91,270 +77,30 @@ const PatientDetailCard = ({ isLoading }) => {
 		setAnchorEl(null);
 	};
 
-	return (
-		<>
-			{isLoading ? (
-				<SkeletonMetricsCard />
-			) : (
-				<CardWrapper
-					border={false}
-					content={false}
-					style={{
-						color: "White",
-						backgroundColor: "#001670",
-					}}
-				>
-					<Box sx={{ p: 2.25 }}>
-						<Grid container direction="column">
-							<Grid item>
-								<Grid
-									container
-									justifyContent="center"
-									spacing={gridSpacing}
-								>
-									<Grid item>
-										<Box
-											component="img"
-											sx={{
-												height: 250,
-												width: 250,
-												maxHeight: { xs: 250, md: 250 },
-												maxWidth: { xs: 250, md: 250 },
-											}}
-											alt="Patient Photo"
-											src={PatientPhoto}
-										></Box>
-									</Grid>
-									{/* <Grid item>
-										<Avatar
-											variant="rounded"
-											sx={{
-												...theme.typography
-													.commonAvatar,
-												...theme.typography
-													.mediumAvatar,
-												backgroundColor:
-													theme.palette.secondary
-														.dark,
-												color: theme.palette
-													.secondary[200],
-												zIndex: 1,
-											}}
-											aria-controls="menu-earning-card"
-											aria-haspopup="true"
-											onClick={handleClick}
-										>
-											<MoreHorizIcon fontSize="inherit" />
-										</Avatar>
-										<Menu
-											id="menu-earning-card"
-											anchorEl={anchorEl}
-											keepMounted
-											open={Boolean(anchorEl)}
-											onClose={handleClose}
-											variant="selectedMenu"
-											anchorOrigin={{
-												vertical: "bottom",
-												horizontal: "right",
-											}}
-											transformOrigin={{
-												vertical: "top",
-												horizontal: "right",
-											}}
-										>
-											<MenuItem onClick={handleClose}>
-												<GetAppTwoToneIcon
-													sx={{ mr: 1.75 }}
-												/>{" "}
-												Import Card
-											</MenuItem>
-											<MenuItem onClick={handleClose}>
-												<FileCopyTwoToneIcon
-													sx={{ mr: 1.75 }}
-												/>{" "}
-												Copy Data
-											</MenuItem>
-											<MenuItem onClick={handleClose}>
-												<PictureAsPdfTwoToneIcon
-													sx={{ mr: 1.75 }}
-												/>{" "}
-												Export
-											</MenuItem>
-											<MenuItem onClick={handleClose}>
-												<ArchiveTwoToneIcon
-													sx={{ mr: 1.75 }}
-												/>{" "}
-												Archive File
-											</MenuItem>
-										</Menu>
-									</Grid> */}
-								</Grid>
-							</Grid>
-							<Grid item>
-								<Grid
-									container
-									justifyContent="center"
-									alignItems="center"
-									spacing={gridSpacing}
-								>
-									<Grid>
-										<Typography sx={CardHeaderTextStyle}>
-											Brandon Chiu Wei Le
-										</Typography>
-									</Grid>
-								</Grid>
-							</Grid>
+	const data = {
+		avatar: "https://i.imgur.com/oflMA1gb.jpg",
+		name: "fake1",
+		age: 90,
+		height: 1.88,
+		weight: 80,
+		blood_type: "A",
+		medication: [
+			{ name: "Prinivil", count: "20mg", freq: "once a day" },
+			{ name: "Metformin", count: "500mg", freq: "twice a day" },
+		],
+		medical_condition: [
+			"High Blood Pressure",
+			"Type II Diabetes",
+			"Allergic to Ibuprofen",
+		],
+		nok_contact: {
+			name: "Chiu Tien Le",
+			relationship: "Son",
+			phone_number: "+6591234567",
+		},
+	};
 
-							<Grid item xs={12}>
-								<Grid container>
-									<Grid
-										item
-										lg={4}
-										md={4}
-										sm={4}
-										xs={4}
-										align="center"
-										p={1}
-									>
-										<Grid item>
-											<Avatar
-												sx={{
-													cursor: "pointer",
-													...theme.typography
-														.smallAvatar,
-													backgroundColor:
-														theme.palette
-															.secondary[200],
-													color: theme.palette
-														.secondary.dark,
-												}}
-											>
-												<PersonIcon fontSize="inherit" />
-											</Avatar>
-										</Grid>
-										<Grid item>
-											<Typography
-												sx={CardHeaderTextStyle}
-											>
-												Basic Details
-											</Typography>
-										</Grid>
-										<Grid item style={CardStyle} p={1}>
-											<Typography sx={CardInfoTextStyle}>
-												Height: 178cm
-											</Typography>
-											<Typography sx={CardInfoTextStyle}>
-												Weight: 74.3kg
-											</Typography>
-											<Typography sx={CardInfoTextStyle}>
-												Blood Type: A+
-											</Typography>
-										</Grid>
-									</Grid>
-									<Grid
-										item
-										lg={4}
-										md={4}
-										sm={4}
-										xs={4}
-										align="center"
-										p={1}
-									>
-										<Grid item>
-											<Avatar
-												sx={{
-													cursor: "pointer",
-													...theme.typography
-														.smallAvatar,
-													backgroundColor:
-														theme.palette
-															.secondary[200],
-													color: theme.palette
-														.secondary.dark,
-												}}
-											>
-												<MedicationIcon fontSize="inherit" />
-											</Avatar>
-										</Grid>
-										<Grid>
-											<Typography
-												sx={CardHeaderTextStyle}
-											>
-												Medication
-											</Typography>
-										</Grid>
-										<Grid item style={CardStyle} p={1}>
-											<Typography sx={CardInfoTextStyle}>
-												Prinivil: 20mg, Once a day
-											</Typography>
-											<Typography sx={CardInfoTextStyle}>
-												Metformin: 500mg, Twice a day
-											</Typography>
-										</Grid>
-									</Grid>
-									<Grid
-										item
-										lg={4}
-										md={4}
-										sm={4}
-										xs={4}
-										align="center"
-										p={1}
-									>
-										<Grid item>
-											<Avatar
-												sx={{
-													cursor: "pointer",
-													...theme.typography
-														.smallAvatar,
-													backgroundColor:
-														theme.palette
-															.secondary[200],
-													color: theme.palette
-														.secondary.dark,
-												}}
-											>
-												<MedicalInformationIcon fontSize="inherit" />
-											</Avatar>
-										</Grid>
-										<Grid>
-											<Typography
-												sx={CardHeaderTextStyle}
-											>
-												Medical Condition
-											</Typography>
-										</Grid>
-										<Grid item style={CardStyle} p={1}>
-											<Typography sx={CardInfoTextStyle}>
-												High Blood Pressure
-											</Typography>
-											<Typography sx={CardInfoTextStyle}>
-												Type II Diabetes
-											</Typography>
-											<Typography sx={CardInfoTextStyle}>
-												Allergic to Ibuprofen
-											</Typography>
-										</Grid>
-									</Grid>
-								</Grid>
-							</Grid>
-							{/* <Grid item sx={{ mb: 1.25 }}>
-								<Typography
-									sx={{
-										fontSize: "1rem",
-										fontWeight: 500,
-										color: theme.palette.secondary[200],
-									}}
-								>
-									Total Earning
-								</Typography>
-							</Grid> */}
-						</Grid>
-					</Box>
-				</CardWrapper>
-			)}
-		</>
-	);
+	return <>{isLoading ? <SkeletonMetricsCard /> : <Child data={data} />}</>;
 };
 
 PatientDetailCard.propTypes = {

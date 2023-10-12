@@ -29,7 +29,7 @@ import LineChart from "components/LineChart";
 import { Line } from "react-chartjs-2";
 import { DateTime } from "luxon";
 
-import MonitorHeartIcon from "@mui/icons-material/MonitorHeart";
+import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 
 const status = [
 	{
@@ -132,7 +132,7 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 
 let isInitial = true;
 
-const HeartRateLineChart = ({ isLoading }) => {
+const ActivityLineChart = ({ isLoading }) => {
 	const [value, setValue] = useState("today");
 	const theme = useTheme();
 	const customization = ["24h", "6h", "1h", "30min"];
@@ -324,7 +324,7 @@ const HeartRateLineChart = ({ isLoading }) => {
 																.secondary.dark,
 														}}
 													>
-														<MonitorHeartIcon fontSize="inherit" />
+														<FitnessCenterIcon fontSize="inherit" />
 													</Avatar>
 												</Grid>
 												<Grid item p={1}>
@@ -342,7 +342,7 @@ const HeartRateLineChart = ({ isLoading }) => {
 															mb: 0.75,
 														}}
 													>
-														90 BPM
+														Moderately Active
 													</Typography>
 												</Grid>
 											</Grid>
@@ -356,7 +356,7 @@ const HeartRateLineChart = ({ isLoading }) => {
 													color: "#5e35b1",
 												}}
 											>
-												Heart Rate
+												Activity Level
 											</Typography>
 										</Grid>
 									</Grid>
@@ -394,7 +394,7 @@ const HeartRateLineChart = ({ isLoading }) => {
 									}),
 									datasets: [
 										{
-											label: "Heart Rate",
+											label: "Activity Level",
 											data: heartrate.data.map(
 												(data) => data.value
 											),
@@ -416,8 +416,8 @@ const HeartRateLineChart = ({ isLoading }) => {
 	);
 };
 
-HeartRateLineChart.propTypes = {
+ActivityLineChart.propTypes = {
 	isLoading: PropTypes.bool,
 };
 
-export default HeartRateLineChart;
+export default ActivityLineChart;

@@ -29,6 +29,14 @@ if os.path.exists(dotenv_path):
 
 ENV = os.environ.get('ENV')
 print(ENV)
+
+dotenv_path = os.path.join(".secret")
+if os.path.exists(dotenv_path):
+    load_dotenv(dotenv_path = dotenv_path)
+
+EMAIL_ADDRESS = os.environ.get("EMAIL_ADDRESS")
+EMAIL_PASSWORD = os.environ.get("EMAIL_PASSWORD")
+
 if ENV == "DEV":
     mongodb_path = 'mongodb://localhost:27020'
     postgres_path = "postgresql://user:password@localhost:5455/MedWatchDB"

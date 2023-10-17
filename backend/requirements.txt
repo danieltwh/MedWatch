@@ -16,3 +16,4 @@ typing
 typing-extensions
 urllib3
 uvicorn
+yagmail

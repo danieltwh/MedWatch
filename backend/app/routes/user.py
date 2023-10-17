@@ -87,6 +87,7 @@ async def add_user(
     email: Annotated[str, Form()],
     password: Annotated[str, Form()],
     role: Annotated[str, Form()],
+    user: Annotated[auth_user, Depends(authenticate_user)]
     ):
     date_created = datetime.datetime.now()
     salt, hashed_password = hash_new_password(password)

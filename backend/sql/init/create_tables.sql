@@ -21,8 +21,11 @@ CREATE TABLE patients (
     lastname VARCHAR(80) NOT NULL,
     under_professional_care BOOLEAN NOT NULL,
     age INT NOT NULL,
-    is_male BOOLEAN NOT NULL
+    is_male BOOLEAN NOT NULL,
+	access_token VARCHAR,
+	refresh_token VARCHAR
 );
+
 
 -- Create user_patient_relation table
 DROP TABLE IF EXISTS user_patient_relation CASCADE;

@@ -19,10 +19,10 @@ INSERT INTO users
 
 -- Insert values into patients
 INSERT INTO patients
-	(firstname, lastname, under_professional_care, age, is_male)
+	(firstname, lastname, under_professional_care, age, is_male, access_token, refresh_token)
 	VALUES
-    ('Ben', 'White', TRUE, 29, TRUE),
-	('Aaron', 'Ramsdale', FALSE, 24, TRUE),
-	('Hanni', 'Pham', FALSE, 20, FALSE),
-	('Minji', 'Kim', FALSE, 21, FALSE)
+    ('Ben', 'White', TRUE, 29, TRUE, '', ''),
+	('Aaron', 'Ramsdale', FALSE, 24, TRUE, '', ''),
+	('Hanni', 'Pham', FALSE, 20, FALSE, '', ''),
+	('Minji', 'Kim', FALSE, 21, FALSE, '', '')
 ;

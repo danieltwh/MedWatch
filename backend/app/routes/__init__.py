@@ -10,6 +10,7 @@ from .user_patient import router as user_patient_routes
 from .met import router as met_routes
 from .sleep import router as sleep_routes
 from .weight import router as weight_routes
+from .fitbit import router as fitbit_routes
 from .email import router as email_routes
 
 
@@ -26,5 +27,6 @@ routes = [
     met_routes,
     sleep_routes,
     weight_routes,
+    fitbit_routes  
     email_routes 
 ]

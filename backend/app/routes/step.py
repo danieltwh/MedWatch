@@ -66,7 +66,7 @@ class MinuteStepsResponse(BaseModel):
         },
     },
 )
-async def get_hourly_calories(patientId: int, user: Annotated[User, Depends(authenticate_user)]) -> List[HourlyStepResponse]:
+async def get_hourly_steps(patientId: int, user: Annotated[User, Depends(authenticate_user)]) -> List[HourlyStepResponse]:
     results = await HourlyStep.find(HourlyStep.patientId == patientId).to_list()
 
     data = []

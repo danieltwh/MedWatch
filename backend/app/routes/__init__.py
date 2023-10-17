@@ -27,6 +27,6 @@ routes = [
     met_routes,
     sleep_routes,
     weight_routes,
-    fitbit_routes  
+    fitbit_routes,
     email_routes 
 ]

@@ -93,10 +93,14 @@ async def fetch_heartrate():
     
     # end = datetime.datetime.utcnow() + datetime.timedelta(minutes=480) - datetime.timedelta(days=2)
 
-    curr_now = datetime.datetime.utcnow()
+    curr_now = datetime.datetime.utcnow() + datetime.timedelta(minutes=480)
 
+    # end = datetime.datetime(year = 2023, month = 10, day = 15, 
+    #                         hour = curr_now.hour, minute=curr_now.minute, second=curr_now.second)
+    
     end = datetime.datetime(year = 2023, month = 10, day = 15, 
-                            hour = curr_now.hour, minute=curr_now.minute, second=curr_now.second)
+                        hour = 12, minute=0, second=0)
+
 
     start = end - datetime.timedelta(minutes=1)
 
@@ -131,11 +135,12 @@ async def fetch_heartrate():
 async def main():
     await init_mongodb()
     while True:
+        curr_now = datetime.datetime.utcnow() + datetime.timedelta(minutes=480)
         try:
             await fetch_heartrate()
-            print("Completed")
+            print(f"{curr_now.isoformat()} - Completed")
         except Exception as err:
-            print("Failed to fetch all heartrate")
+            print(f"{curr_now.isoformat()} - Failed to fetch all heartrate")
             print(err)
         finally:
             time.sleep(10)

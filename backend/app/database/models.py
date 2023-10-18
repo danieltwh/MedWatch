@@ -63,6 +63,8 @@ class Patient(PostgresBase):
     under_professional_care = Column(Boolean, nullable=False)
     age = Column(Integer, nullable=False)
     is_male = Column(Boolean, nullable=False)
+    access_token = Column(String)
+    refresh_token = Column(String)
 
     def __repr__(self):
         return f'<{self.id}: User {self.firstname}>'

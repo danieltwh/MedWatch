@@ -72,7 +72,7 @@ app.add_middleware(
      allow_credentials=True,
 )
 
-app.add_middleware(HTTPSRedirectMiddleware)
+# app.add_middleware(HTTPSRedirectMiddleware)
 
 # Include all the routes
 for route in routes:

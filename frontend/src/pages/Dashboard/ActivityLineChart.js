@@ -22,6 +22,7 @@ import { useNavigate } from "react-router-dom";
 import Chart from "chart.js/auto";
 
 import { heartrate as heartrateAPI } from "features/api";
+import { heartrateHourly as heartrateHourlyAPI } from "features/api";
 
 import { heartrateActions, selectHeartrate } from "features/heartrateSlice";
 
@@ -235,7 +236,7 @@ const ActivityLineChart = ({ isLoading }) => {
 		if (isInitial) {
 			// console.log(heartrate.status);
 			isInitial = false;
-			fetchHeartrateData();
+			// fetchHeartrateData();
 		}
 	}, [dispatch]);
 

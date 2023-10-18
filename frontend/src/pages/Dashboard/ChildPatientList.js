@@ -135,7 +135,7 @@ const CardLinkStyle = {
 };
 
 const ChildPatientList = (props) => {
-	const [openFitbit, setOpenFitbit] = useState(true);
+	const [openFitbit, setOpenFitbit] = useState(false);
 	const handleFitbitOpen = () => setOpenFitbit(true);
 	const handleFitbitClose = () => setOpenFitbit(false);
 

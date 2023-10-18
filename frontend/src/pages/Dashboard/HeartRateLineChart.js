@@ -35,6 +35,14 @@ import MonitorHeartIcon from "@mui/icons-material/MonitorHeart";
 
 const status = [
 	{
+		value: "1min",
+		label: "1 Min",
+	},
+	{
+		value: "3min",
+		label: "3 Min",
+	},
+	{
 		value: "5min",
 		label: "5 Min",
 	},
@@ -278,7 +286,8 @@ const HeartRateLineChart = ({ isLoading }) => {
 
 
 		// let luxonDate = DateTime.now();
-		let luxonDate = DateTime.fromObject({ year: 2023, month: 10, day: 15, hour: 12, minute: 0, second: 0 });
+		// let luxonDate = DateTime.fromObject({ year: 2023, month: 10, day: 15, hour: 12, minute: 0, second: 0 });
+		let luxonDate = DateTime.now().minus({days:1});
 
 		const endTime = luxonDate
 		// const startTime = luxonDate.minus({hours:1});
@@ -452,7 +461,7 @@ const HeartRateLineChart = ({ isLoading }) => {
 								</Grid>
 							</Grid>
 						</Grid>
-						<Grid item xs={12} sx={{height: "400px"}}>
+						<Grid item xs={12} sx={{height: "350px"}}>
 							{/* <Chart {...chartData} /> */}
 							<Line
 								data={{

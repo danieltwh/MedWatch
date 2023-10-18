@@ -20,8 +20,10 @@ import chartData from "./chart-data/total-growth-bar-chart";
 
 import { useNavigate } from "react-router-dom";
 import Chart from "chart.js/auto";
+import 'chartjs-adapter-luxon';
 
 import { heartrate as heartrateAPI } from "features/api";
+import { heartrateDetailLevel as heartrateDetailLevelAPI } from "features/api";
 
 import { heartrateActions, selectHeartrate } from "features/heartrateSlice";
 
@@ -33,17 +35,26 @@ import MonitorHeartIcon from "@mui/icons-material/MonitorHeart";
 
 const status = [
 	{
-		value: "today",
+		value: "5min",
+		label: "5 Min",
+	},
+	{
+		value: "1hour",
+		label: "1 Hour",
+	},
+	{
+		value: "Today",
 		label: "Today",
+
 	},
-	{
-		value: "month",
-		label: "This Month",
-	},
-	{
-		value: "year",
-		label: "This Year",
-	},
+	// {
+	// 	value: "month",
+	// 	label: "This Month",
+	// },
+	// {
+	// 	value: "year",
+	// 	label: "This Year",
+	// },
 ];
 
 const CardWrapper = styled(MainCard)(({ theme }) => ({
@@ -133,7 +144,7 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 let isInitial = true;
 
 const HeartRateLineChart = ({ isLoading }) => {
-	const [value, setValue] = useState("today");
+	const [value, setValue] = useState("5min");
 	const theme = useTheme();
 	const customization = ["24h", "6h", "1h", "30min"];
 
@@ -216,7 +227,8 @@ const HeartRateLineChart = ({ isLoading }) => {
 	const heartrate = useSelector(selectHeartrate);
 
 	const fetchHeartrateData = async () => {
-		let userHeartRate = await heartrateAPI().catch((error) => {
+
+		let userHeartRate = await heartrateDetailLevelAPI(value).catch((error) => {
 			console.log("There was an error", error);
 		});
 		if (userHeartRate.status == 200) {
@@ -239,16 +251,73 @@ const HeartRateLineChart = ({ isLoading }) => {
 		}
 	}, [dispatch]);
 
-	var lineChartOptions = {
-		scales: {
-			x: {
-				ticks: {
-					maxRotation: 45,
-					minRotation: 45,
+	// Refresh Data when value changes
+	useEffect(() => {
+		fetchHeartrateData();
+	}, [value])
+
+	const getChartOptions = () => {
+		var offset_minutes;
+		switch(value) {
+			case "1min":
+				offset_minutes = 1;
+				break;
+			case "5min":
+				offset_minutes = 5;
+				break;
+			case "1hour":
+				offset_minutes = 60;
+				break;
+			case "Today":
+				offset_minutes = 1440;
+				break;
+			default:
+				offset_minutes = 5
+				break;
+		}
+
+
+		// let luxonDate = DateTime.now();
+		let luxonDate = DateTime.fromObject({ year: 2023, month: 10, day: 15, hour: 12, minute: 0, second: 0 });
+
+		const endTime = luxonDate
+		// const startTime = luxonDate.minus({hours:1});
+		const startTime = luxonDate.minus({minutes:offset_minutes});
+
+		console.log("Here")
+		console.log(startTime, endTime);
+
+
+		var lineChartOptions = {
+			responsive: true,
+			scales: {
+				x : {
+					type: 'time',
+					time: {
+						unit: 'minute'
+					},
+					min: startTime.valueOf(),
+					max: endTime.valueOf(),
+					ticks: {
+						maxRotation: 45,
+						minRotation: 45,
+					}
 				},
+				y: {
+					min: 0,
+					max: 250,
+					ticks: {
+						// forces step size to be 50 units
+						stepSize: 10
+					}
+				}
 			},
-		},
-	};
+			maintainAspectRatio: false,
+		};
+
+		return lineChartOptions;
+	}
+	
 
 	// const WhiteBorderTextField = styled(TextField)`
 	// 	& label.Mui-focused {
@@ -366,8 +435,9 @@ const HeartRateLineChart = ({ isLoading }) => {
 										id="standard-select-currency"
 										select
 										value={value}
-										onChange={(e) =>
-											setValue(e.target.value)
+										onChange={(e) => {
+												setValue(e.target.value);
+											}
 										}
 									>
 										{status.map((option) => (
@@ -382,7 +452,7 @@ const HeartRateLineChart = ({ isLoading }) => {
 								</Grid>
 							</Grid>
 						</Grid>
-						<Grid item xs={12}>
+						<Grid item xs={12} sx={{height: "400px"}}>
 							{/* <Chart {...chartData} /> */}
 							<Line
 								data={{
@@ -390,7 +460,8 @@ const HeartRateLineChart = ({ isLoading }) => {
 										let luxonDate = DateTime.fromJSDate(
 											new Date(data.time)
 										);
-										return luxonDate.toFormat("hh:mm:ss");
+										// return luxonDate.toFormat("hh:mm:ss");
+										return luxonDate
 									}),
 									datasets: [
 										{
@@ -405,7 +476,8 @@ const HeartRateLineChart = ({ isLoading }) => {
 									borderColor: "black",
 									borderWidth: 2,
 								}}
-								options={lineChartOptions}
+								// options={lineChartOptions}
+								options={getChartOptions()}
 							/>
 						</Grid>
 					</Grid>

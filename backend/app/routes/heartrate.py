@@ -114,12 +114,16 @@ async def get_heartrate(patientId: int, user: Annotated[User, Depends(authentica
     },
 )
 async def get_heartrate_hour(patientId: int, detail_level: str, user: Annotated[User, Depends(authenticate_user)]) -> List[HeartRateResponse]:
-    curr_now = datetime.datetime.utcnow() + datetime.timedelta(minutes=480)
+    # curr_now = datetime.datetime.utcnow() + datetime.timedelta(minutes=480)
+
+    curr_now = datetime.datetime.utcnow() + datetime.timedelta(minutes=480) - datetime.timedelta(days=1)
 
     # curr_now = datetime.datetime(year=2023, month=10, day=15, hour = 12, minute=0, second=0)
 
+
     switcher = {
         "1min": 1,
+        "3min": 3,
         "5min": 5,
         "1hour": 60,
         "Today": 1440,

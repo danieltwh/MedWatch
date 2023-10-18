@@ -86,7 +86,7 @@ async def get_heartrate(patientId: int, user: Annotated[User, Depends(authentica
 
 
 @router.get(
-    "/{patientId}/hour",
+    "/{patientId}/{detail_level}",
     response_model=List[str],
     tags=["Health Data"],
     responses={
@@ -113,12 +113,24 @@ async def get_heartrate(patientId: int, user: Annotated[User, Depends(authentica
         },
     },
 )
-async def get_heartrate_hour(patientId: int, user: Annotated[User, Depends(authenticate_user)]) -> List[HeartRateResponse]:
+async def get_heartrate_hour(patientId: int, detail_level: str, user: Annotated[User, Depends(authenticate_user)]) -> List[HeartRateResponse]:
     curr_now = datetime.datetime.utcnow() + datetime.timedelta(minutes=480)
 
-    # curr_now = curr_now.replace(year=2023, month=10, day=15, hour = 12, minute=0, second=0)
+    # curr_now = datetime.datetime(year=2023, month=10, day=15, hour = 12, minute=0, second=0)
 
-    time_limit = curr_now - datetime.timedelta(minutes=60)
+    switcher = {
+        "1min": 1,
+        "5min": 5,
+        "1hour": 60,
+        "Today": 1440,
+    }
+
+    if detail_level not in switcher:
+        raise HTTPException(400, detail="Invalid detail level")
+
+    num_minutes = switcher.get(detail_level)
+    
+    time_limit = curr_now - datetime.timedelta(minutes=num_minutes)
     print(time_limit)
     results = await HeartRate.find(
             HeartRate.patientId == patientId,

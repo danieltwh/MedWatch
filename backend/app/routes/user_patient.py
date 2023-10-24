@@ -27,7 +27,7 @@ router = APIRouter(
 )
 
 @router.get(
-    "/patient/{userId}",
+    "/patient",
     response_model=List[str],
     responses={
         200: {
@@ -58,9 +58,9 @@ router = APIRouter(
         },
     },
 )
-async def get_related_patients(userId: int, user: Annotated[auth_user, Depends(authenticate_user)]):
+async def get_related_patients(user: Annotated[auth_user, Depends(authenticate_user)]):
     postgres = init_postgres()
-    user = postgres.query(models.User).filter(models.User.id == userId).first()
+    user = postgres.query(models.User).filter(models.User.id == user.id).first()
 
     if not user:
         raise HTTPException(status_code=400, detail="User does not exist.")

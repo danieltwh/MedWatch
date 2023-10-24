@@ -151,7 +151,7 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 
 let isInitial = true;
 
-const HeartRateLineChart = ({ isLoading }) => {
+const HeartRateLineChart = ({ isLoading, patientId }) => {
 	const [value, setValue] = useState("5min");
 	const theme = useTheme();
 	const customization = ["24h", "6h", "1h", "30min"];
@@ -236,7 +236,7 @@ const HeartRateLineChart = ({ isLoading }) => {
 
 	const fetchHeartrateData = async () => {
 
-		let userHeartRate = await heartrateDetailLevelAPI(value).catch((error) => {
+		let userHeartRate = await heartrateDetailLevelAPI(value, patientId).catch((error) => {
 			console.log("There was an error", error);
 		});
 		if (userHeartRate.status == 200) {
@@ -293,8 +293,8 @@ const HeartRateLineChart = ({ isLoading }) => {
 		// const startTime = luxonDate.minus({hours:1});
 		const startTime = luxonDate.minus({minutes:offset_minutes});
 
-		console.log("Here")
-		console.log(startTime, endTime);
+		// console.log("Here")
+		// console.log(startTime, endTime);
 
 
 		var lineChartOptions = {

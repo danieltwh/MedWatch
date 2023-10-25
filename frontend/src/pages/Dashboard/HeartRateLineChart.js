@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 // material-ui
@@ -32,6 +32,9 @@ import { Line } from "react-chartjs-2";
 import { DateTime } from "luxon";
 
 import MonitorHeartIcon from "@mui/icons-material/MonitorHeart";
+import { authActions } from "features/authSlice";
+import { logout as logoutLocalStorage } from "features/auth";
+import { usePageVisibility } from "components/usePageVisibility";
 
 const status = [
 	{
@@ -156,6 +159,10 @@ const HeartRateLineChart = ({ isLoading, patientId }) => {
 	const theme = useTheme();
 	const customization = ["24h", "6h", "1h", "30min"];
 
+	const isPageVisible = usePageVisibility();
+	const timerIdRef = useRef(null);
+	const [isPollingEnabled, setIsPollingEnabled] = useState(true);
+
 	const { navType } = customization;
 	const { primary } = theme.palette.text;
 	const darkLight = theme.palette.dark.light;
@@ -244,10 +251,12 @@ const HeartRateLineChart = ({ isLoading, patientId }) => {
 			dispatch(heartrateActions.set(userHeartRate.body));
 		} else if (userHeartRate.status == 401) {
 			// Logout
-			localStorage.removeItem("authenticated");
-			localStorage.removeItem("token");
-			localStorage.removeItem("token_type");
-			nav("/", { replace: true });
+			// localStorage.removeItem("authenticated");
+			// localStorage.removeItem("token");
+			// localStorage.removeItem("token_type");
+			logoutLocalStorage();
+			dispatch(authActions.logout());
+			nav("/login", { replace: true });
 		}
 	};
 
@@ -255,14 +264,42 @@ const HeartRateLineChart = ({ isLoading, patientId }) => {
 		if (isInitial) {
 			// console.log(heartrate.status);
 			isInitial = false;
+			if(patientId < 0) {
+				return;
+			}
+
 			fetchHeartrateData();
 		}
 	}, [dispatch]);
 
 	// Refresh Data when value changes
 	useEffect(() => {
+		if(patientId < 0) {
+			return;
+		}
 		fetchHeartrateData();
-	}, [value])
+	}, [value, patientId])
+
+	// Polling data
+	useEffect(() => {
+		const startPolling = () => {
+			timerIdRef.current = setInterval(fetchHeartrateData, 5000);
+		}
+		const stopPolling = () => {
+			clearInterval(timerIdRef.current);
+		}
+
+		if(isPageVisible && isPollingEnabled) {
+			startPolling();
+		} else {
+			stopPolling();
+		}
+
+		return () => {
+			stopPolling();
+		}
+	}, [isPageVisible, isPollingEnabled, patientId]);
+
 
 	const getChartOptions = () => {
 		var offset_minutes;

@@ -27,6 +27,8 @@ import patientListData from "./patientListData";
 import { patientList as patientListAPI } from "features/api";
 
 import { patientsActions, selectPatients } from "features/patientsSlice";
+import { authActions } from "features/authSlice";
+import { logout as logoutLocalStorage } from "features/auth";
 
 let isInitial = true;
 
@@ -181,6 +183,11 @@ function PatientList() {
 		console.log(patientList);
 		if (patientList.status == 200) {
 			dispatch(patientsActions.set(patientList.body));
+		} else if (patientList.status == 401) {
+			// Unauthorized
+			logoutLocalStorage();
+			dispatch(authActions.logout());
+			nav("/login", {replace: true})
 		}
 
 

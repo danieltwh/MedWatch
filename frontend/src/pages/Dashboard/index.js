@@ -82,12 +82,29 @@ const Dashboard = () => {
 
 		if (isInitial) {
 			isInitial = false;
-			if (state.patientId) {
+			if (state && state.patientId) {
 				var currPatient = patients.data.find(currPatient => currPatient.id === state.patientId);
+				
+				let data = {
+					...patientListData[currPatient.id % patientListData.length],
+					name: `${currPatient.firstName} ${currPatient.lastName}`,
+					id: currPatient.id
+				}
+
 				// console.log(currPatient);
-				setPatient(currPatient);
+				setPatient(data);
 			} else if (patients.data && patients.data.length > 0) {
-				setPatient(patients.data[0]);
+				console.log("Default to patient index 0");
+				
+				var currPatient = patients.data[0];
+
+				let data = {
+					...patientListData[currPatient.id % patientListData.length],
+					name: `${currPatient.firstName} ${currPatient.lastName}`,
+					id: currPatient.id
+				}
+
+				setPatient(data);
 			}
 		}
 	}, []);

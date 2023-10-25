@@ -93,7 +93,7 @@ function LoginPage() {
       }));
 
       // nav(location?.path || "/dashboard", { replace: true });
-      nav(location?.path || "/dashboard", {replace: true});
+      nav(location?.path || "/patientlist", {replace: true});
     } else if(resp.status == 400) {
       setLoginError(true);
       setErrorMsg(resp.body.detail);

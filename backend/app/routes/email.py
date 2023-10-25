@@ -84,6 +84,10 @@ async def send_email_to_user(userId: int, patient_id: Annotated[int, Form()], us
     },
 )
 async def send_email_to_user(patientId: int, user: Annotated[User, Depends(authenticate_user)]):
+    response = send_email_helper(patientId)
+    return Response(content=json.dumps(response, default=str), media_type="application/json")
+
+def send_email_helper(patientId):
     postgres = init_postgres()
     patient = postgres.query(models.Patient).filter(models.Patient.id == patientId).first().serialize()
     subject = f'Alert for {patient["firstName"]} {patient["lastName"]}'
@@ -102,4 +106,4 @@ async def send_email_to_user(patientId: int, user: Annotated[User, Depends(authe
         "Status": "Success",
         "Target Email Address": user_emails
     }
-    return Response(content=json.dumps(response, default=str), media_type="application/json")
+    return response

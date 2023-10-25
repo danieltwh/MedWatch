@@ -12,6 +12,7 @@ from .sleep import router as sleep_routes
 from .weight import router as weight_routes
 from .fitbit import router as fitbit_routes
 from .email import router as email_routes
+from .anomaly_detection import router as anomaly_routes
 
 
 routes = [
@@ -28,5 +29,6 @@ routes = [
     sleep_routes,
     weight_routes,
     fitbit_routes,
-    email_routes 
+    email_routes,
+    anomaly_routes
 ]

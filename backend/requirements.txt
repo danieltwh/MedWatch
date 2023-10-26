@@ -17,3 +17,4 @@ typing-extensions
 urllib3
 uvicorn
 yagmail
+numpy

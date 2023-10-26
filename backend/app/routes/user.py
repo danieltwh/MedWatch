@@ -27,7 +27,7 @@ router = APIRouter(
 )
 
 @router.get(
-    "/{userId}",
+    "/get",
     response_model=List[str],
     responses={
         200: {
@@ -50,9 +50,9 @@ router = APIRouter(
         },
     },
 )
-async def get_user_details(userId: int, user: Annotated[auth_user, Depends(authenticate_user)]):
+async def get_user_details(user: Annotated[auth_user, Depends(authenticate_user)]):
     postgres = init_postgres()
-    patient_details = postgres.query(models.User).filter(models.User.id == userId).first()
+    patient_details = postgres.query(models.User).filter(models.User.id == user.id).first()
     if not patient_details:
         raise HTTPException(status_code=400, detail="Patient does not exist.")
     return Response(content=json.dumps(patient_details.serialize(), default=str), media_type="application/json")

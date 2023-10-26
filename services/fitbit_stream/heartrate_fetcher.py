@@ -122,6 +122,8 @@ async def fetch_heartrate():
 
     patients= postgres.query(Patient).filter(Patient.access_token != "").all()
 
+    del postgres
+
     tasks = set()
     for patient in patients:
         print( "Patient ID:", patient.id)

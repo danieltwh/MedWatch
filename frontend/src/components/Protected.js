@@ -66,7 +66,7 @@ export const PublicRoutes = () => {
 
     // return (auth.authenticated == null || auth.authenticated != "true") ? <Outlet /> : <Navigate to="/home" replace state={{path: location.pathname}}/>;
     // return (!auth.authenticated) ? <Outlet /> : <Navigate to="/home" replace state={{path: location.pathname}}/>;
-    return (!auth.authenticated) ? <Outlet /> : <Navigate to="/home" replace state={{path: location.pathname}}/>;
+    return (!auth.authenticated) ? <Outlet /> : <Navigate to="/patientlist" replace state={{path: location.pathname}}/>;
 }
 
 
@@ -99,6 +99,6 @@ export const ProtectedRoutes = () => {
     // return (authenticated) ? <Outlet /> : <Navigate to="/login" replace state={{path: location.pathname}}/>;
 
     // return (auth.authenticated != null || auth.authenticated == "true") ? <Outlet /> : <Navigate to="/login" replace state={{path: location.pathname}}/>;
-    // return (auth.authenticated) ? <Outlet /> : <Navigate to="/login" replace state={{path: location.pathname}}/>;
-    return <Outlet />;
+    return (auth.authenticated) ? <Outlet /> : <Navigate to="/login" replace state={{path: location.pathname}}/>;
+    // return <Outlet />;
 }

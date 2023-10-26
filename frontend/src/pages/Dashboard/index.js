@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 // material-ui
 import { useTheme, styled } from "@mui/material/styles";
@@ -15,11 +15,15 @@ import StepsCard from "./StepsCard";
 import StreamCard from "./StreamCard";
 import { gridSpacing } from "shared/constant";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import HeartRateLineChart from "./HeartRateLineChart";
 import ActivityLineChart from "./ActivityLineChart";
 
 import Parent from "./archive/Parent";
+import { selectPatients } from "features/patientsSlice";
+
+// HARD CODED DATA
+import patientListData from "pages/patientListData";
 
 // ==============================|| DEFAULT DASHBOARD ||============================== //
 
@@ -37,8 +41,36 @@ const ExpandMore = styled((props) => {
 }));
 
 const Dashboard = () => {
+	const location = useLocation();
+	const { state } = location;
+
+	const patients = useSelector(selectPatients);
+
 	const [isLoading, setLoading] = useState(true);
 	const [expanded, setExpanded] = useState(false);
+	const [patient, setPatient] = useState({
+		id: -1,
+		avatar: "/images/avatars/wolf.png",
+		name: "fake1",
+		age: 90,
+		height: 1.88,
+		weight: 80,
+		blood_type: "A",
+		medication: [
+			{ name: "Prinivil", count: "20mg", freq: "once a day" },
+			{ name: "Metformin", count: "500mg", freq: "twice a day" },
+		],
+		medical_condition: [
+			"High Blood Pressure",
+			"Type II Diabetes",
+			"Allergic to Ibuprofen",
+		],
+		nok_contact: {
+			name: "Chiu Tien Le",
+			relationship: "Son",
+			phone_number: "+6591234567",
+		},
+	});
 
 	const handleExpandClick = () => {
 		setExpanded(!expanded);
@@ -46,6 +78,35 @@ const Dashboard = () => {
 
 	useEffect(() => {
 		setLoading(false);
+		// console.log(state)
+
+		if (isInitial) {
+			isInitial = false;
+			if (state && state.patientId) {
+				var currPatient = patients.data.find(currPatient => currPatient.id === state.patientId);
+				
+				let data = {
+					...patientListData[currPatient.id % patientListData.length],
+					name: `${currPatient.firstName} ${currPatient.lastName}`,
+					id: currPatient.id
+				}
+
+				// console.log(currPatient);
+				setPatient(data);
+			} else if (patients.data && patients.data.length > 0) {
+				console.log("Default to patient index 0");
+				
+				var currPatient = patients.data[0];
+
+				let data = {
+					...patientListData[currPatient.id % patientListData.length],
+					name: `${currPatient.firstName} ${currPatient.lastName}`,
+					id: currPatient.id
+				}
+
+				setPatient(data);
+			}
+		}
 	}, []);
 
 	const theme = useTheme();
@@ -62,6 +123,18 @@ const Dashboard = () => {
 				},
 			},
 		},
+	};
+
+	const curPatientCode = () => {
+		let data = (patient && patient.id) ? {
+			...patientListData[patient.id % patientListData.length],
+			name: `${patient.firstName} ${patient.lastName}`,
+			id: patient.id
+		} : {
+			...patientListData[0],
+			id: 0
+		}
+		return <PatientDetailsCard isLoading={isLoading} data={data} />
 	};
 
 	return (
@@ -106,7 +179,7 @@ const Dashboard = () => {
 						<Grid item xs={12}>
 							<Grid container spacing={gridSpacing}>
 								<Grid item xs={6} md={6}>
-									<HeartRateLineChart />
+									<HeartRateLineChart patientId={patient.id} />
 								</Grid>
 								<Grid item xs={6} md={6}>
 									<ActivityLineChart />
@@ -127,7 +200,8 @@ const Dashboard = () => {
 						<Grid item xs={12}>
 							<Grid container spacing={gridSpacing}>
 								<Grid item lg={12} md={12} sm={12} xs={12}>
-									<PatientDetailsCard isLoading={isLoading} />
+									{/* <PatientDetailsCard isLoading={isLoading} /> */}
+									{curPatientCode()}
 								</Grid>
 							</Grid>
 						</Grid>

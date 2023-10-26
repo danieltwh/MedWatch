@@ -62,32 +62,32 @@ function App() {
 	const dispatch = useDispatch();
 	const auth = useSelector(selectAuth);
 
-	function checkUserAuthenticated() {
-		var userLogged = localStorage.getItem("authenticated");
-		return userLogged == "true";
-	}
+	// function checkUserAuthenticated() {
+	// 	var userLogged = localStorage.getItem("authenticated");
+	// 	return userLogged == "true";
+	// }
 
-	function getUser() {
-		return {
-			token_type: localStorage.getItem("token_type"),
-			token: localStorage.getItem("token"),
-			authenticated: localStorage.getItem("authenticated"),
-		};
-	}
+	// function getUser() {
+	// 	return {
+	// 		token_type: localStorage.getItem("token_type"),
+	// 		token: localStorage.getItem("token"),
+	// 		authenticated: localStorage.getItem("authenticated"),
+	// 	};
+	// }
 
-	useEffect(() => {
-		if (isInitial) {
-			if (checkUserAuthenticated()) {
-				var user = getUser();
-				// console.log(user);
-				dispatch(authActions.login(user));
-			} else {
-				dispatch(authActions.logout());
-			}
-			// console.log(auth);
-			isInitial = false;
-		}
-	}, [dispatch]);
+	// useEffect(() => {
+	// 	if (isInitial) {
+	// 		if (checkUserAuthenticated()) {
+	// 			var user = getUser();
+	// 			// console.log(user);
+	// 			dispatch(authActions.login(user));
+	// 		} else {
+	// 			dispatch(authActions.logout());
+	// 		}
+	// 		// console.log(auth);
+	// 		isInitial = false;
+	// 	}
+	// }, [dispatch]);
 
 	return (
 		<StyledEngineProvider injectFirst>
@@ -106,9 +106,7 @@ function App() {
 					<Routes>
 						<Route
 							element={
-								<PublicRoutes
-									authenticated={auth.authenticated}
-								/>
+								<PublicRoutes />
 							}
 						>
 							<Route
@@ -132,17 +130,15 @@ function App() {
 
 						<Route
 							element={
-								<ProtectedRoutes
-									authenticated={auth.authenticated}
-								/>
+								<ProtectedRoutes />
 							}
 						>
 							<Route element={<ResponsiveAppBar />}>
-								<Route
+								{/* <Route
 									exact
 									path="/home"
 									element={<Dashboard />}
-								/>
+								/> */}
 								{/* <Route exact path="/dashboard" element={<DashboardPage />} /> */}
 								<Route
 									exact
@@ -177,7 +173,7 @@ function App() {
 								<Route
 									exact
 									path="/*"
-									element={<Navigate to="/home" />}
+									element={<Navigate to="/patientlist" />}
 								/>
 							</Route>
 						</Route>

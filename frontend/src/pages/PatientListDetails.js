@@ -21,7 +21,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import MedicationIcon from "@mui/icons-material/Medication";
 import MedicalInformationIcon from "@mui/icons-material/MedicalInformation";
 
-import FitbitModal from "./FitbitModal";
+import FitbitModal from "pages/Dashboard/FitbitModal";
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 
@@ -134,7 +134,7 @@ const CardLinkStyle = {
 	color: "#ffc107",
 };
 
-const ChildPatientList = (props) => {
+const PatientListDetails = (props) => {
 	const [openFitbit, setOpenFitbit] = useState(false);
 	const handleFitbitOpen = () => setOpenFitbit(true);
 	const handleFitbitClose = () => setOpenFitbit(false);
@@ -145,12 +145,20 @@ const ChildPatientList = (props) => {
 	theme = responsiveFontSizes(theme);
 
 	const goto = () => {
-		nav("/dashboard", { replace: true });
+		let newState = {
+			patientId: props.data.id
+		}
+
+		// console.log(newState);
+		nav("/dashboard", { 
+			// replace: true,
+			state: newState
+		 });
 	};
 
 	return (
 		<>
-			<FitbitModal open={openFitbit} handleClose={handleFitbitClose} />
+			{/* <FitbitModal open={openFitbit} handleClose={handleFitbitClose} /> */}
 			<CardWrapper border={false} content={false}>
 				<Box sx={{ p: 2.25 }}>
 					<Grid container direction="column">
@@ -188,13 +196,13 @@ const ChildPatientList = (props) => {
 						</Grid>
 						<Grid item>
 							<Grid container justifyContent="center">
-								{/* <Typography
+								<Typography
 									sx={CardLinkStyle}
 									onClick={() => goto("/dashboard")}
 								>
 									Go to Dashboard
-								</Typography> */}
-								<Grid item>
+								</Typography>
+								{/* <Grid item>
 									<Button
 										sx={{
 											cursor: "pointer",
@@ -209,7 +217,7 @@ const ChildPatientList = (props) => {
 										Device
 									</Button>
 									<IconButton />
-								</Grid>
+								</Grid> */}
 							</Grid>
 						</Grid>
 						{/* Basic Details */}
@@ -321,4 +329,4 @@ const ChildPatientList = (props) => {
 	);
 };
 
-export default ChildPatientList;
+export default PatientListDetails;

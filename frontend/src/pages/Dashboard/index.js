@@ -84,14 +84,13 @@ const Dashboard = () => {
 			isInitial = false;
 			if (state && state.patientId) {
 				var currPatient = patients.data.find(currPatient => currPatient.id === state.patientId);
-				
+				// console.log(currPatient);
 				let data = {
 					...patientListData[currPatient.id % patientListData.length],
 					name: `${currPatient.firstName} ${currPatient.lastName}`,
 					id: currPatient.id
 				}
 
-				// console.log(currPatient);
 				setPatient(data);
 			} else if (patients.data && patients.data.length > 0) {
 				console.log("Default to patient index 0");
@@ -127,9 +126,7 @@ const Dashboard = () => {
 
 	const curPatientCode = () => {
 		let data = (patient && patient.id) ? {
-			...patientListData[patient.id % patientListData.length],
-			name: `${patient.firstName} ${patient.lastName}`,
-			id: patient.id
+			...patient
 		} : {
 			...patientListData[0],
 			id: 0

@@ -1,7 +1,10 @@
+import PatientPicture from "static/images/patients/index";
+
 const patientListData = [
 	{
-		avatar: "https://i.imgur.com/oflMA1gb.jpg",
-		name: "fake1",
+		// avatar: "https://i.imgur.com/oflMA1gb.jpg",
+		avatar: PatientPicture.profilePicture_01,
+		name: "Brandon Chiu",
 		age: 90,
 		height: 1.88,
 		weight: 80,
@@ -22,8 +25,9 @@ const patientListData = [
 		},
 	},
 	{
-		avatar: "https://i.imgur.com/e2jhDsIb.jpg",
-		name: "fake2",
+		// avatar: "https://i.imgur.com/e2jhDsIb.jpg",
+		avatar: PatientPicture.profilePicture_02,
+		name: "Kelly Tan",
 		age: 50,
 		height: 1.78,
 		weight: 80,
@@ -44,8 +48,9 @@ const patientListData = [
 		},
 	},
 	{
-		avatar: "https://i.imgur.com/KwrDil8b.jpg",
-		name: "fake3",
+		// avatar: "https://i.imgur.com/KwrDil8b.jpg",
+		avatar: PatientPicture.profilePicture_03,
+		name: "Jasmine Lim",
 		age: 63,
 		height: 1.43,
 		weight: 93,
@@ -66,8 +71,9 @@ const patientListData = [
 		},
 	},
 	{
-		avatar: "https://i.imgur.com/Wdhjfmnb.jpg",
-		name: "fake4",
+		// avatar: "https://i.imgur.com/Wdhjfmnb.jpg",
+		avatar: PatientPicture.profilePicture_04,
+		name: "Rob Chan",
 		age: 78,
 		height: 1.94,
 		weight: 90,
@@ -88,8 +94,9 @@ const patientListData = [
 		},
 	},
 	{
-		avatar: "https://i.imgur.com/GuAB8OEb.jpg",
-		name: "fake5",
+		// avatar: "https://i.imgur.com/GuAB8OEb.jpg",
+		avatar: PatientPicture.profilePicture_05,
+		name: "Chua Teck Sim",
 		age: 82,
 		height: 1.67,
 		weight: 60,
@@ -110,8 +117,9 @@ const patientListData = [
 		},
 	},
 	{
-		avatar: "https://i.imgur.com/crWLssFb.jpg",
-		name: "fake6",
+		// avatar: "https://i.imgur.com/crWLssFb.jpg",
+		avatar: PatientPicture.profilePicture_06,
+		name: "Tom Poh",
 		age: 73,
 		height: 1.54,
 		weight: 56,

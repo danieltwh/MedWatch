@@ -136,11 +136,12 @@ const CardInfoHeaderTextStyle = {
 };
 
 const CardInfoTextStyle = {
-	fontSize: "1rem",
+	fontSize: "1.125rem",
 	fontWeight: 800,
 	mr: 1,
 	mt: 0.5,
 	mb: 0.5,
+	textAlign: "center",
 };
 
 // ===========================|| PATIENT LIST ||=========================== //

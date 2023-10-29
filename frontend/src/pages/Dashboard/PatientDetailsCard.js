@@ -21,6 +21,8 @@ import MedicalInformationIcon from "@mui/icons-material/MedicalInformation";
 import Child from "./ChildPatientList";
 import PatientList from "../PatientList";
 
+import PatientPicture from "static/images/patients/index";
+
 const CardWrapper = styled(MainCard)(({ theme }) => ({
 	backgroundColor: theme.palette.secondary.dark,
 	color: "#fff",
@@ -78,8 +80,9 @@ const PatientDetailCard = ({ isLoading }) => {
 	};
 
 	const data = {
-		avatar: "https://i.imgur.com/oflMA1gb.jpg",
-		name: "fake1",
+		// avatar: "https://i.imgur.com/oflMA1gb.jpg",
+		avatar: PatientPicture.profilePicture_01,
+		name: "Brandon Chiu",
 		age: 90,
 		height: 1.88,
 		weight: 80,

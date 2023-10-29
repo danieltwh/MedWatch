@@ -29,19 +29,6 @@ if os.path.exists(dotenv_path):
 
 ENV = os.environ.get('ENV')
 print(ENV)
-
-dotenv_path = os.path.join(".secret")
-if os.path.exists(dotenv_path):
-    load_dotenv(dotenv_path = dotenv_path)
-
-# For Email Notification
-EMAIL_ADDRESS = os.environ.get("EMAIL_ADDRESS")
-EMAIL_PASSWORD = os.environ.get("EMAIL_PASSWORD")
-
-# For Fitbit
-FITBIT_CLIENT_ID = os.environ.get("FITBIT_CLIENT_ID")
-FITBIT_CLIENT_SECRET = os.environ.get("FITBIT_CLIENT_SECRET")
-
 if ENV == "DEV":
     mongodb_path = 'mongodb://localhost:27020'
     postgres_path = "postgresql://user:password@localhost:5455/MedWatchDB"

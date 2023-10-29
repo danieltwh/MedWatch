@@ -2,6 +2,7 @@
 from fastapi import FastAPI, Response, HTTPException, Depends
 from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.httpsredirect import HTTPSRedirectMiddleware
 
 # Other libraries
 from typing import Union, List
@@ -67,8 +68,11 @@ app = FastAPI(
 
 # Enable CORS
 app.add_middleware(
-    CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"]
+     CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"], 
+     allow_credentials=True,
 )
+
+# app.add_middleware(HTTPSRedirectMiddleware)
 
 # Include all the routes
 for route in routes:
@@ -76,7 +80,7 @@ for route in routes:
 
 # Initialise the MongoDB connection
 @app.on_event("startup")
-async def sstart_mongodb():
+async def start_mongodb():
     await init_mongodb()
 
 @app.get("/", include_in_schema=False)

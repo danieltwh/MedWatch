@@ -8,7 +8,7 @@ import logo_black from "static/images/logo_black.png";
 import search from "static/images/search.svg";
 
 import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 // material-ui
@@ -20,8 +20,15 @@ import SkeletonMetricsCard from "ui-component/cards/Skeleton/MetricsCard";
 import { gridSpacing } from "shared/constant";
 
 import Child from "pages/Dashboard/ChildPatientList";
+import PatientListDetails from "./PatientListDetails";
 import PatientDetailsCard from "pages/Dashboard/PatientDetailsCard";
 import patientListData from "./patientListData";
+
+import { patientList as patientListAPI } from "features/api";
+
+import { patientsActions, selectPatients } from "features/patientsSlice";
+import { authActions } from "features/authSlice";
+import { logout as logoutLocalStorage } from "features/auth";
 
 let isInitial = true;
 
@@ -149,15 +156,18 @@ const CardInfoTextStyle = {
 function PatientList() {
 	const dispatch = useDispatch();
 	const nav = useNavigate();
+
+	const patients = useSelector(selectPatients);
+
 	const theme = useTheme();
 
 	let [page, setPage] = useState(0);
-	let [patientList, setPatientList] = useState([]);
+	let [patientList2, setPatientList] = useState([]);
 	let [curPatient, setCurPatient] = useState(null);
 
 	const startIdx = page * 12;
-	const endIdx = Math.min((page + 1) * 12, patientList.length);
-	const curPatientList = patientList.slice(startIdx, endIdx);
+	const endIdx = Math.min((page + 1) * 12, patientList2.length);
+	const curPatientList = patientList2.slice(startIdx, endIdx);
 
 	//patient info related API, use dummy variables for now
 	// const patients = async () => {
@@ -167,7 +177,21 @@ function PatientList() {
 
 	//     dispatch(patientListActions.set(patienList));
 	// }
-	const fetchPatientData = () => {
+	const fetchPatientData = async () => {
+		let patientList = await patientListAPI().catch((error) => {
+			console.log("There was an error", error);
+		});
+		console.log(patientList);
+		if (patientList.status == 200) {
+			dispatch(patientsActions.set(patientList.body));
+		} else if (patientList.status == 401) {
+			// Unauthorized
+			logoutLocalStorage();
+			dispatch(authActions.logout());
+			nav("/login", {replace: true})
+		}
+
+
 		let patientData = patientListData;
 
 		// 拿取假資料的過程
@@ -189,6 +213,7 @@ function PatientList() {
 		}
 	}, [dispatch]);
 
+
 	function selectPatient(patient) {
 		setCurPatient(patient);
 		// console.log(curPatient)
@@ -200,17 +225,24 @@ function PatientList() {
 
 	const curPatientCode = () => {
 		if (!curPatient) return;
-		return <Child data={curPatient} />;
+		// return <Child data={curPatient} />;
+		let data = {
+			...patientListData[curPatient.id % patientListData.length],
+			name: `${curPatient.firstName} ${curPatient.lastName}`,
+			id: curPatient.id
+		}
+		// return <Child data={data} />;
+		return <PatientListDetails data={data} />;
 	};
 
 	const pageTo = (id) => {
 		console.log("pageTo", id);
-		if (id < 0 || id * 12 >= patientList.length) return;
+		if (id < 0 || id * 12 >= patientList2.length) return;
 		setPage(id);
 	};
 
 	function pagesCode() {
-		const pageCount = patientList.length / 12;
+		const pageCount = patientList2.length / 12;
 		let code = [];
 		for (let i = 0; i < pageCount; i++) {
 			if (i === page) code.push(styles.pageDotSelected);
@@ -255,21 +287,21 @@ function PatientList() {
 												container
 												justifyContent="space-between"
 											>
-												{curPatientList.map((patient) =>
-													!curPatient ||
-													curPatient.index !==
-														patient.index ? (
+												{patients.data.map((patient) =>
+											(
 														<Grid
 															item
-															style={CardStyle}
+															style={(!curPatient || curPatient.id !== patient.id ) ? CardStyle : CardSelectedStyle}
 															p={3}
 															mt={2}
 															onClick={() =>
 																selectPatient(
 																	patient
+																	// patientList2[patient.id % patientList2.length]
+																	// patientListData[patient.id % patientListData.length]
 																)
 															}
-															key={patient.index}
+															key={patient.id}
 														>
 															<Grid
 																container
@@ -282,7 +314,8 @@ function PatientList() {
 																			styles.avatar
 																		}
 																		src={
-																			patient.avatar
+																			// patient.avatar
+																			patientListData[patient.id % patientListData.length].avatar
 																		}
 																		alt="avatar"
 																	></Box>
@@ -299,62 +332,14 @@ function PatientList() {
 																		}
 																	>
 																		{
-																			patient.name
+																			// patient.name
+																			`${patient.firstName} ${patient.lastName}`
 																		}
 																	</Typography>
 																</Grid>
 															</Grid>
 														</Grid>
-													) : (
-														<Grid
-															item
-															style={
-																CardSelectedStyle
-															}
-															p={3}
-															mt={2}
-															onClick={() =>
-																selectPatient(
-																	patient
-																)
-															}
-															key={patient.index}
-														>
-															<Grid
-																container
-																justifyContent="center"
-															>
-																<Grid item>
-																	<Box
-																		component="img"
-																		className={
-																			styles.avatar
-																		}
-																		src={
-																			patient.avatar
-																		}
-																		alt="avatar"
-																	></Box>
-																</Grid>
-															</Grid>
-															<Grid
-																container
-																justifyContent="center"
-															>
-																<Grid item>
-																	<Typography
-																		sx={
-																			CardInfoTextStyle
-																		}
-																	>
-																		{
-																			patient.name
-																		}
-																	</Typography>
-																</Grid>
-															</Grid>
-														</Grid>
-													)
+													) 
 												)}
 											</Grid>
 											{/* Page Navigator */}

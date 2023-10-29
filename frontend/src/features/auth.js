@@ -5,5 +5,5 @@ export const logout = () => {
     localStorage.removeItem("authenticated");
     localStorage.removeItem("token");
     localStorage.removeItem("token_type");
-    return nav("/", {replace: true})
+    // return nav("/", {replace: true})
 }

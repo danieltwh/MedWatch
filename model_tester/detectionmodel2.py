@@ -2,6 +2,7 @@ import math
 from ultralytics import YOLO
 import cv2
 import numpy as np
+from tracker import *
 
 
 class KeyPoint:
@@ -186,6 +187,7 @@ class Processor:
         self.human_detection_count_in_frames = 0
         self.total_frames = 0
         self.fall_frames = 0
+        self.tracker = EuclideanDistTracker()
 
         img2gray = cv2.cvtColor(self.fall_logo, cv2.COLOR_BGR2GRAY)  # Construction of Mask
         self.ret, self.mask = cv2.threshold(img2gray, 1, 255, cv2.THRESH_BINARY)
@@ -197,14 +199,27 @@ class Processor:
         for keypoints, box in zip(results[0].keypoints.xyn, results[0].boxes.xyxy):
             detected_people.append({'keypoints': keypoints.numpy(), 'box': box.numpy()})
         return detected_people
-
+    
+    # Update human tracker
+    def update_tracker(self, detected_people):
+        detections = []
+        for person in detected_people:
+            topX, topY, botX, botY = person['box']
+            topX = int(topX)
+            topY = int(topY)
+            botX = int(botX)
+            botY = int(botY)
+            
+            detections.append([topX, topY, botX, botY])
+        return self.tracker.update(detections)        
+    
     def draw_bounding_box(self, frame, person, fall_detected):
         if fall_detected:
             colour = (0, 0, 255)  # Red color
         else:
             colour = (0, 255, 0)  # Green color
-        frame = cv2.rectangle(frame, (int(person.topX), int(person.topY)), (int(person.botX), int(person.botY)), colour,
-                              2)
+        frame = cv2.rectangle(frame, (int(person.topX), int(person.topY)), (int(person.botX), int(person.botY)), colour, 2)
+        # frame = cv2.putText(frame, str(id), (topX, topY - 15), cv2.FONT_HERSHEY_PLAIN, 1, (255, 0, 0), 2)
         return frame
 
     def draw_direction_arrow(self, frame, person, direction, color, label):
@@ -247,6 +262,7 @@ class Processor:
 
     def process(self, frame):
         detected_people = self.get_body_coordinates_from_frame(frame)
+        boxes_ids = self.update_tracker(detected_people)
         self.total_frames += 1
 
         if detected_people:  # If humans are detected in the frame
@@ -265,7 +281,7 @@ class Processor:
 
             fall_detected = self.fall_detection_processor(self.people[idx])
             frame = self.draw_bounding_box(frame, self.people[idx], fall_detected)
-
+            
             # ------------ Direction Arrow Drawing (Begin) ------------
             # Comment/Uncomment this block if you don't want to see the arrows
             if hasattr(self.people[idx], 'direction_of_travel') and self.people[idx].direction_of_travel is not None:
@@ -281,7 +297,13 @@ class Processor:
             if fall_detected:
                 self.fall_frames += 1  # Increase the fall_frames count when a fall is detected
                 frame = self.add_fall_logo(frame, self.people[idx])
-
+        
+        # Display tracker count on the top-left of the box
+        for box_id in boxes_ids:
+            topX, topY, botX, botY, id = box_id
+            cv2.putText(frame, str(id), (topX, topY - 15), cv2.FONT_HERSHEY_PLAIN, 1, (255, 0, 0), 2)
+            # cv2.rectangle(frame, (topX, topY), (botX, botY), colour, 2)
+        
         return frame
 
     def output_stats(self):

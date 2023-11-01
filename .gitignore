@@ -1,5 +1,7 @@
 *.DS_Store
 
+Videos/
+
 # Large model files
 **/models
 

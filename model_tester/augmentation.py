@@ -4,7 +4,7 @@ import random
 import time
 
 class FootagePreprocessor:
-    def __init__(self,frames):
+    def __init__(self, frames):
         self.frames = frames
         self.target_brightness = 100 
         self.target_kernel_size = (5,5)
@@ -53,8 +53,60 @@ class FootagePreprocessor:
         return equalized_image
 
 
+class SingleFootageAugmenter:
+    def __init__(self, frame):
+        self.frame = frame
+    def augment_brightness(self, target_brightness=random.uniform(50, 200)):
+        frame = self.frame
+        avg_brightness = np.mean(frame)
+        brightness_diff = target_brightness - avg_brightness
+        adjusted_frame = np.clip(frame + brightness_diff, 0, 255).astype(np.uint8)
+        self.frame = adjusted_frame
+
+    # Constant image noise in all frames
+    def add_image_noise(self, noise_mean=0, noise_stdev=25):
+        frame = self.frame
+        image_noise = np.random.normal(noise_mean, noise_stdev, frame.shape).astype(np.uint8)
+
+        noisy_frame = cv2.add(frame, image_noise)
+        noisy_frame = np.clip(noisy_frame, 0, 255).astype(np.uint8)
+
+        self.frame = noisy_frame
+
+    # higher the kernel size, the less the noise but the greater the blur
+    def adjust_image_blur(self, kernel_size=(5, 5)):
+        frame = self.frame
+
+        blurred_frame = cv2.GaussianBlur(frame, kernel_size, 0)
+
+        self.frame = blurred_frame
+
+    def adjust_camera_rotation(self, angle=45):
+
+        frame = self.frame
+
+        image_height, image_width = frame.shape[0], frame.shape[1]
+        centerY, centerX = image_height // 2, image_width // 2
+        rotationMatrix = cv2.getRotationMatrix2D((centerY, centerX), angle, 1)
+        cos_of_rotation_matrix = np.abs(rotationMatrix[0][0])
+        sin_of_rotation_matrix = np.abs(rotationMatrix[0][1])
+
+        newImageHeight = int((image_height * sin_of_rotation_matrix) + (image_width * cos_of_rotation_matrix))
+        newImageWidth = int((image_height * cos_of_rotation_matrix) + (image_width * sin_of_rotation_matrix))
+
+        rotationMatrix[0][2] += (newImageWidth / 2) - centerX
+        rotationMatrix[1][2] += (newImageHeight / 2) - centerY
+
+        rotating_image = cv2.warpAffine(frame, rotationMatrix, (newImageWidth, newImageHeight))
+
+        self.frame = rotating_image
+
+    def output_augmented_frame(self):
+        return self.frame
+
+
 class FootageAugmenter:
-    def __init__(self,frames):
+    def __init__(self, frames):
         self.frames = frames
 
     def augment_brightness(self,target_brightness=random.uniform(50,200)):
@@ -73,8 +125,8 @@ class FootageAugmenter:
             adjusted_frames.append(frame)
 
             if random.random() < lag_probability:
-                for i in range(lag_duration):
-                    adjusted_frames.append(frame)
+                lag_frame = [frame]
+                adjusted_frames.extend(lag_frame * lag_duration)
                 #time.sleep(lag_duration)
         
         return adjusted_frames

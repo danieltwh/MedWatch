@@ -17,8 +17,13 @@ import { gridSpacing } from "shared/constant";
 // assets
 import PatientPhoto from "static/images/patientPicture.jpg";
 import PersonIcon from "@mui/icons-material/Person";
+import SettingsIcon from '@mui/icons-material/Settings';
 import MedicationIcon from "@mui/icons-material/Medication";
 import MedicalInformationIcon from "@mui/icons-material/MedicalInformation";
+
+import FitbitModal from "./FitbitModal";
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
 
 const CardWrapper = styled(MainCard)(({ theme }) => ({
 	backgroundColor: theme.palette.secondary.dark,
@@ -77,6 +82,7 @@ const CardHeaderTextStyle = {
 	mr: 1,
 	mt: 0,
 	mb: 1,
+	textAlign: "center",
 };
 
 const CardSubHeaderTextStyle = {
@@ -130,6 +136,10 @@ const CardLinkStyle = {
 };
 
 const ChildPatientList = (props) => {
+	const [openFitbit, setOpenFitbit] = useState(false);
+	const handleFitbitOpen = () => setOpenFitbit(true);
+	const handleFitbitClose = () => setOpenFitbit(false);
+
 	const nav = useNavigate();
 
 	let theme = useTheme();
@@ -140,156 +150,175 @@ const ChildPatientList = (props) => {
 	};
 
 	return (
-		<CardWrapper border={false} content={false}>
-			<Box sx={{ p: 2.25 }}>
-				<Grid container direction="column">
-					<Grid item>
-						<Grid container justifyContent="center">
-							<Grid item>
-								<Box
-									component="img"
-									sx={{
-										height: 150,
-										width: 150,
-										maxHeight: { xs: 250, md: 250 },
-										maxWidth: { xs: 250, md: 250 },
-										borderRadius: "50%",
-									}}
-									alt="Patient Photo"
-									src={props.data.avatar}
-								></Box>
+		<>
+			<FitbitModal open={openFitbit} handleClose={handleFitbitClose} />
+			<CardWrapper border={false} content={false}>
+				<Box sx={{ p: 2.25 }}>
+					<Grid container direction="column">
+						<Grid item>
+							<Grid container justifyContent="center">
+								<Grid item>
+									<Box
+										component="img"
+										sx={{
+											height: 150,
+											width: 150,
+											maxHeight: { xs: 250, md: 250 },
+											maxWidth: { xs: 250, md: 250 },
+											borderRadius: "50%",
+										}}
+										alt="Patient Photo"
+										src={props.data.avatar}
+									></Box>
+								</Grid>
 							</Grid>
 						</Grid>
-					</Grid>
-					<Grid item>
-						<Grid container justifyContent="center">
-							<Typography sx={CardHeaderTextStyle}>
-								{props.data.name}
+						<Grid item>
+							<Grid container justifyContent="center">
+								<Typography sx={CardHeaderTextStyle}>
+									{props.data.name}
+								</Typography>
+							</Grid>
+						</Grid>
+						<Grid item>
+							<Grid container justifyContent="center">
+								<Typography sx={CardSubHeaderTextStyle}>
+									{props.data.age} years old
+								</Typography>
+							</Grid>
+						</Grid>
+						<Grid item>
+							<Grid container justifyContent="center">
+								{/* <Typography
+									sx={CardLinkStyle}
+									onClick={() => goto("/dashboard")}
+								>
+									Go to Dashboard
+								</Typography> */}
+								<Grid item>
+									<Button
+										sx={{
+											cursor: "pointer",
+											...theme.typography.smallAvatar,
+											backgroundColor:
+												theme.palette.secondary[200],
+											color: theme.palette.secondary.dark,
+										}}
+										startIcon={<SettingsIcon />}
+										onClick={handleFitbitOpen}
+									>
+										Device
+									</Button>
+									<IconButton />
+								</Grid>
+							</Grid>
+						</Grid>
+						{/* Basic Details */}
+						<Grid item>
+							<Grid container alignItems="center">
+								<Grid item>
+									<Avatar
+										sx={{
+											cursor: "pointer",
+											...theme.typography.smallAvatar,
+											backgroundColor:
+												theme.palette.secondary[200],
+											color: theme.palette.secondary.dark,
+										}}
+									>
+										<PersonIcon fontSize="inherit" />
+									</Avatar>
+								</Grid>
+								<Grid item p={2}>
+									<Typography sx={CardInfoHeaderTextStyle}>
+										Basic Details
+									</Typography>
+								</Grid>
+							</Grid>
+						</Grid>
+						<Grid item style={CardStyle} p={2}>
+							<Typography sx={CardInfoTextStyle}>
+								<b>Height: </b>
+								{props.data.height}
+							</Typography>
+							<Typography sx={CardInfoTextStyle}>
+								<b>Weight: </b>
+								{props.data.weight}
+							</Typography>
+							<Typography sx={CardInfoTextStyle}>
+								<b>Blood Type: </b>
+								{props.data.blood_type}
 							</Typography>
 						</Grid>
-					</Grid>
-					<Grid item>
-						<Grid container justifyContent="center">
-							<Typography sx={CardSubHeaderTextStyle}>
-								{props.data.age} years old
-							</Typography>
-						</Grid>
-					</Grid>
-					<Grid item>
-						<Grid container justifyContent="center">
-							<Typography
-								sx={CardLinkStyle}
-								onClick={() => goto("/dashboard")}
-							>
-								Go to Dashboard
-							</Typography>
-						</Grid>
-					</Grid>
-					{/* Basic Details */}
-					<Grid item>
-						<Grid container alignItems="center">
-							<Grid item>
-								<Avatar
-									sx={{
-										cursor: "pointer",
-										...theme.typography.smallAvatar,
-										backgroundColor:
-											theme.palette.secondary[200],
-										color: theme.palette.secondary.dark,
-									}}
-								>
-									<PersonIcon fontSize="inherit" />
-								</Avatar>
-							</Grid>
-							<Grid item p={2}>
-								<Typography sx={CardInfoHeaderTextStyle}>
-									Basic Details
-								</Typography>
+						{/* Medical Condition */}
+						<Grid item>
+							<Grid container alignItems="center">
+								<Grid item>
+									<Avatar
+										sx={{
+											cursor: "pointer",
+											...theme.typography.smallAvatar,
+											backgroundColor:
+												theme.palette.secondary[200],
+											color: theme.palette.secondary.dark,
+										}}
+									>
+										<MedicalInformationIcon fontSize="inherit" />
+									</Avatar>
+								</Grid>
+								<Grid item p={2}>
+									<Typography sx={CardInfoHeaderTextStyle}>
+										Medical Condition
+									</Typography>
+								</Grid>
 							</Grid>
 						</Grid>
-					</Grid>
-					<Grid item style={CardStyle} p={2}>
-						<Typography sx={CardInfoTextStyle}>
-							<b>Height: </b>
-							{props.data.height}
-						</Typography>
-						<Typography sx={CardInfoTextStyle}>
-							<b>Weight: </b>
-							{props.data.weight}
-						</Typography>
-						<Typography sx={CardInfoTextStyle}>
-							<b>Blood Type: </b>
-							{props.data.blood_type}
-						</Typography>
-					</Grid>
-					{/* Medical Condition */}
-					<Grid item>
-						<Grid container alignItems="center">
-							<Grid item>
-								<Avatar
-									sx={{
-										cursor: "pointer",
-										...theme.typography.smallAvatar,
-										backgroundColor:
-											theme.palette.secondary[200],
-										color: theme.palette.secondary.dark,
-									}}
-								>
-									<MedicalInformationIcon fontSize="inherit" />
-								</Avatar>
-							</Grid>
-							<Grid item p={2}>
-								<Typography sx={CardInfoHeaderTextStyle}>
-									Medical Condition
-								</Typography>
+						<Grid item style={CardStyle} p={2}>
+							{props.data.medical_condition.map((item) => {
+								return (
+									<Typography sx={CardInfoTextStyle}>
+										<b>{item}</b>
+									</Typography>
+								);
+							})}
+						</Grid>
+						{/* Medication */}
+						<Grid item>
+							<Grid container alignItems="center">
+								<Grid item>
+									<Avatar
+										sx={{
+											cursor: "pointer",
+											...theme.typography.smallAvatar,
+											backgroundColor:
+												theme.palette.secondary[200],
+											color: theme.palette.secondary.dark,
+										}}
+									>
+										<MedicationIcon fontSize="inherit" />
+									</Avatar>
+								</Grid>
+								<Grid item p={2}>
+									<Typography sx={CardInfoHeaderTextStyle}>
+										Medication
+									</Typography>
+								</Grid>
 							</Grid>
 						</Grid>
-					</Grid>
-					<Grid item style={CardStyle} p={2}>
-						{props.data.medical_condition.map((item) => {
-							return (
-								<Typography sx={CardInfoTextStyle}>
-									<b>{item}</b>
-								</Typography>
-							);
-						})}
-					</Grid>
-					{/* Medication */}
-					<Grid item>
-						<Grid container alignItems="center">
-							<Grid item>
-								<Avatar
-									sx={{
-										cursor: "pointer",
-										...theme.typography.smallAvatar,
-										backgroundColor:
-											theme.palette.secondary[200],
-										color: theme.palette.secondary.dark,
-									}}
-								>
-									<MedicationIcon fontSize="inherit" />
-								</Avatar>
-							</Grid>
-							<Grid item p={2}>
-								<Typography sx={CardInfoHeaderTextStyle}>
-									Medication
-								</Typography>
-							</Grid>
+						<Grid item style={CardStyle} p={2}>
+							{props.data.medication.map((item) => {
+								return (
+									<Typography sx={CardInfoTextStyle}>
+										<b>{item.name}: </b> {item.count},{" "}
+										{item.freq}
+									</Typography>
+								);
+							})}
 						</Grid>
 					</Grid>
-					<Grid item style={CardStyle} p={2}>
-						{props.data.medication.map((item) => {
-							return (
-								<Typography sx={CardInfoTextStyle}>
-									<b>{item.name}: </b> {item.count},{" "}
-									{item.freq}
-								</Typography>
-							);
-						})}
-					</Grid>
-				</Grid>
-			</Box>
-		</CardWrapper>
+				</Box>
+			</CardWrapper>
+		</>
 	);
 };
 

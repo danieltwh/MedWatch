@@ -82,6 +82,7 @@ const CardHeaderTextStyle = {
 	mr: 1,
 	mt: 0,
 	mb: 1,
+	textAlign: "center",
 };
 
 const CardSubHeaderTextStyle = {

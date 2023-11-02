@@ -1,3 +1,5 @@
+import PatientPicture from "static/images/patients/index";
+
 const patientListData = [
 	{
 		avatar: "/images/avatars/wolf.png",
@@ -219,7 +221,7 @@ const patientListData = [
 			phone_number: "+6591234567",
 		},
 	},
-		{
+	{
 		avatar: "/images/avatars/sloth.png",
 		name: "fake6",
 		age: 73,
@@ -263,7 +265,6 @@ const patientListData = [
 			phone_number: "+6591234567",
 		},
 	},
-
 ];
 
 export default patientListData;

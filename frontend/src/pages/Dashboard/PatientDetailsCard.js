@@ -21,6 +21,8 @@ import MedicalInformationIcon from "@mui/icons-material/MedicalInformation";
 import Child from "./ChildPatientList";
 import PatientList from "../PatientList";
 
+import PatientPicture from "static/images/patients/index";
+
 const CardWrapper = styled(MainCard)(({ theme }) => ({
 	backgroundColor: theme.palette.secondary.dark,
 	color: "#fff",

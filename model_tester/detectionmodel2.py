@@ -164,13 +164,13 @@ class FallDetection:
         """Overall fall detection that checks all rules."""
 
         if self.detect_fall_rule1():
-            print("Fall detected by Rule 1")
+            # print("Fall detected by Rule 1")
             return True
-        elif self.detect_fall_rule2():
-            print("Fall detected by Rule 2")
-            return True
+        # elif self.detect_fall_rule2():
+        #     print("Fall detected by Rule 2")
+        #     return True
         elif self.detect_fall_rule3():
-            print("Fall detected by Rule 3")
+            # print("Fall detected by Rule 3")
             return True
         return False
 
@@ -193,7 +193,7 @@ class Processor:
         self.ret, self.mask = cv2.threshold(img2gray, 1, 255, cv2.THRESH_BINARY)
 
     def get_body_coordinates_from_frame(self, frame):
-        results = self.model(frame, conf=0.3, classes=0, verbose=True)
+        results = self.model(frame, conf=0.3, classes=0, verbose=False)
 
         detected_people = []
         for keypoints, box in zip(results[0].keypoints.xyn, results[0].boxes.xyxy):
@@ -281,18 +281,19 @@ class Processor:
 
             fall_detected = self.fall_detection_processor(self.people[idx])
             frame = self.draw_bounding_box(frame, self.people[idx], fall_detected)
-            
-            # ------------ Direction Arrow Drawing (Begin) ------------
-            # Comment/Uncomment this block if you don't want to see the arrows
-            if hasattr(self.people[idx], 'direction_of_travel') and self.people[idx].direction_of_travel is not None:
-                frame = self.draw_direction_arrow(frame, self.people[idx], self.people[idx].direction_of_travel,
-                                                  (0, 255, 0), "Current")
-                # Assuming you store the previous direction of travel in another attribute called 'previous_direction_of_travel'
-                if hasattr(self.people[idx], 'previous_direction_of_travel'):
-                    frame = self.draw_direction_arrow(frame, self.people[idx],
-                                                      self.people[idx].previous_direction_of_travel, (0, 0, 255),
-                                                      "Previous")
-            # ------------ Direction Arrow Drawing (End) --------------
+
+
+            # # ------------ Direction Arrow Drawing (Begin) ------------
+            # # Comment/Uncomment this block if you don't want to see the arrows
+            # if hasattr(self.people[idx], 'direction_of_travel') and self.people[idx].direction_of_travel is not None:
+            #     frame = self.draw_direction_arrow(frame, self.people[idx], self.people[idx].direction_of_travel,
+            #                                       (0, 255, 0), "Current")
+            #     # Assuming you store the previous direction of travel in another attribute called 'previous_direction_of_travel'
+            #     if hasattr(self.people[idx], 'previous_direction_of_travel'):
+            #         frame = self.draw_direction_arrow(frame, self.people[idx],
+            #                                           self.people[idx].previous_direction_of_travel, (0, 0, 255),
+            #                                           "Previous")
+            # # ------------ Direction Arrow Drawing (End) --------------
 
             if fall_detected:
                 self.fall_frames += 1  # Increase the fall_frames count when a fall is detected

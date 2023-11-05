@@ -173,3 +173,6 @@ model_tester/Data/*
 model_tester/Videos/*
 !model_tester/Videos/.gitkeep
 model_tester/*.pt
+!model_tester/Videos/Output/.gitkeep
+model_tester/Videos/Output/*
+model_tester/.ipynb_checkpoints

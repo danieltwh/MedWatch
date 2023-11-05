@@ -3,6 +3,7 @@ from ultralytics import YOLO
 import cv2
 import numpy as np
 from tracker import *
+from collections import deque
 
 
 class KeyPoint:
@@ -50,6 +51,7 @@ class Person:
     def __init__(self, initial_keypoints, topX, topY, botX, botY):
         self.current_keypoints = KeyPoint(initial_keypoints)
         self.keypoints_history = [self.current_keypoints]
+
 
         self.initial_angle = self.compute_initial_angle()
         self.direction_of_travel = None
@@ -108,8 +110,9 @@ class Person:
 
 
 class FallDetection:
-    def __init__(self, person):
+    def __init__(self, person,frame):
         self.person = person
+        self.frame = frame
 
     def detect_fall_rule1(self):
         """Detect fall based on deviation from initial body angle."""
@@ -125,15 +128,15 @@ class FallDetection:
 
     def detect_fall_rule2(self):
         """Detect fall based on deviation from the direction of travel."""
-        recent_keypoints = self.person.get_recent_keypoints(2)
-        if len(recent_keypoints) < 2:
+        recent_keypoints = self.person.get_recent_keypoints(10)
+        if len(recent_keypoints) < 10:
             return False
 
         joint_names = ['LEFT_SHOULDER', 'RIGHT_SHOULDER', 'LEFT_HIP', 'RIGHT_HIP']
 
         current_direction = sum(
             self.compute_direction(
-                recent_keypoints[1].compiled[joint],
+                recent_keypoints[-1].compiled[joint],
                 recent_keypoints[0].compiled[joint]
             ) for joint in joint_names
         ) / len(joint_names)
@@ -160,6 +163,38 @@ class FallDetection:
         current_distance = self.person.compute_vertical_distance()
         return current_distance < 0.5 * self.person.initial_distance
 
+    def calculate_angle_by_coordinates(self, coordinates1, coordinates2):
+        x1, y1 = (coordinates1['LEFT_SHOULDER'] + coordinates1['RIGHT_SHOULDER']) / 2
+        x2, y2 = (coordinates1['LEFT_HIP'] + coordinates1['RIGHT_HIP']) / 2
+        x3, y3 = (coordinates2['LEFT_SHOULDER'] + coordinates2['RIGHT_SHOULDER']) / 2
+        x4, y4 = (coordinates2['LEFT_HIP'] + coordinates2['RIGHT_HIP']) / 2
+        if x1 == x2 or x3 == x4:
+            x1, y1 = y1, x1
+            x2, y2 = y2, x2
+            x3, y3 = y3, x3
+            x4, y4 = y4, x4
+        m1 = (y2 - y1) / (x2 - x1)
+        m2 = (y4 - y3) / (x4 - x3)
+
+        return (math.atan(abs((m2 - m1) / (1 + m1 * m2))) * 180) / math.pi
+
+    def detect_fall_rule4(self):
+        cand_keypoint = self.person.get_recent_keypoints(1)[0]
+        coordinates = cand_keypoint.compiled
+
+        coordinates_dict = {}
+        frame = self.frame
+        for body_part, (x, y) in coordinates.items():
+            coordinates_dict[body_part] = (int(x * frame.shape[1]), int(y * frame.shape[0]))
+
+        if len(self.person.keypoints_history) >= 5:
+            old_coordinates = self.person.get_recent_keypoints(2)[1]
+            old_coordinates = old_coordinates.compiled
+            ang = self.calculate_angle_by_coordinates(old_coordinates, coordinates)
+            if ang >= 15:
+                return True
+        return False
+
     def detect_fall(self):
         """Overall fall detection that checks all rules."""
 
@@ -168,9 +203,13 @@ class FallDetection:
             return True
         # elif self.detect_fall_rule2():
         #     print("Fall detected by Rule 2")
-        #     return True
+            return True
         elif self.detect_fall_rule3():
             # print("Fall detected by Rule 3")
+            return True
+
+        elif self.detect_fall_rule4():
+            # print("Fall detected By Rule 4")
             return True
         return False
 
@@ -256,8 +295,8 @@ class Processor:
 
         return frame
 
-    def fall_detection_processor(self, person):
-        fall_detector = FallDetection(person)
+    def fall_detection_processor(self, person,frame):
+        fall_detector = FallDetection(person,frame)
         return fall_detector.detect_fall()
 
     def process(self, frame):
@@ -279,7 +318,7 @@ class Processor:
                 person = Person(detected['keypoints'], *detected['box'])
                 self.people.append(person)
 
-            fall_detected = self.fall_detection_processor(self.people[idx])
+            fall_detected = self.fall_detection_processor(self.people[idx],frame)
             frame = self.draw_bounding_box(frame, self.people[idx], fall_detected)
 
 

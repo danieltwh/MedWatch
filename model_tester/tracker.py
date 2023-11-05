@@ -55,7 +55,7 @@ class EuclideanDistTracker:
                 objects_bbs_ids.append([topX, topY, botX, botY, info['id']])
                 same_object_detected = True
                 minEDist = {}
-
+                
             # New object is detected we assign the ID to that object
             if same_object_detected is False:
                 self.center_points[self.id_count] = (cx, cy)

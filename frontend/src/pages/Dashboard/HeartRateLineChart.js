@@ -246,7 +246,11 @@ const HeartRateLineChart = ({ isLoading, patientId }) => {
 		let userHeartRate = await heartrateDetailLevelAPI(value, patientId).catch((error) => {
 			console.log("There was an error", error);
 		});
-		if (userHeartRate.status == 200) {
+
+		if(!userHeartRate) {
+			console.log("Server Down");
+			return ;
+		} else if (userHeartRate.status == 200) {
 			// setHeartRateData(userHeartRate.body);
 			dispatch(heartrateActions.set(userHeartRate.body));
 		} else if (userHeartRate.status == 401) {
@@ -267,7 +271,6 @@ const HeartRateLineChart = ({ isLoading, patientId }) => {
 			if(patientId < 0) {
 				return;
 			}
-
 			fetchHeartrateData();
 		}
 	}, [dispatch]);

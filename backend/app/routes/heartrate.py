@@ -28,6 +28,7 @@ class HeartRateResponse(BaseModel):
     id: int
     time: str
     value: float
+    isAnomaly: bool
 
 
 @router.get(
@@ -66,7 +67,8 @@ async def get_heartrate(patientId: int, user: Annotated[User, Depends(authentica
         data.append({
             "id": result.patientId,
             "time": result.time,
-            "value": result.value
+            "value": result.value,
+            "isAnomaly": result.isAnomaly
         })
 
     for d in data:
@@ -147,7 +149,8 @@ async def get_heartrate_hour(patientId: int, detail_level: str, user: Annotated[
         data.append({
             "id": result.patientId,
             "time": result.time,
-            "value": result.value
+            "value": result.value,
+            "isAnomaly": result.isAnomaly
         })
 
     for d in data:

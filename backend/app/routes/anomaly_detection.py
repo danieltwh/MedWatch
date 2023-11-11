@@ -55,15 +55,15 @@ class HeartRateResponse(BaseModel):
 async def link_patient_to_user(
     patientId: int,
     new_heartrate_data: List[HeartRate],
-    user: Annotated[User, Depends(authenticate_user)]
+    # user: Annotated[User, Depends(authenticate_user)]
     ):
-    print(f'Input data: {new_heartrate_data}')
+    # print(f'Input data: {new_heartrate_data}')
     
 
     results = await HeartRate.find(HeartRate.patientId == patientId).to_list()
     if len(results) > 360:
         results = results[-360: ]
-    print(f'Results: {results}')
+    # print(f'Results: {results}')
 
     data = []
     new_data = []
@@ -74,8 +74,8 @@ async def link_patient_to_user(
         if curr.value > 0:
             new_data.append(curr.value)
     
-    print(f'Data: {data}')
-    print(f'New data: {new_data}')
+    # print(f'Data: {data}')
+    # print(f'New data: {new_data}')
     thresold = 2
     mean = np.mean(data)
     std_dev = np.std(data)

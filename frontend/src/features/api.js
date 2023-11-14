@@ -197,6 +197,111 @@ export const heartrateDetailLevel = async (detailLevel, patientId) => {
 	return response;
 };
 
+export const caloriesDetailLevel = async (detailLevel, patientId) => {
+	// const requestOptions = {
+	//     headers: {
+	//         "Content-Type": "application/json",
+	//     },
+	//     body: JSON.stringify({
+	//         email: payload.email,
+	//         password: payload.password,
+	//     }),
+	//     method: "POST",
+	// };
+
+	const requestOptions = {
+		method: "GET",
+		// body: payload,
+		headers: {
+			// "Content-Type": "application/x-www-form-urlencoded"
+			Authorization: `${localStorage.token_type} ${localStorage.token}`,
+		},
+	};
+	// console.log(requestOptions);
+
+	const response = await fetch(`${base_url}/calories/minute/${patientId}/${detailLevel}`, requestOptions)
+		.then((response) => {
+			// console.log(response);
+			return response;
+		})
+		.then((response) =>
+			response.json().then((data) => {
+				// if(data.data) {
+				//     data['data'].forEach(data => {
+				//         data.time = new Date(data.time)
+				//     })
+				// }
+
+				// return data['data']
+				return {
+					body: data["data"],
+					status: response.status,
+				};
+			})
+		);
+	// console.log(response);
+
+	return response;
+};
+
+export const caloriesTotal = async (patientId) => {
+	const requestOptions = {
+		method: "GET",
+		// body: payload,
+		headers: {
+			// "Content-Type": "application/x-www-form-urlencoded"
+			Authorization: `${localStorage.token_type} ${localStorage.token}`,
+		},
+	};
+	// console.log(requestOptions);
+
+	const response = await fetch(`${base_url}/calories/total/${patientId}`, requestOptions)
+		.then((response) => {
+			// console.log(response);
+			return response;
+		})
+		.then((response) =>
+			response.json().then((data) => {
+				return {
+					body: data,
+					status: response.status,
+				};
+			})
+		);
+	// console.log(response);
+
+	return response;
+};
+
+export const stepsTotal = async (patientId) => {
+	const requestOptions = {
+		method: "GET",
+		// body: payload,
+		headers: {
+			// "Content-Type": "application/x-www-form-urlencoded"
+			Authorization: `${localStorage.token_type} ${localStorage.token}`,
+		},
+	};
+	// console.log(requestOptions);
+
+	const response = await fetch(`${base_url}/step/total/${patientId}`, requestOptions)
+		.then((response) => {
+			// console.log(response);
+			return response;
+		})
+		.then((response) =>
+			response.json().then((data) => {
+				return {
+					body: data,
+					status: response.status,
+				};
+			})
+		);
+	// console.log(response);
+
+	return response;
+};
+
 export const weight = async (payload) => {
 	// const requestOptions = {
 	//     headers: {

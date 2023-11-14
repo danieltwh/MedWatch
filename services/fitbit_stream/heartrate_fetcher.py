@@ -15,7 +15,11 @@ from models import Patient, HeartRate
 import datetime
 import time
 import asyncio
+import json
 
+import numpy as np
+
+MEDWATCH_URL = "http://localhost:5050"
 
 mongodb_path = 'mongodb://localhost:27020'
 postgres_path = "postgresql://user:password@localhost:5455/MedWatchDB"
@@ -62,13 +66,75 @@ async def get_heartrate(patient_id, access_token, heart_rate_url):
 
     return heartrates
 
-async def update_mongodb(ls, start):
+async def trigger_heartrate_detection(patient_id, new_heartrate_ls):
+    heart_rate_anomaly_url = f"{MEDWATCH_URL}/anomaly_detection/{patient_id}"
+
+
+# async def get_mean_and_std(patiend_id):
+#     results = await HeartRate.find(HeartRate.patientId == patiend_id).to_list()
+#     if len(results) > 360:
+#         results = results[-360: ]
+#     print(f'Results: {results}')
+
+#     data = []
+#     new_data = []
+#     for result in results:
+#         if result.value > 0:
+#             data.append(result.value)
+
+
+#     mean = np.mean(data)
+#     std_dev = np.std(data)
+
+#     return (mean, std_dev)
+
+async def send_email(patient_id):
+    email_url = f"{MEDWATCH_URL}/email/patient/{patient_id}"
+
+    requests.get(email_url)
+
+async def send_new_heartrate(patient_id, new_heart_rate):
+    new_heart_rate_url = f"{MEDWATCH_URL}/anomaly_detection/{patient_id}"
+
+    data = []
+
+    for heartrate in new_heart_rate:
+        data.append({
+            "patientId": heartrate.patientId,
+            "time": heartrate.time,
+            "value": heartrate.value,
+            "isAnomaly": heartrate.isAnomaly
+        })
+
+    # print(data)
+    resp = requests.post(
+        url=new_heart_rate_url,
+        # json = json.dumps(new_heart_rate)
+        # json=json.dumps(data)
+        json=data
+    )
+
+    # print(resp)
+    # print(resp.json())
+
+
+async def update_mongodb(patient_id, ls, start):
+    # mean, std_dev = await get_mean_and_std(patient_id)
+    # thresold = 2
+
+    # contains_anomaly = False
+
     temp_ls = []
 
     for heartrate in ls[:]:
         dt = datetime.datetime.strptime(heartrate['time'], "%H:%M:%S").replace(year=start.year, month=start.month, day=start.day)
-        curr = HeartRate(patientId=1, time=dt.isoformat(), value=heartrate['value'])
+        # z_score =(heartrate['value'] - mean) / std_dev
+        # isAnomaly = z_score > thresold
+        curr = HeartRate(patientId=patient_id, time=dt.isoformat(), value=heartrate['value'], isAnomaly="False")
         temp_ls.append(curr)
+
+        # if isAnomaly:
+        #     contains_anomaly = True
 
     async with BulkWriter() as bulk_writer:
         for heartrate in temp_ls:
@@ -76,15 +142,24 @@ async def update_mongodb(ls, start):
                 .find_one({HeartRate.patientId: heartrate.patientId, HeartRate.time: heartrate.time}) \
                     .upsert(Set({HeartRate.value: heartrate.value}), on_insert=heartrate)
             await bulk_writer.commit()   
+    
+    await send_new_heartrate(patient_id, temp_ls)
+    
+    # if contains_anomaly:
+    #     print('Sending email')
+    #     send_email(patient_id)
+
+
+
 
 async def fetch_user_heartrate(patient_id, patient_access_token, heart_rate_url, start):
     try:
         ls = await get_heartrate(patient_id, patient_access_token, heart_rate_url)
         if ls:
-            await update_mongodb(ls, start)
+            await update_mongodb(patient_id, ls, start)
         
     except Exception as err:
-        print(f"Error with fetchin patient {patient_id}")
+        print(f"Error with fetching patient {patient_id}")
         print(err)
 
 
@@ -133,6 +208,8 @@ async def fetch_heartrate():
 
 
     await asyncio.wait(tasks)
+
+
 
 
 async def main():

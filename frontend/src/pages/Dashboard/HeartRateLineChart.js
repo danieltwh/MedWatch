@@ -50,6 +50,14 @@ const status = [
 		label: "5 Min",
 	},
 	{
+		value: "10min",
+		label: "10 Min",
+	},
+	{
+		value: "30min",
+		label: "30 Min",
+	},
+	{
 		value: "1hour",
 		label: "1 Hour",
 	},
@@ -242,11 +250,14 @@ const HeartRateLineChart = ({ isLoading, patientId }) => {
 	const heartrate = useSelector(selectHeartrate);
 
 	const fetchHeartrateData = async () => {
-
 		let userHeartRate = await heartrateDetailLevelAPI(value, patientId).catch((error) => {
 			console.log("There was an error", error);
 		});
-		if (userHeartRate.status == 200) {
+
+		if(!userHeartRate) {
+			console.log("Server Down");
+			return ;
+		} else if (userHeartRate.status == 200) {
 			// setHeartRateData(userHeartRate.body);
 			dispatch(heartrateActions.set(userHeartRate.body));
 		} else if (userHeartRate.status == 401) {
@@ -267,7 +278,6 @@ const HeartRateLineChart = ({ isLoading, patientId }) => {
 			if(patientId < 0) {
 				return;
 			}
-
 			fetchHeartrateData();
 		}
 	}, [dispatch]);
@@ -298,7 +308,7 @@ const HeartRateLineChart = ({ isLoading, patientId }) => {
 		return () => {
 			stopPolling();
 		}
-	}, [isPageVisible, isPollingEnabled, patientId]);
+	}, [isPageVisible, isPollingEnabled, patientId, value]);
 
 
 	const getChartOptions = () => {
@@ -307,8 +317,17 @@ const HeartRateLineChart = ({ isLoading, patientId }) => {
 			case "1min":
 				offset_minutes = 1;
 				break;
+			case "3min":
+				offset_minutes = 3;
+				break;
 			case "5min":
 				offset_minutes = 5;
+				break;
+			case "10min":
+				offset_minutes = 10;
+				break;
+			case "30min":
+				offset_minutes = 30;
 				break;
 			case "1hour":
 				offset_minutes = 60;
@@ -457,7 +476,7 @@ const HeartRateLineChart = ({ isLoading, patientId }) => {
 															mb: 0.75,
 														}}
 													>
-														90 BPM
+														{(heartrate.data.length <= 0) ? "0" : heartrate.data[heartrate.data.length - 1].value} BPM
 													</Typography>
 												</Grid>
 											</Grid>
@@ -499,7 +518,6 @@ const HeartRateLineChart = ({ isLoading, patientId }) => {
 							</Grid>
 						</Grid>
 						<Grid item xs={12} sx={{height: "350px"}}>
-							{/* <Chart {...chartData} /> */}
 							<Line
 								data={{
 									labels: heartrate.data.map((data) => {
@@ -507,6 +525,8 @@ const HeartRateLineChart = ({ isLoading, patientId }) => {
 											new Date(data.time)
 										);
 										// return luxonDate.toFormat("hh:mm:ss");
+
+										
 										return luxonDate
 									}),
 									datasets: [
@@ -514,6 +534,11 @@ const HeartRateLineChart = ({ isLoading, patientId }) => {
 											label: "Heart Rate",
 											data: heartrate.data.map(
 												(data) => data.value
+											),
+											pointBackgroundColor: heartrate.data.map(
+												// (data) => (data.isAnomaly && data.isAnomaly === "True") ?  "#ee4e36" : "#5e35b1"
+
+												(data) => (data.isAnomaly == "True") ?  "#ee4e36" : "#5e35b1"
 											),
 											borderColor: "#5e35b1",
 											backgroundColor: "#5e35b1",

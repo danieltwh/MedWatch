@@ -90,6 +90,7 @@ class HeartRate(Document):
     patientId: int
     time: str
     value: float
+    isAnomaly: str
     
     class Settings:
         name = "heartrate"
@@ -99,7 +100,8 @@ class HeartRate(Document):
             "example": {
                 "title": 2022484408,
                 "time": "2016-12-04T07:21:00",
-                "value": 97
+                "value": 97,
+                "isAnomaly": "False"
             }
         }
 

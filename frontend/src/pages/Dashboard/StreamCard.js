@@ -135,7 +135,7 @@ const ExpandMore = styled((props) => {
 
 // ===========================|| DASHBOARD DEFAULT - EARNING CARD ||=========================== //
 
-const StreamCard = ({ isLoading }) => {
+const StreamCard = ({ isLoading, patientId }) => {
 	let theme = useTheme();
 	theme = responsiveFontSizes(theme);
 
@@ -228,29 +228,25 @@ const StreamCard = ({ isLoading }) => {
 									</Grid>
 								</Grid>
 								{/* Stream - Collapse/Expand */}
-								<Grid item>
-									<Grid container alignItems="center">
-										<Collapse
-											in={expanded}
-											timeout="auto"
-											unmountOnExit
-										>
-											<CardContent>
-												<Grid item>
-													<Grid
-														container
-														alignItems="center"
-													>
-														<VideoPage />
-													</Grid>
-												</Grid>
-											</CardContent>
-										</Collapse>
+								{/* <Grid item>
+									<Grid container>
+										
 									</Grid>
-								</Grid>
+								</Grid> */}
 								{/* END Stream - Collapse/Expand */}
 							</Grid>
 						</Grid>
+						<Collapse
+							in={expanded}
+							timeout="auto"
+							unmountOnExit
+						>
+							<CardContent >
+								<Grid item xs={12}>
+									<VideoPage patientId={patientId} />
+								</Grid>
+							</CardContent>
+						</Collapse>
 					</Box>
 				</CardWrapper>
 			)}

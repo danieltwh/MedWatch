@@ -169,8 +169,13 @@ const Dashboard = () => {
 						{/* Stream Card  */}
 						<Grid item xs={12}>
 							<Grid container spacing={gridSpacing}>
-								<Grid item xs={12} md={12}>
-									<StreamCard isLoading={isLoading} />
+								<Grid item xs={12} md={12} >
+									<StreamCard isLoading={isLoading} patientId={patient.id}
+										sx={{
+											"display": "flex",
+											justifyContent: "center"
+										}}
+									/>
 								</Grid>
 							</Grid>
 						</Grid>

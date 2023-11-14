@@ -476,7 +476,7 @@ const HeartRateLineChart = ({ isLoading, patientId }) => {
 															mb: 0.75,
 														}}
 													>
-														{heartrate.data[heartrate.data.length - 1].value} BPM
+														{(heartrate.data.length <= 0) ? "0" : heartrate.data[heartrate.data.length - 1].value} BPM
 													</Typography>
 												</Grid>
 											</Grid>
@@ -518,7 +518,6 @@ const HeartRateLineChart = ({ isLoading, patientId }) => {
 							</Grid>
 						</Grid>
 						<Grid item xs={12} sx={{height: "350px"}}>
-							{/* <Chart {...chartData} /> */}
 							<Line
 								data={{
 									labels: heartrate.data.map((data) => {
@@ -526,6 +525,8 @@ const HeartRateLineChart = ({ isLoading, patientId }) => {
 											new Date(data.time)
 										);
 										// return luxonDate.toFormat("hh:mm:ss");
+
+										
 										return luxonDate
 									}),
 									datasets: [

@@ -89,9 +89,10 @@ async def link_patient_to_user(
         print('Sending email')
         send_email_helper(patientId)
         true_index = [i for i, val in enumerate([abs(z_score) > thresold for z_score in z_score_new_data]) if val]
+        print(true_index)
         for index in true_index:
             curr_data = new_heartrate_data[index]
-            mongo_data = await HeartRate.find_one(HeartRate.patientId == curr_data.patientId and HeartRate.time == curr_data.time and HeartRate.value == curr_data.value)
+            mongo_data = await HeartRate.find_one(HeartRate.patientId == curr_data.patientId and HeartRate.time == curr_data.time)
             mongo_data.isAnomaly = "True"
             await mongo_data.save()
 

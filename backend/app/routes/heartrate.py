@@ -127,6 +127,8 @@ async def get_heartrate_hour(patientId: int, detail_level: str, user: Annotated[
         "1min": 1,
         "3min": 3,
         "5min": 5,
+        "10min": 10,
+        "30min": 30,
         "1hour": 60,
         "Today": 1440,
     }
@@ -136,11 +138,13 @@ async def get_heartrate_hour(patientId: int, detail_level: str, user: Annotated[
 
     num_minutes = switcher.get(detail_level)
     
-    time_limit = curr_now - datetime.timedelta(minutes=num_minutes)
-    print(time_limit)
+    start_time = curr_now - datetime.timedelta(minutes=num_minutes)
+    end_time = curr_now
+    print(start_time, )
     results = await HeartRate.find(
             HeartRate.patientId == patientId,
-            HeartRate.time >= time_limit.isoformat()
+            HeartRate.time >= start_time.isoformat(),
+            HeartRate.time <= end_time.isoformat()
             ).to_list()
 
 

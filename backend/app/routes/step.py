@@ -152,7 +152,15 @@ async def get_daily_steps(patientId: int, user: Annotated[User, Depends(authenti
     },
 )
 async def get_minute_steps(patientId: int, user: Annotated[User, Depends(authenticate_user)]) -> List[MinuteStepsResponse]:
-    results = await MinuteStep.find(MinuteStep.patientId == patientId).to_list()
+    curr_now = datetime.datetime.utcnow() + datetime.timedelta(minutes=480) - datetime.timedelta(days=1)
+
+    start_time = curr_now.replace(hour=0, minute=00, second=1)
+    end_time = curr_now.replace(hour=23, minute=59, second=59)
+    results = await MinuteStep.find(
+        MinuteStep.patientId == patientId,
+        MinuteStep.time >= start_time.isoformat(),
+        MinuteStep.time <= end_time.isoformat()
+        ).to_list()
 
     data = []
     for result in results:
@@ -166,6 +174,123 @@ async def get_minute_steps(patientId: int, user: Annotated[User, Depends(authent
     
     resp_body = {
         "data": data
+    }
+
+    return Response(content=json.dumps(resp_body), media_type="application/json")
+
+
+@router.get(
+    "/minute/{patientId}/{detail_level}",
+    response_model=List[str],
+    tags=["Health Data"],
+    responses={
+        200: {
+            "content": {
+                "application/json": {
+                    "example": {
+                        "data": [
+                            {"id": 500, "time": "2016-12-04T07:21:00", "value": 10102}, 
+                            {"id": 500, "time": "2016-12-04T07:22:00", "value": 10280}
+                            ]
+                    }
+                }
+            },
+            "description": """Returns the list of step data by minute for the selected user""",
+        },
+    },
+)
+async def get_minute_steps_detail(patientId: int, detail_level: str, user: Annotated[User, Depends(authenticate_user)]) -> List[MinuteStepsResponse]:
+    curr_now = datetime.datetime.utcnow() + datetime.timedelta(minutes=480) - datetime.timedelta(days=1)
+
+    switcher = {
+        "1min": 1,
+        "3min": 3,
+        "5min": 5,
+        "10min": 10,
+        "30min": 30,
+        "1hour": 60,
+        "Today": 1440,
+    }
+
+    if detail_level not in switcher:
+        raise HTTPException(400, detail="Invalid detail level")
+    
+    num_minutes = switcher.get(detail_level)
+
+    start_time = curr_now - datetime.timedelta(minutes=num_minutes)
+    end_time = curr_now
+
+    results = await MinuteStep.find(
+        MinuteStep.patientId == patientId,
+        MinuteStep.time >= start_time.isoformat(),
+        MinuteStep.time <= end_time.isoformat()
+        ).to_list()
+
+    data = []
+    for result in results:
+        data.append({
+            "id": result.patientId, 
+            "time": result.time,
+            "value": result.value 
+            })
+    
+    data.sort(key=lambda x: datetime.datetime.fromisoformat(x['time']))
+    
+    resp_body = {
+        "data": data
+    }
+
+    return Response(content=json.dumps(resp_body), media_type="application/json")
+
+
+@router.get(
+    "/total/{patientId}/",
+    response_model=List[str],
+    tags=["Health Data"],
+    responses={
+        200: {
+            "content": {
+                "application/json": {
+                    "example": {
+                        "id": 1,
+                        "time": "2016-04-12T00:00:00",
+                        "value": 0.786499977111816
+                    }
+                }
+            },
+            "description": """Returns the total calories burned for the selected patient today""",
+        },
+    },
+)
+async def get_total_steps_today(patientId: int, user: Annotated[User, Depends(authenticate_user)]) -> List[MinuteStepsResponse]:
+    curr_now = datetime.datetime.utcnow() + datetime.timedelta(minutes=480) - datetime.timedelta(days=1)
+
+
+    start_time = curr_now.replace(hour=0, minute=0, second=0, microsecond=0)
+    end_time = curr_now
+
+    results = await MinuteStep.find(
+        MinuteStep.patientId == patientId,
+        MinuteStep.time >= start_time.isoformat(),
+        MinuteStep.time <= end_time.isoformat()
+        ).to_list()
+
+    totalSteps = 0
+    for result in results:
+        # data.append({
+        #     "id": result.patientId,
+        #     "time": result.time,
+        #     "value": result.value
+        # })
+        totalSteps += result.value
+
+    # Round to the nearest integer
+    totalSteps = round(totalSteps)
+
+    resp_body = {
+        "id": patientId,
+        "time": end_time.isoformat(),
+        "value": totalSteps
     }
 
     return Response(content=json.dumps(resp_body), media_type="application/json")

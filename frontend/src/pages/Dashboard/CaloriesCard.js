@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 // material-ui
 import { styled, useTheme, responsiveFontSizes } from "@mui/material/styles";
@@ -19,6 +19,12 @@ import FileCopyTwoToneIcon from "@mui/icons-material/FileCopyOutlined";
 import PictureAsPdfTwoToneIcon from "@mui/icons-material/PictureAsPdfOutlined";
 import ArchiveTwoToneIcon from "@mui/icons-material/ArchiveOutlined";
 import WhatshotIcon from "@mui/icons-material/Whatshot";
+import { useSelector } from "react-redux";
+import { selectCalories } from "features/caloriesSlice";
+
+import { caloriesTotal as caloriesTotalAPI } from "features/api";
+
+import { usePageVisibility } from "components/usePageVisibility";
 
 // const CardWrapper = styled(MainCard)(({ theme }) => ({
 // 	backgroundColor: "#fff",
@@ -104,11 +110,69 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 
 // ===========================|| DASHBOARD DEFAULT - EARNING CARD ||=========================== //
 
-const CaloriesCard = ({ isLoading }) => {
+let isInitial = true;
+
+const CaloriesCard = ({ isLoading, patientId}) => {
 	let theme = useTheme();
 	theme = responsiveFontSizes(theme);
 
 	const [anchorEl, setAnchorEl] = useState(null);
+	const [totalCalories, setTotalCalories] = useState(0);
+
+	const isPageVisible = usePageVisibility();
+	const timerIdRef = useRef(null);
+	const [isPollingEnabled, setIsPollingEnabled] = useState(true);
+
+	// const calories = useSelector(selectCalories)
+
+	const fetchTotalCalories = async () => {
+		var userCalories = await caloriesTotalAPI(patientId);
+		if (userCalories.status != 200 && !userCalories.body && !userCalories.body.value) {
+			console.log("Server down")
+			return
+		}
+		var userTotalCalories = userCalories.body.value;
+		// console.log(userCalories)
+		setTotalCalories(userTotalCalories)
+	}
+
+	useEffect(() => {
+		// console.log(patientId)
+		// if (isInitial) {
+		// 	// console.log(heartrate.status);
+		// 	isInitial = false;
+		// 	if(patientId < 0) {
+		// 		return;
+		// 	}
+		// 	fetchTotalCalories();
+		// }
+
+		if(patientId < 0) {
+			return;
+		}
+		fetchTotalCalories();
+
+	}, [patientId]);
+
+	// Polling data
+	useEffect(() => {
+		const startPolling = () => {
+			timerIdRef.current = setInterval(fetchTotalCalories, 20000);
+		}
+		const stopPolling = () => {
+			clearInterval(timerIdRef.current);
+		}
+
+		if(isPageVisible && isPollingEnabled) {
+			startPolling();
+		} else {
+			stopPolling();
+		}
+
+		return () => {
+			stopPolling();
+		}
+	}, [isPageVisible, isPollingEnabled, patientId]);
 
 	const handleClick = (event) => {
 		setAnchorEl(event.currentTarget);
@@ -157,7 +221,7 @@ const CaloriesCard = ({ isLoading }) => {
 												mb: 0.75,
 											}}
 										>
-											532 kcal
+											{totalCalories} kcal
 										</Typography>
 									</Grid>
 								</Grid>
@@ -183,7 +247,7 @@ const CaloriesCard = ({ isLoading }) => {
 										color: "#1e88e5",
 									}}
 								>
-									Brandon's calories burned is in the normal
+									Calories burned is in the normal
 									range.
 								</Typography>
 							</Grid>

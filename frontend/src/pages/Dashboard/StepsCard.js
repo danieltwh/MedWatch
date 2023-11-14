@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 // material-ui
 import { styled, useTheme } from "@mui/material/styles";
@@ -19,6 +19,10 @@ import FileCopyTwoToneIcon from "@mui/icons-material/FileCopyOutlined";
 import PictureAsPdfTwoToneIcon from "@mui/icons-material/PictureAsPdfOutlined";
 import ArchiveTwoToneIcon from "@mui/icons-material/ArchiveOutlined";
 import DirectionsWalkIcon from "@mui/icons-material/DirectionsWalk";
+
+import { usePageVisibility } from "components/usePageVisibility";
+
+import { stepsTotal as stepsTotalAPI } from "features/api";
 
 // const CardWrapper = styled(MainCard)(({ theme }) => ({
 // 	backgroundColor: "#fff",
@@ -106,10 +110,17 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 
 // ===========================|| DASHBOARD DEFAULT - EARNING CARD ||=========================== //
 
-const StepsCard = ({ isLoading }) => {
+let isInitial = true;
+
+const StepsCard = ({ isLoading, patientId }) => {
 	const theme = useTheme();
 
 	const [anchorEl, setAnchorEl] = useState(null);
+	const [totalSteps, setTotalSteps] = useState(0);
+
+	const isPageVisible = usePageVisibility();
+	const timerIdRef = useRef(null);
+	const [isPollingEnabled, setIsPollingEnabled] = useState(true);
 
 	const handleClick = (event) => {
 		setAnchorEl(event.currentTarget);
@@ -118,6 +129,45 @@ const StepsCard = ({ isLoading }) => {
 	const handleClose = () => {
 		setAnchorEl(null);
 	};
+
+	const fetchTotalSteps = async () => {
+		var userSteps = await stepsTotalAPI(patientId);
+		if (userSteps.status != 200 && !userSteps.body && !userSteps.body.value) {
+			console.log("Server down")
+			return
+		}
+		var userTotalSteps = userSteps.body.value;
+		// console.log(userSteps)
+		setTotalSteps(userTotalSteps)
+	}
+
+	useEffect(() => {
+		if(patientId < 0) {
+			return;
+		}
+		fetchTotalSteps();
+
+	}, [patientId]);
+
+	// Polling data
+	useEffect(() => {
+		const startPolling = () => {
+			timerIdRef.current = setInterval(fetchTotalSteps, 20000);
+		}
+		const stopPolling = () => {
+			clearInterval(timerIdRef.current);
+		}
+
+		if(isPageVisible && isPollingEnabled) {
+			startPolling();
+		} else {
+			stopPolling();
+		}
+
+		return () => {
+			stopPolling();
+		}
+	}, [isPageVisible, isPollingEnabled, patientId]);
 
 	return (
 		<>
@@ -158,7 +208,7 @@ const StepsCard = ({ isLoading }) => {
 												mb: 0.75,
 											}}
 										>
-											4,376 steps
+											{totalSteps} steps
 										</Typography>
 									</Grid>
 								</Grid>
@@ -184,8 +234,10 @@ const StepsCard = ({ isLoading }) => {
 										color: "#1e88e5",
 									}}
 								>
-									Need 5,624 more steps to complete 10,000
-									steps.
+									{ totalSteps >= 10000 ? "Patient completed 10,000 steps" : `Need ${10000 - totalSteps} more steps to complete 10,000
+									steps.`
+									}
+									
 								</Typography>
 							</Grid>
 						</Grid>

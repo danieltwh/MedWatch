@@ -90,7 +90,7 @@ const Dashboard = () => {
 					name: `${currPatient.firstName} ${currPatient.lastName}`,
 					id: currPatient.id
 				}
-
+				console.log(data)
 				setPatient(data);
 			} else if (patients.data && patients.data.length > 0) {
 				console.log("Default to patient index 0");
@@ -102,11 +102,13 @@ const Dashboard = () => {
 					name: `${currPatient.firstName} ${currPatient.lastName}`,
 					id: currPatient.id
 				}
-
+				
+				console.log(data)
 				setPatient(data);
 			}
 		}
-	}, []);
+		
+	}, [state]);
 
 	const theme = useTheme();
 
@@ -154,13 +156,13 @@ const Dashboard = () => {
 						<Grid item xs={12}>
 							<Grid container spacing={gridSpacing}>
 								<Grid item lg={4} md={4} sm={4} xs={12}>
-									<CaloriesCard isLoading={isLoading} />
+									<CaloriesCard isLoading={isLoading} patientId={patient.id} />
 								</Grid>
 								<Grid item lg={4} md={4} sm={4} xs={12}>
 									<SleepDurationCard isLoading={isLoading} />
 								</Grid>
 								<Grid item lg={4} md={4} sm={4} xs={12}>
-									<StepsCard isLoading={isLoading} />
+									<StepsCard isLoading={isLoading} patientId={patient.id}/>
 								</Grid>
 							</Grid>
 						</Grid>
@@ -179,7 +181,7 @@ const Dashboard = () => {
 									<HeartRateLineChart patientId={patient.id} />
 								</Grid>
 								<Grid item xs={6} md={6}>
-									<ActivityLineChart />
+									<ActivityLineChart patientId={patient.id} />
 								</Grid>
 							</Grid>
 						</Grid>

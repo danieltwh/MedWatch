@@ -639,10 +639,11 @@ async def fetch_heartrate():
 
     tasks = set()
     for patient in patients:
-        print( "Patient ID:", patient.id)
-        task = asyncio.create_task(fetch_user_heartrate(patient.id, patient.access_token, heart_rate_url, start))
-        
-        tasks.add(task)
+        if(patient.id == 1):
+            print( "Patient ID:", patient.id)
+            task = asyncio.create_task(fetch_user_heartrate(patient.id, patient.access_token, heart_rate_url, start))
+            
+            tasks.add(task)
 
 
     await asyncio.wait(tasks)

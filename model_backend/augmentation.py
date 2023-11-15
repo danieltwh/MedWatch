@@ -4,22 +4,27 @@ import random
 import time
 
 class FootagePreprocessor:
-    def __init__(self, frame):
-        self.frame = frame
+    def __init__(self, frames):
+        self.frames = frames
         self.target_brightness = 100 
         self.target_kernel_size = (5,5)
     
     def preprocess_footage(self):
-        #Match images used to train YOLOv8 model
-        updated_frame = cv2.resize(self.frame,(640,640))
-        updated_frame = self.denoise_image(updated_frame)
-        updated_frame = self.adjust_saturation(updated_frame)
-        updated_frame = self.augment_brightness(updated_frame)
+        processed_frames = []
 
-        #normalise image
-        #updated_frame = updated_frame/255.0
+        for frame in self.frames:
+            #Match images used to train YOLOv8 model
+            updated_frame = cv2.resize(frame,(640,640))
+            updated_frame = self.denoise_image(updated_frame)
+            updated_frame = self.adjust_saturation(updated_frame)
+            updated_frame = self.augment_brightness(updated_frame)
+
+            #normalise image
+            #updated_frame = updated_frame/255.0
+
+            processed_frames.append(updated_frame) 
         
-        return updated_frame
+        return processed_frames
 
     def augment_brightness(self,frame):
         avg_brightness = np.mean(frame)

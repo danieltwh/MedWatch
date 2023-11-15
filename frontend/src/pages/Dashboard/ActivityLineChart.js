@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 // material-ui
@@ -23,8 +23,9 @@ import Chart from "chart.js/auto";
 
 import { heartrate as heartrateAPI } from "features/api";
 import { heartrateHourly as heartrateHourlyAPI } from "features/api";
+import { caloriesDetailLevel as caloriesDetailLevelAPI } from "features/api";
 
-import { heartrateActions, selectHeartrate } from "features/heartrateSlice";
+import { caloriesActions, selectCalories } from "features/caloriesSlice";
 
 import LineChart from "components/LineChart";
 import { Line } from "react-chartjs-2";
@@ -32,18 +33,39 @@ import { DateTime } from "luxon";
 
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 
+import { usePageVisibility } from "components/usePageVisibility";
+import { authActions } from "features/authSlice";
+import { logout as logoutLocalStorage } from "features/auth";
+
 const status = [
+	// {
+	// 	value: "1min",
+	// 	label: "1 Min",
+	// },
 	{
-		value: "today",
+		value: "3min",
+		label: "3 Min",
+	},
+	{
+		value: "5min",
+		label: "5 Min",
+	},
+	{
+		value: "10min",
+		label: "10 Min",
+	},
+	{
+		value: "30min",
+		label: "30 Min",
+	},
+	{
+		value: "1hour",
+		label: "1 Hour",
+	},
+	{
+		value: "Today",
 		label: "Today",
-	},
-	{
-		value: "month",
-		label: "This Month",
-	},
-	{
-		value: "year",
-		label: "This Year",
+
 	},
 ];
 
@@ -133,10 +155,14 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 
 let isInitial = true;
 
-const ActivityLineChart = ({ isLoading }) => {
-	const [value, setValue] = useState("today");
+const ActivityLineChart = ({ isLoading, patientId }) => {
+	const [value, setValue] = useState("5min");
 	const theme = useTheme();
 	const customization = ["24h", "6h", "1h", "30min"];
+
+	const isPageVisible = usePageVisibility();
+	const timerIdRef = useRef(null);
+	const [isPollingEnabled, setIsPollingEnabled] = useState(true);
 
 	const { navType } = customization;
 	const { primary } = theme.palette.text;
@@ -214,21 +240,28 @@ const ActivityLineChart = ({ isLoading }) => {
 	const nav = useNavigate();
 	const dispatch = useDispatch();
 
-	const heartrate = useSelector(selectHeartrate);
+	// const heartrate = useSelector(selectHeartrate);
+	const heartrate = useSelector(selectCalories);
 
 	const fetchHeartrateData = async () => {
-		let userHeartRate = await heartrateAPI().catch((error) => {
+		let userHeartRate = await caloriesDetailLevelAPI(value, patientId).catch((error) => {
 			console.log("There was an error", error);
 		});
-		if (userHeartRate.status == 200) {
+
+		if (!userHeartRate) {
+			console.log("Server Down");
+			return;
+		} else if (userHeartRate.status == 200) {
 			// setHeartRateData(userHeartRate.body);
-			dispatch(heartrateActions.set(userHeartRate.body));
+			dispatch(caloriesActions.set(userHeartRate.body));
 		} else if (userHeartRate.status == 401) {
 			// Logout
-			localStorage.removeItem("authenticated");
-			localStorage.removeItem("token");
-			localStorage.removeItem("token_type");
-			nav("/", { replace: true });
+			// localStorage.removeItem("authenticated");
+			// localStorage.removeItem("token");
+			// localStorage.removeItem("token_type");
+			logoutLocalStorage();
+			dispatch(authActions.logout());
+			nav("/login", { replace: true });
 		}
 	};
 
@@ -236,9 +269,40 @@ const ActivityLineChart = ({ isLoading }) => {
 		if (isInitial) {
 			// console.log(heartrate.status);
 			isInitial = false;
-			// fetchHeartrateData();
+			if (patientId < 0) {
+				return;
+			}
+			fetchHeartrateData();
 		}
 	}, [dispatch]);
+
+	// Refresh Data when value changes
+	useEffect(() => {
+		if (patientId < 0) {
+			return;
+		}
+		fetchHeartrateData();
+	}, [value, patientId])
+
+	// Polling data
+	useEffect(() => {
+		const startPolling = () => {
+			timerIdRef.current = setInterval(fetchHeartrateData, 5000);
+		}
+		const stopPolling = () => {
+			clearInterval(timerIdRef.current);
+		}
+
+		if (isPageVisible && isPollingEnabled) {
+			startPolling();
+		} else {
+			stopPolling();
+		}
+
+		return () => {
+			stopPolling();
+		}
+	}, [isPageVisible, isPollingEnabled, patientId, value]);
 
 	var lineChartOptions = {
 		scales: {
@@ -250,6 +314,77 @@ const ActivityLineChart = ({ isLoading }) => {
 			},
 		},
 	};
+
+	const getChartOptions = () => {
+		var offset_minutes;
+		switch (value) {
+			case "1min":
+				offset_minutes = 1;
+				break;
+			case "5min":
+				offset_minutes = 5;
+				break;
+			case "10min":
+				offset_minutes = 10;
+				break;
+			case "30min":
+				offset_minutes = 30;
+				break;
+			case "1hour":
+				offset_minutes = 60;
+				break;
+			case "Today":
+				offset_minutes = 1440;
+				break;
+			default:
+				offset_minutes = 5
+				break;
+		}
+
+
+		// let luxonDate = DateTime.now();
+		// let luxonDate = DateTime.fromObject({ year: 2023, month: 10, day: 15, hour: 12, minute: 0, second: 0 });
+		let luxonDate = DateTime.now().minus({ days: 1 });
+
+		const endTime = luxonDate
+		// const startTime = luxonDate.minus({hours:1});
+		const startTime = luxonDate.minus({ minutes: offset_minutes });
+
+		// console.log("Here")
+		// console.log(startTime, endTime);
+
+
+		var lineChartOptions = {
+			responsive: true,
+			scales: {
+				x: {
+					type: 'time',
+					time: {
+						unit: 'minute'
+					},
+					// min: startTime.valueOf(),
+					// max: endTime.valueOf(),
+					ticks: {
+						maxRotation: 45,
+						minRotation: 45,
+					}
+				},
+				y: {
+					min: 0,
+					max: 10,
+					ticks: {
+						// forces step size to be 50 units
+						stepSize: 0.1
+					}
+				}
+			},
+			maintainAspectRatio: false,
+		};
+
+		return lineChartOptions;
+	}
+
+
 
 	// const WhiteBorderTextField = styled(TextField)`
 	// 	& label.Mui-focused {
@@ -307,7 +442,7 @@ const ActivityLineChart = ({ isLoading }) => {
 								<Grid item>
 									<Grid
 										container
-										direction="column"
+										direction="row"
 										spacing={1}
 									>
 										<Grid item>
@@ -348,7 +483,7 @@ const ActivityLineChart = ({ isLoading }) => {
 												</Grid>
 											</Grid>
 										</Grid>
-										<Grid item>
+										<Grid item xs={6}>
 											<Typography
 												sx={{
 													fontSize: "1rem",
@@ -360,30 +495,35 @@ const ActivityLineChart = ({ isLoading }) => {
 												Activity Level
 											</Typography>
 										</Grid>
+
+										<Grid item xs={6} display="flex" justifyContent="flex-end">
+											<WhiteTextField
+												id="standard-select-currency"
+												select
+												value={value}
+												onChange={(e) => {
+													// e.preventDefault()
+													// console.log(value)
+													setValue(e.target.value)
+												}
+												}
+											>
+												{status.map((option) => (
+													<MenuItem
+														key={option.value}
+														value={option.value}
+													>
+														{option.label}
+													</MenuItem>
+												))}
+											</WhiteTextField>
+										</Grid>
 									</Grid>
 								</Grid>
-								<Grid item>
-									<WhiteTextField
-										id="standard-select-currency"
-										select
-										value={value}
-										onChange={(e) =>
-											setValue(e.target.value)
-										}
-									>
-										{status.map((option) => (
-											<MenuItem
-												key={option.value}
-												value={option.value}
-											>
-												{option.label}
-											</MenuItem>
-										))}
-									</WhiteTextField>
-								</Grid>
+
 							</Grid>
 						</Grid>
-						<Grid item xs={12}>
+						<Grid item xs={12} sx={{ height: "320px" }}>
 							{/* <Chart {...chartData} /> */}
 							<Line
 								data={{
@@ -406,7 +546,8 @@ const ActivityLineChart = ({ isLoading }) => {
 									borderColor: "black",
 									borderWidth: 2,
 								}}
-								options={lineChartOptions}
+								// options={lineChartOptions}
+								options={getChartOptions()}
 							/>
 						</Grid>
 					</Grid>

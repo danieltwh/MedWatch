@@ -54,13 +54,16 @@ class HeartRateResponse(BaseModel):
 )
 async def link_patient_to_user(
     patientId: int,
-    new_heartrate_data: List[HeartRateResponse],
-    user: Annotated[User, Depends(authenticate_user)]
+    new_heartrate_data: List[HeartRate],
+    # user: Annotated[User, Depends(authenticate_user)]
     ):
-    print(f'Input data: {new_heartrate_data}')
+    # print(f'Input data: {new_heartrate_data}')
     
 
     results = await HeartRate.find(HeartRate.patientId == patientId).to_list()
+    if len(results) > 360:
+        results = results[-360: ]
+    # print(f'Results: {results}')
 
     data = []
     new_data = []
@@ -71,8 +74,8 @@ async def link_patient_to_user(
         if curr.value > 0:
             new_data.append(curr.value)
     
-    print(f'Data: {data}')
-    print(f'New data: {new_data}')
+    # print(f'Data: {data}')
+    # print(f'New data: {new_data}')
     thresold = 2
     mean = np.mean(data)
     std_dev = np.std(data)
@@ -85,6 +88,15 @@ async def link_patient_to_user(
     if contains_anomaly:
         print('Sending email')
         send_email_helper(patientId)
+        true_index = [i for i, val in enumerate([abs(z_score) > thresold for z_score in z_score_new_data]) if val]
+        print(true_index)
+        for index in true_index:
+            curr_data = new_heartrate_data[index]
+            mongo_data = await HeartRate.find_one(HeartRate.patientId == curr_data.patientId and HeartRate.time == curr_data.time)
+            mongo_data.isAnomaly = "True"
+            await mongo_data.save()
+
+
 
     response = {
         'Patient Id': patientId,

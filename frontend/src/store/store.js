@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import authReducer from "../features/authSlice"
 import heartrateReducer from "../features/heartrateSlice"
 import patientsSlice from 'features/patientsSlice'
+import caloriesSlice from 'features/caloriesSlice'
 
 import storage from 'redux-persist/lib/storage'
 // import { persistReducer, persistStore } from 'redux-persist'
@@ -28,7 +29,8 @@ const persistConfig = {
 const rootReducer = combineReducers({
   auth: authReducer,
   heartrate: heartrateReducer,
-  patients: patientsSlice
+  patients: patientsSlice,
+  calories: caloriesSlice
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

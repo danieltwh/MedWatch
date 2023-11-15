@@ -4,6 +4,7 @@ import cv2
 from starlette.middleware.cors import CORSMiddleware
 
 from detectionmodel import FallDetection
+from detectionmodel2 import Processor
 
 app = FastAPI()
 origins = [
@@ -51,6 +52,32 @@ def webcam():
         else:
             cap.release()
 
+
+def webcam_2():
+    cap = cv2.VideoCapture(0)
+
+    if not cap.isOpened():
+        print("Cannot open camera")
+        exit()
+
+    # Create an instance of Processor
+    processor = Processor('yolov8s-pose.pt')
+
+    while True:
+        success, frame = cap.read()
+        if not success:
+            cap.release()
+
+        output_frame = processor.process(frame)
+        ret, buffer = cv2.imencode('.jpg', output_frame)
+        output_frame = buffer.tobytes()
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + output_frame + b'\r\n')
+
+
+
+
+
 @app.get("/webcam")
 async def read_webcam():
-    return StreamingResponse(webcam(), media_type="multipart/x-mixed-replace; boundary=frame")
+    return StreamingResponse(webcam_2(), media_type="multipart/x-mixed-replace; boundary=frame")
